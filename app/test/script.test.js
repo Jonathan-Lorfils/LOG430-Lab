@@ -1,7 +1,9 @@
-test('additionne 1 et 1 pour donner 2', () => {
-    expect(1 + 1).toBe(2);
-});
+describe('basic unit test', () => {
+    it('should be true', () => {
+        expect(true).toBe(true);
+    });
 
-test('valide que true est true', () => {
-    expect(true).toBe(true)
+    it('should be false', () => {
+        expect(false).toBe(false);
+    });
 });
