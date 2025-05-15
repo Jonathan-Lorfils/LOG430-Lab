@@ -1,5 +1,2 @@
-# Ignore les fichiers compilés .class
-*.class
-
-# Ignore les fichiers de VSCode
-.vscode/
+# Ignore les node_modules
+node_modules
