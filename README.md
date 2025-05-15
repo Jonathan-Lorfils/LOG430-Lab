@@ -45,23 +45,17 @@ Prérequis:
 
 ## Structure
 
-    ```
-LOG430-LAB/
-├── .github/
-│   └── workflows/
-│       └── docker-image.yml
-├── app/
-│   ├── node_modules/
-│   ├── src/
-│   │   └── index.js
-│   ├── test/
-│   │   └── script.test.js
-│   ├── .dockerignore
+```
+.
+├── app
 │   ├── docker-compose.yml
 │   ├── Dockerfile
 │   ├── eslint.config.js
 │   ├── package-lock.json
-│   └── package.json
-├── .gitignore
+│   ├── package.json
+│   ├── src
+│   │   └── index.js
+│   └── test
+│       └── script.test.js
 └── README.md
-    ```
+```
