@@ -45,5 +45,23 @@ Prérequis:
 
 ## Structure
 
-<pre lang="markdown"> ``` LOG430-LAB/ ├── .github/ │ └── workflows/ │ └── docker-image.yml ├── app/ │ ├── node_modules/ │ ├── src/ │ │ └── index.js │ ├── test/ │ │ └── script.test.js │ ├── .dockerignore │ ├── docker-compose.yml │ ├── Dockerfile │ ├── eslint.config.js │ ├── package-lock.json │ └── package.json ├── .gitignore └── README.md ``` </pre>
-
+    ```
+LOG430-LAB/
+├── .github/
+│   └── workflows/
+│       └── docker-image.yml
+├── app/
+│   ├── node_modules/
+│   ├── src/
+│   │   └── index.js
+│   ├── test/
+│   │   └── script.test.js
+│   ├── .dockerignore
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── eslint.config.js
+│   ├── package-lock.json
+│   └── package.json
+├── .gitignore
+└── README.md
+    ```
