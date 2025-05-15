@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "start": "node src/index.js",
-        "test": "jest --watchAll --detectOpenHandles --forceExit",
+        "test": "jest",
         "eslint": "eslint ."
     },
     "dependencies": {
