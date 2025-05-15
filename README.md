@@ -3,6 +3,16 @@
 ## Description 
 Ce projet renvoie une réponse contenant un message "Hello World !" à l'utilisateur lorsque celui-ci accède à l'URL. Cela est fait en lançant une instance de express puis en retournant le message lorsqu'un usager accède à la racine de l'URL.
 
+La pipeline CI/CD suit les instructions suivantes :
+- Télécharge le code source
+- Setup Node.js en version 22
+- Installe les dépendances nécessaire au fonctionnement de l'application
+- Exécute la commande npm run eslint afin de vérifier la qualité syntaxique et stylistique du code.
+- Éxecute la commande npm run test afin de vérifier automatiquement que les tests fonctionnent.
+- Se connecte à Docker à l'aide d'un token, crée une image Docker puis la pousse sur mon dépôt Docker Hub.
+
+Pour ce qui est des choix techniques, j'ai choisi d'utiliser ces technologies étant donné que j'ai pu les utiliser lors de mon précédent stage. J'ai donc développé une certaine aisance avec celles-ci.
+
 Lien vers pipeline : https://github.com/Jonathan-Lorfils/LOG430-Lab/actions/runs/15049100689
 
 ## Instructions d'exécution
