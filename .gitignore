@@ -1,2 +1,4 @@
 # Ignore les node_modules
 node_modules
+
+/app/.env
