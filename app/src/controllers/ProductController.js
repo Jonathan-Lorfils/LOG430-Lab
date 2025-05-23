@@ -21,7 +21,6 @@ const ProductController = {
                 const newCategory = await CategoryController.createCategory(categoryName);
                 categoryId = newCategory.id;
             }
-            console.log(categoryId)
 
             const product = await Product.create({
                 name: name,
@@ -32,7 +31,6 @@ const ProductController = {
 
             await t.commit();
             console.log('Product created successfully:');
-            return product;
         } catch (error) {
             await t.rollback();
             console.error('Error creating product:', error);
@@ -49,7 +47,7 @@ const ProductController = {
             });
 
             if (product) {
-                console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}`);
+                console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
             } else {
                 console.log('Product not found');
             }
@@ -68,7 +66,7 @@ const ProductController = {
             });
 
             if (product) {
-                console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}`);
+                console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
             } else {
                 console.log('Product not found');
             }
@@ -95,7 +93,7 @@ const ProductController = {
 
                 if (products.length > 0) {
                     products.forEach(product => {
-                        console.log(`ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}`);
+                        console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
                     });
                 } else {
                     console.log('No products found in this category');
@@ -120,7 +118,7 @@ const ProductController = {
 
             if (products.length > 0) {
                 products.forEach(product => {
-                    console.log(`ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}`);
+                    console.log(`ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
                 });
                 return products;
             } else {
