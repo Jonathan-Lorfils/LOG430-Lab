@@ -117,7 +117,7 @@ describe("ProductController", () => {
             stockQuantity: 20,
             categoryId: 1,
         }, { transaction: expect.any(Object) });
-        expect(consoleSpy).toHaveBeenCalledWith("Product created successfully:");
+        expect(consoleSpy).toHaveBeenCalledWith("Produit ajouté avec succès !");
     });
 
     it("getAllProducts should return all products successfully", async () => {
