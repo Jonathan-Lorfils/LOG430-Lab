@@ -1,6 +1,6 @@
 # LOG430-Lab
 
-# Description 
+# Description Arc42
 
 ## Contexte
 
@@ -182,6 +182,10 @@ Prérequis:
    cd LOG430-Lab
    ```
 
+   ```
+   git checkout labo01
+   ```
+
 2. Lancer le container
    - Ouvrir le répertoire avec la commande suivante :
 
@@ -201,19 +205,73 @@ Prérequis:
     docker-compose up
     ```
 
+    -- Ouvrir un nouveau terminal et exécuter la commande
+
+    ```
+    docker compose run --rm app
+    ```
+
 ## Structure
 
 ```
 .
 ├── app
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── eslint.config.js
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── src
-│   │   └── index.js
-│   └── test
-│       └── script.test.js
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── eslint.config.js
+│   ├── jest.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── controllers
+│   │   │   ├── CategoryController.js
+│   │   │   └── ProductController.js
+│   │   ├── database.js
+│   │   ├── index.js
+│   │   └── models
+│   │       ├── Category.js
+│   │       └── Product.js
+│   └── test
+│       ├── CategoryController.test.js
+│       ├── ProductController.test.js
+│       └── script.test.js
+├── docs
+│   ├── ADR
+│   │   ├── ADR1.md
+│   │   └── ADR2.md
+│   └── UML
+│       ├── VueCasUtilisation.puml
+│       ├── VueDeploiement.puml
+│       ├── VueImplementation.puml
+│       ├── VueLogique.puml
+│       ├── VueProcessusAjouterProduit.puml
+│       ├── VueProcessusConsulterProduits.puml
+│       ├── VueProcessusRechercherProduitId.puml
+│       ├── VueProcessusRechercherProduitNom.puml
+│       ├── VueProcessusRechercherProduitsCategorie.puml
+│       └── VueProcessusRetournerProduit.puml
+├── out
+│   └── docs
+│       └── UML
+│           ├── VueCasUtilisation
+│           │   └── VueCasUtilisation.png
+│           ├── VueDeploiement
+│           │   └── VueDeploiement.png
+│           ├── VueImplementation
+│           │   └── ComposantsPOS.png
+│           ├── VueLogique
+│           │   └── POS_Product_Category.png
+│           ├── VueProcessusAjouterProduit
+│           │   └── VueProcessusAjouterProduit.png
+│           ├── VueProcessusConsulterProduits
+│           │   └── VueProcessusConsulterProduits.png
+│           ├── VueProcessusRechercherProduitId
+│           │   └── VueProcessusRechercherProduitId.png
+│           ├── VueProcessusRechercherProduitNom
+│           │   └── VueProcessusRechercherProduitNom.png
+│           ├── VueProcessusRechercherProduitsCategorie
+│           │   └── VueProcessusRechercherProduitCategorie.png
+│           └── VueProcessusRetournerProduit
+│               └── VueProcessusRetournerProduit.png
 └── README.md
 ```
