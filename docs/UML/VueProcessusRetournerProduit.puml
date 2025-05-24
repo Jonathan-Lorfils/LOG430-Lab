@@ -1,0 +1,17 @@
+@startuml VueProcessusRetournerProduit
+
+actor "Employe" as Employe
+hide footbox
+
+Employe -> "Application POS" : returnProduct(id, quantity)
+"Application POS" -> "Base de données": Product.findOne(where: {id: id})
+alt "Product found"
+    "Base de données" --> "Application POS": product
+    "Application POS" -> "Application POS": product.quantity += quantity
+    "Application POS" -> "Base de données": product.save()}
+    "Application POS" --> "Employe": console.log('Produit retourné avec succès !')
+else "Product not found"
+    "Base de données" --> "Application POS": null
+    "Application POS" --> "Employe": console.log("Product not found")
+end
+@enduml

@@ -1,0 +1,20 @@
+@startuml VueDeploiement
+skinparam componentStyle rectangle
+skinparam node {
+    BackgroundColor #EEF
+    BorderColor Black
+}
+
+node "Node.js" {
+    artifact "Application POS"
+}
+
+' Base de données PostgreSQL
+node "Serveur BD" {
+    database "PostgreSQL"
+}
+
+' Connexions entre les artefacts
+"Application POS" --> "PostgreSQL" : Requêtes via ORM Sequelize
+
+@enduml

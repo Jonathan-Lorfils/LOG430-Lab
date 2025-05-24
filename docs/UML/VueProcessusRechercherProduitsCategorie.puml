@@ -1,0 +1,22 @@
+@startuml VueProcessusRechercherProduitCategorie
+
+actor "Employe" as Employe
+hide footbox
+
+Employe -> "Application POS" : searchProductsByCategory(categoryName)
+"Application POS" -> "Base de données": Categorie.findOne(where: {name: categoryName})
+alt "Category found"
+    "Base de données" --> "Application POS": category
+    "Application POS" -> "Base de données": Product.findAll(where: {categoryId: category.id})
+    alt "Products found"
+        "Base de données" --> "Application POS": products[]
+        "Application POS" --> "Employe": console.log(product)
+    else "Product not found"
+        "Base de données" --> "Application POS": null
+        "Application POS" --> "Employe": console.log("No products found in the category")
+    end
+else "Category not found"
+    "Base de données" --> "Application POS": null
+    "Application POS" --> "Employe": console.log('Category not found');
+end
+@enduml

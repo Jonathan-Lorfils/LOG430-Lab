@@ -30,7 +30,7 @@ const ProductController = {
             }, { transaction: t });
 
             await t.commit();
-            console.log('Product created successfully:');
+            console.log('Produit ajouté avec succès !')
         } catch (error) {
             await t.rollback();
             console.error('Error creating product:', error);
@@ -93,7 +93,7 @@ const ProductController = {
 
                 if (products.length > 0) {
                     products.forEach(product => {
-                        console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
+                        console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product?.category ? product.category.name : 'Aucune'}`);
                     });
                 } else {
                     console.log('No products found in this category');

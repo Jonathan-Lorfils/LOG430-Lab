@@ -1,0 +1,14 @@
+@startuml VueCasUtilisation
+left to right direction
+actor "Employe" as e
+rectangle "Application POS" {
+  usecase "Rechercher un produit" as UC1
+  usecase "Ajouter un produit" as UC2
+  usecase "Retourner un produit" as UC3
+  usecase "Consulter les produits" as UC4
+}
+e -- UC1
+e -- UC2
+e -- UC3
+e -- UC4
+@enduml

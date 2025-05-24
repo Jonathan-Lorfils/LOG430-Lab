@@ -1,0 +1,15 @@
+@startuml VueProcessusRechercherProduitId
+
+actor "Employe" as Employe
+hide footbox
+
+Employe -> "Application POS" : searchProductById(id)
+"Application POS" -> "Base de données": Product.findOne(where: {id: id})
+alt "Product found"
+    "Base de données" --> "Application POS": product
+    "Application POS" --> "Employe": console.log(product)
+else "Product not found"
+    "Base de données" --> "Application POS": null
+    "Application POS" --> "Employe": console.log("No products found")
+end
+@enduml

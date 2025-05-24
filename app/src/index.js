@@ -13,7 +13,7 @@ import ProductController from './controllers/ProductController.js';
   }
 })();
 
-//await sequelize.sync({ force: true }) // Synchronize the database and drop all tables
+await sequelize.sync({}) // Synchronize the database
 
 async function menu() {
   const { action } = await inquirer.prompt({
@@ -102,8 +102,7 @@ async function menu() {
 
       try {
         await
-          ProductController.createProduct(name, price, stockQuantity, categoryName);
-        console.log('Produit ajouté avec succès !');
+          ProductController.createProduct(name, price, stockQuantity, categoryName);;
       } catch (error) {
         console.error('Erreur lors de l\'ajout du produit :', error);
       }
