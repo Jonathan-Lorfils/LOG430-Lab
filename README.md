@@ -276,4 +276,3 @@ Prérequis:
 │               └── VueProcessusRetournerProduit.png
 └── README.md
 ```
-J’ai pris la décision de combiner la logique métier au controller étant donné que dans notre cas nous travaillons directement avec la base de donnée. Sequelize prend déjà en charge le status de la transaction et effectue un rollback en cas d'échec. Le controller ne retourne donc rien en soi hormis un message afficher dans la console.
