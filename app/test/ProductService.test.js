@@ -36,7 +36,7 @@ describe("ProductService", () => {
         expect(mockFindOne).toHaveBeenCalledWith({
             where: { name: "Laptop" },
         });
-        expect(consoleSpy).toHaveBeenCalledWith("Produit trouvé : ID: 1, Nom: Laptop, Prix: 1000, Quantité: 10, Catégorie: Electronics");
+        expect(consoleSpy).toHaveBeenCalledWith("ID: 1, Nom: Laptop, Prix: 1000, Quantité: 10, Catégorie: Electronics");
     });
 
     it("searchProductById should return a product successfully", async () => {
@@ -55,7 +55,7 @@ describe("ProductService", () => {
         expect(mockFindOne).toHaveBeenCalledWith({
             where: { id: 1 },
         });
-        expect(consoleSpy).toHaveBeenCalledWith("Produit trouvé : ID: 2, Nom: Ps5, Prix: 599, Quantité: 5, Catégorie: Electronics");
+        expect(consoleSpy).toHaveBeenCalledWith("ID: 2, Nom: Ps5, Prix: 599, Quantité: 5, Catégorie: Electronics");
     });
 
     it("searchProductByCategory should return a product successfully", async () => {
@@ -86,8 +86,8 @@ describe("ProductService", () => {
         expect(mockFindOne).toHaveBeenCalledWith({
             where: { categoryId: 1 },
         });
-        expect(consoleSpy).toHaveBeenCalledWith("Produit trouvé : ID: 3, Nom: Iphone, Prix: 999, Quantité: 20, Catégorie: Electronics");
-        expect(consoleSpy).toHaveBeenCalledWith("Produit trouvé : ID: 4, Nom: Samsung, Prix: 799, Quantité: 15, Catégorie: Electronics");
+        expect(consoleSpy).toHaveBeenCalledWith("ID: 3, Nom: Iphone, Prix: 999, Quantité: 20, Catégorie: Electronics");
+        expect(consoleSpy).toHaveBeenCalledWith("ID: 4, Nom: Samsung, Prix: 799, Quantité: 15, Catégorie: Electronics");
     });
 
     it("createProduct should create a product successfully", async () => {
@@ -167,6 +167,19 @@ describe("ProductService", () => {
         expect(mockProduct.stockQuantity).toBe(25);
         expect(mockProduct.save).toHaveBeenCalled();
         expect(consoleSpy).toHaveBeenCalledWith("Produit retourné avec succès !");
-    }
-    );
+    });
+
+    it("shouldDisplayProduct should log product details", () => {
+        const mockProduct = {
+            id: 1,
+            name: "Iphone",
+            price: 999,
+            stockQuantity: 20,
+            category: { name: "Electronics" },
+        };
+
+        ProductService.displayProduct(mockProduct);
+
+        expect(consoleSpy).toHaveBeenCalledWith("ID: 1, Nom: Iphone, Prix: 999, Quantité: 20, Catégorie: Electronics");
+    })
 });
