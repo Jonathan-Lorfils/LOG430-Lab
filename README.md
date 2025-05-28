@@ -193,21 +193,22 @@ Prérequis:
     cd app
     ```
 
-    - Construire le conteneur
+    - Construire le container
     
     ```
     docker-compose build
     ```
 
-    - Lancer le conteneur
+    - Lancer le container
 
     ```
     docker-compose up
     ```
 
-    -- Ouvrir un nouveau terminal et exécuter la commande
+    -- Ouvrir un nouveau terminal et exécuter les commandes
 
     ```
+    cd app
     docker compose run --rm app
     ```
 
@@ -223,17 +224,17 @@ Prérequis:
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── src
-│   │   ├── controllers
-│   │   │   ├── CategoryController.js
-│   │   │   └── ProductController.js
+│   │   ├── services
+│   │   │   ├── CategoryService.js
+│   │   │   └── ProductService.js
 │   │   ├── database.js
 │   │   ├── index.js
 │   │   └── models
 │   │       ├── Category.js
 │   │       └── Product.js
 │   └── test
-│       ├── CategoryController.test.js
-│       ├── ProductController.test.js
+│       ├── CategoryService.test.js
+│       ├── ProductService.test.js
 │       └── script.test.js
 ├── docs
 │   ├── ADR

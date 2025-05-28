@@ -1,7 +1,6 @@
 import sequelize from './database.js';
-import CategoryController from './controllers/CategoryController.js';
 import inquirer from 'inquirer';
-import ProductController from './controllers/ProductController.js';
+import ProductService from './services/ProductService.js';
 
 
 (async () => {
@@ -45,7 +44,7 @@ async function menu() {
             message: 'Nom du produit :'
           });
           try {
-            await ProductController.searchProductByName(name);
+            await ProductService.searchProductByName(name);
           } catch (error) {
             console.error('Erreur lors de la recherche du produit :', error);
           }
@@ -57,7 +56,7 @@ async function menu() {
             message: 'Id du produit :'
           });
           try {
-            await ProductController.searchProductById(id);
+            await ProductService.searchProductById(id);
           } catch (error) {
             console.error('Erreur lors de la recherche du produit :', error);
           }
@@ -69,7 +68,7 @@ async function menu() {
             message: 'Nom de la catégorie :'
           });
           try {
-            await ProductController.searchProductByCategory(category);
+            await ProductService.searchProductByCategory(category);
           } catch (error) {
             console.error('Erreur lors de la recherche du produit :', error);
           }
@@ -102,7 +101,7 @@ async function menu() {
 
       try {
         await
-          ProductController.createProduct(name, price, stockQuantity, categoryName);;
+          ProductService.createProduct(name, price, stockQuantity, categoryName);;
       } catch (error) {
         console.error('Erreur lors de l\'ajout du produit :', error);
       }
@@ -121,7 +120,7 @@ async function menu() {
         }
       ]);
       try {
-        await ProductController.returnProduct(productId, quantity);
+        await ProductService.returnProduct(productId, quantity);
       }
       catch (error) {
         console.error('Erreur lors du retour du produit :', error);
@@ -129,7 +128,7 @@ async function menu() {
       break;
     case 'Consulter les produits':
       try {
-        await ProductController.getAllProducts();
+        await ProductService.getAllProducts();
       } catch (error) {
         console.error('Erreur lors de la recherche des produits :', error);
       }

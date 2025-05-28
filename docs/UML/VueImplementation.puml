@@ -1,12 +1,12 @@
 @startuml ComposantsPOS
 
 package "Application POS (Node.js)" {
-  [Console UI (Inquirer.js)] --> [Controller Produit]
-  [Console UI (Inquirer.js)] --> [Controller Catégorie]
+  [Console UI (Inquirer.js)] --> [Produit Service]
+  [Console UI (Inquirer.js)] --> [Catégorie Service]
 }
 
-[Controller Produit] --> [Modèle Sequelize: Product]
-[Controller Catégorie] --> [Modèle Sequelize: Category]
+[Produit Service] --> [Modèle Sequelize: Product]
+[Catégorie Service] --> [Modèle Sequelize: Category]
 
 database "Base de données PostgreSQL" as DB
 

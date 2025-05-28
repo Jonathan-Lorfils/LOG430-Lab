@@ -1,10 +1,10 @@
-import ProductController from "../src/controllers/ProductController";
-import Product from "../src/models/Product";
-import sequelize from "../src/database";
+import ProductService from "../src/services/ProductService.js";
+import Product from "../src/models/Product.js";
+import sequelize from "../src/database.js";
 import { expect, jest } from "@jest/globals";
-import Category from "../src/models/Category";
+import Category from "../src/models/Category.js";
 
-describe("ProductController", () => {
+describe("ProductService", () => {
     let consoleSpy;
 
     beforeEach(() => {
@@ -31,7 +31,7 @@ describe("ProductController", () => {
         const mockFindOne = jest.fn().mockResolvedValue(mockProduct);
         Product.findOne = mockFindOne;
 
-        await ProductController.searchProductByName("Laptop");
+        await ProductService.searchProductByName("Laptop");
 
         expect(mockFindOne).toHaveBeenCalledWith({
             where: { name: "Laptop" },
@@ -50,7 +50,7 @@ describe("ProductController", () => {
         const mockFindOne = jest.fn().mockResolvedValue(mockProduct);
         Product.findOne = mockFindOne;
 
-        await ProductController.searchProductById(1);
+        await ProductService.searchProductById(1);
 
         expect(mockFindOne).toHaveBeenCalledWith({
             where: { id: 1 },
@@ -79,7 +79,7 @@ describe("ProductController", () => {
             category: { name: "Electronics" },
         }]);
         Product.findAll = mockFindOne;
-        await ProductController.searchProductByCategory("Electronics");
+        await ProductService.searchProductByCategory("Electronics");
         expect(mockFindOneCategory).toHaveBeenCalledWith({
             where: { name: "Electronics" },
         });
@@ -106,7 +106,7 @@ describe("ProductController", () => {
         });
         Product.create = mockCreate;
 
-        await ProductController.createProduct("Iphone", 999, 20, "Electronics");
+        await ProductService.createProduct("Iphone", 999, 20, "Electronics");
 
         expect(mockFindOneCategory).toHaveBeenCalledWith({
             where: { name: "Electronics" },
@@ -140,7 +140,7 @@ describe("ProductController", () => {
         const mockFindAll = jest.fn().mockResolvedValue(mockProducts);
         Product.findAll = mockFindAll;
 
-        await ProductController.getAllProducts();
+        await ProductService.getAllProducts();
 
         expect(mockFindAll).toHaveBeenCalled();
         expect(consoleSpy).toHaveBeenCalledWith("ID: 1, Nom: Iphone, Prix: 999, Quantité: 20, Catégorie: Electronics");
@@ -159,7 +159,7 @@ describe("ProductController", () => {
         const mockFindOne = jest.fn().mockResolvedValue(mockProduct);
         Product.findOne = mockFindOne;
 
-        await ProductController.returnProduct(1, 5);
+        await ProductService.returnProduct(1, 5);
 
         expect(mockFindOne).toHaveBeenCalledWith({
             where: { id: 1 },

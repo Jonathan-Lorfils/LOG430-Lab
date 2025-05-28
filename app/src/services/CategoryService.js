@@ -1,7 +1,7 @@
 import Category from '../models/Category.js';
 import sequelize from '../database.js';
 
-const CategoryController = {
+const CategoryService = {
     async createCategory(categoryName) {
         const t = await sequelize.transaction();
 
@@ -21,4 +21,4 @@ const CategoryController = {
     }
 };
 
-export default CategoryController;
+export default CategoryService;

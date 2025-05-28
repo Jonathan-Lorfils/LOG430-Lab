@@ -1,9 +1,9 @@
-import CategoryController from '../src/controllers/CategoryController.js';
+import CategoryService from '../src/services/CategoryService.js'
 import Category from '../src/models/Category.js';
 import { jest } from '@jest/globals';
 import sequelize from '../src/database.js';
 
-describe('CategoryController', () => {
+describe('CategoryService', () => {
     let consoleSpy;
 
     beforeEach(() => {
@@ -24,7 +24,7 @@ describe('CategoryController', () => {
         const mockCreate = jest.fn().mockResolvedValue(mockCategory);
         Category.create = mockCreate;
 
-        const result = await CategoryController.createCategory('Electronics');
+        const result = await CategoryService.createCategory('Electronics');
 
         expect(mockCreate).toHaveBeenCalledWith({ name: 'Electronics' }, { transaction: expect.any(Object) });
         expect(result).toEqual(mockCategory);

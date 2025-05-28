@@ -1,9 +1,9 @@
 import Product from '../models/Product.js';
 import sequelize from '../database.js';
 import Category from '../models/Category.js';
-import CategoryController from './CategoryController.js';
+import CategoryService from './CategoryService.js';
 
-const ProductController = {
+const ProductService = {
     async createProduct(name, price, stockQuantity, categoryName) {
         let categoryId = null;
         const t = await sequelize.transaction()
@@ -18,7 +18,7 @@ const ProductController = {
             if (category) {
                 categoryId = category.id;
             } else {
-                const newCategory = await CategoryController.createCategory(categoryName);
+                const newCategory = await CategoryService.createCategory(categoryName);
                 categoryId = newCategory.id;
             }
 
@@ -47,7 +47,7 @@ const ProductController = {
             });
 
             if (product) {
-                console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
+                this.displayProduct(product);
             } else {
                 console.log('Product not found');
             }
@@ -66,7 +66,7 @@ const ProductController = {
             });
 
             if (product) {
-                console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
+                this.displayProduct(product);
             } else {
                 console.log('Product not found');
             }
@@ -93,7 +93,7 @@ const ProductController = {
 
                 if (products.length > 0) {
                     products.forEach(product => {
-                        console.log(`Produit trouvé : ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product?.category ? product.category.name : 'Aucune'}`);
+                        this.displayProduct(product);
                     });
                 } else {
                     console.log('No products found in this category');
@@ -118,7 +118,7 @@ const ProductController = {
 
             if (products.length > 0) {
                 products.forEach(product => {
-                    console.log(`ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product.category.name}`);
+                    this.displayProduct(product);
                 });
                 return products;
             } else {
@@ -149,7 +149,11 @@ const ProductController = {
             console.error('Error returning product:', error);
             throw error;
         }
+    },
+
+    displayProduct(product) {
+        console.log(`ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product?.category ? product.category.name : 'Aucune'}`);
     }
 };
 
-export default ProductController;
+export default ProductService;
