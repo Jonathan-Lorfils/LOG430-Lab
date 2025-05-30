@@ -37,3 +37,4 @@ const SaleLine = sequelize.define(
     timestamps: true
 }
 );
+export default SaleLine;

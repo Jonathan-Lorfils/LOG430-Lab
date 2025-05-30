@@ -12,7 +12,7 @@ import ProductService from './services/ProductService.js';
   }
 })();
 
-await sequelize.sync({}) // Synchronize the database
+await sequelize.sync({ force: true });
 
 async function menu() {
   const { action } = await inquirer.prompt({

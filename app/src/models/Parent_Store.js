@@ -1,5 +1,7 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
+import Store from './Store.js';
+import Warehouse from './Warehouse.js';
 
 const Parent_Store = sequelize.define(
     'Parent_Store', {
@@ -21,3 +23,5 @@ const Parent_Store = sequelize.define(
     timestamps: true
 }
 );
+
+export default Parent_Store;

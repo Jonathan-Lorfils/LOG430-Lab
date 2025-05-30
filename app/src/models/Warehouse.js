@@ -26,6 +26,9 @@ const Warehouse = sequelize.define(
     },
 }, {
     tableName: 'warehouses',
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true,
 }
 );
+
+export default Warehouse;

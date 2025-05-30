@@ -1,5 +1,6 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
+import ProductStock from './ProductStock.js';
 
 const Product = sequelize.define(
     'Product', {
@@ -33,13 +34,5 @@ const Product = sequelize.define(
     timestamps: true
 }
 );
-
-// Define the association with Category
-import Category from './Category.js';
-Product.belongsTo(Category, {
-    foreignKey: 'categoryId',
-    targetKey: 'id',
-    as: 'category'
-});
 
 export default Product;

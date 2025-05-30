@@ -11,7 +11,6 @@ const CategoryService = {
             }, { transaction: t });
 
             await t.commit();
-            console.log('Category created successfully:');
             return category;
         } catch (error) {
             await t.rollback();

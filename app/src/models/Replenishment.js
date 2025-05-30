@@ -1,29 +1,37 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 
-const ProductStock = sequelize.define(
-    'ProductStock', {
+const Replenishment = sequelize.define(
+    'Replenishment', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    productId: {
+    productStockId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'products',
+            model: 'product_stocks',
+            key: 'id'
+        }
+    },
+    storeId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'parent_stores',
             key: 'id'
         }
     },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false
-    },
+    }
 }, {
-    tableName: 'product_stocks',
+    tableName: 'replenishments',
     timestamps: true
-});
+}
+);
 
-
-export default ProductStock;
+export default Replenishment;

@@ -1,3 +1,4 @@
+import ProductStock from '../../../../../../../../ÉTS/Été 2025/LOG430/Labo 00/LOG430-Lab/app/src/models/ProductStock.js';
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 
@@ -13,7 +14,7 @@ const Store = sequelize.define(
         allowNull: false
     },
     address: {
-        type: DataTypes.STxRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     parentStoreId: {
@@ -26,6 +27,9 @@ const Store = sequelize.define(
     },
 }, {
     tableName: 'stores',
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true,
 }
 );
+
+export default Store;

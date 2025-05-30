@@ -30,7 +30,7 @@ const ProductService = {
             }, { transaction: t });
 
             await t.commit();
-            console.log('Produit ajouté avec succès !')
+            return product;
         } catch (error) {
             await t.rollback();
             console.error('Error creating product:', error);
@@ -47,9 +47,9 @@ const ProductService = {
             });
 
             if (product) {
-                this.displayProduct(product);
+                return product
             } else {
-                console.log('Product not found');
+                return null;
             }
         } catch (error) {
             console.error('Error searching for product:', error);
@@ -66,9 +66,9 @@ const ProductService = {
             });
 
             if (product) {
-                this.displayProduct(product);
+                return product
             } else {
-                console.log('Product not found');
+                return null;
             }
         } catch (error) {
             console.error('Error searching for product:', error);
@@ -92,11 +92,9 @@ const ProductService = {
                 });
 
                 if (products.length > 0) {
-                    products.forEach(product => {
-                        this.displayProduct(product);
-                    });
+                    return products
                 } else {
-                    console.log('No products found in this category');
+                    return null;
                 }
             } else {
                 console.log('Category not found');
@@ -117,42 +115,14 @@ const ProductService = {
             });
 
             if (products.length > 0) {
-                products.forEach(product => {
-                    this.displayProduct(product);
-                });
                 return products;
             } else {
-                console.log('No products found');
+                return null;
             }
         } catch (error) {
             console.error('Error fetching products:', error);
             throw error;
         }
-    },
-
-    async returnProduct(id, quantity) {
-        try {
-            const product = await Product.findOne({
-                where: {
-                    id: id
-                }
-            });
-
-            if (product) {
-                product.stockQuantity = parseInt(product.stockQuantity) + parseInt(quantity);
-                await product.save();
-                console.log('Produit retourné avec succès !');
-            } else {
-                console.log('Product not found');
-            }
-        } catch (error) {
-            console.error('Error returning product:', error);
-            throw error;
-        }
-    },
-
-    displayProduct(product) {
-        console.log(`ID: ${product.id}, Nom: ${product.name}, Prix: ${product.price}, Quantité: ${product.stockQuantity}, Catégorie: ${product?.category ? product.category.name : 'Aucune'}`);
     }
 };
 
