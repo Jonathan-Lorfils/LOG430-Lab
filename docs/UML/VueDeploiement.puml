@@ -5,16 +5,25 @@ skinparam node {
     BorderColor Black
 }
 
-node "Node.js" {
-    artifact "Application POS"
+node "Caisse 1 (PC)" {
+    artifact "Application POS 1"
 }
 
-' Base de données PostgreSQL
+node "Caisse 2 (PC)" {
+    artifact "Application POS 2"
+}
+
+node "Caisse 3 (PC)" {
+    artifact "Application POS 3"
+}
+
 node "Serveur BD" {
     database "PostgreSQL"
 }
 
-' Connexions entre les artefacts
-"Application POS" --> "PostgreSQL" : Requêtes via ORM Sequelize
+' Connexions entre les artefacts et la base de données
+"Application POS 1" -- "PostgreSQL"
+"Application POS 2" -- "PostgreSQL"
+"Application POS 3" -- "PostgreSQL"
 
 @enduml
