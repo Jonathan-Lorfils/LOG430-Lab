@@ -23,4 +23,7 @@ const Sale = sequelize.define(
 }
 );
 
+Sale.hasMany(SaleLine)
+SaleLine.belongsTo(Sale);
+
 export default Sale;

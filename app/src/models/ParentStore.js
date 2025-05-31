@@ -24,4 +24,9 @@ const ParentStore = sequelize.define(
 }
 );
 
+ParentStore.hasMany(Store);
+Store.belongsTo(ParentStore);
+ParentStore.hasMany(Warehouse);
+Warehouse.belongsTo(ParentStore);
+
 export default ParentStore;

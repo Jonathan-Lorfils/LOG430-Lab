@@ -20,4 +20,10 @@ const Product = sequelize.define(
 }
 );
 
+Product.hasMany(Stock);
+Stock.belongsTo(Product);
+
+Product.hasMany(SaleLine);
+SaleLine.belongsTo(Product);
+
 export default Product;

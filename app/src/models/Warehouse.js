@@ -23,4 +23,7 @@ const Warehouse = sequelize.define(
 }
 );
 
+Warehouse.hasMany(Stock)
+Stock.belongsTo(Warehouse);
+
 export default Warehouse;

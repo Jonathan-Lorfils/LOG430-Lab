@@ -24,4 +24,10 @@ const Store = sequelize.define(
 }
 );
 
+Store.hasMany(Stock);
+Stock.belongsTo(Store);
+
+Store.hasMany(Sale);
+Sale.belongsTo(Store);
+
 export default Store;
