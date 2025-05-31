@@ -1,14 +1,7 @@
 import sequelize from './database.js';
 import inquirer from 'inquirer';
 import ProductService from './services/ProductService.js';
-import './models/Product.js';
-import './models/Category.js';
-import './models/Stock.js';
-import './models/Warehouse.js';
-import './models/ParentStore.js';
-import './models/Sale.js'
-import './models/SaleLine.js';
-import './models/Store.js';
+import './models/index.js';
 
 (async () => {
   try {
