@@ -1,23 +1,22 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
-import Stock from './Stock.js';
-import SaleLine from './SaleLine.js';
 
-const Product = sequelize.define(
-    'Product', {
+const Stock = sequelize.define(
+    'Stock', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
-        type: DataTypes.STRING,
+    quantity: {
+        type: DataTypes.INTEGER,
         allowNull: false
     }
 }, {
-    tableName: 'products',
+    tableName: 'stocks',
     timestamps: true
 }
 );
 
-export default Product;
+
+export default Stock;

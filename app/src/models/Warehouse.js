@@ -1,5 +1,6 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
+import Stock from './Stock.js';
 
 const Warehouse = sequelize.define(
     'Warehouse', {
@@ -13,21 +14,12 @@ const Warehouse = sequelize.define(
         allowNull: false
     },
     address: {
-        type: DataTypes.STxRING,
+        type: DataTypes.STRING,
         allowNull: false
-    },
-    parentStoreId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'parent_stores',
-            key: 'id'
-        }
     },
 }, {
     tableName: 'warehouses',
     timestamps: true,
-    freezeTableName: true,
 }
 );
 

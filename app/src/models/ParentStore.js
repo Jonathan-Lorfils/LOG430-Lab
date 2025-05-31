@@ -3,8 +3,8 @@ import { DataTypes } from 'sequelize';
 import Store from './Store.js';
 import Warehouse from './Warehouse.js';
 
-const Parent_Store = sequelize.define(
-    'Parent_Store', {
+const ParentStore = sequelize.define(
+    'ParentStore', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -19,9 +19,9 @@ const Parent_Store = sequelize.define(
         allowNull: false
     }
 }, {
-    tableName: 'parent_stores',
+    tableName: 'parentStores',
     timestamps: true
 }
 );
 
-export default Parent_Store;
+export default ParentStore;

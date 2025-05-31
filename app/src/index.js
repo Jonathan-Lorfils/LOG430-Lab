@@ -1,7 +1,14 @@
 import sequelize from './database.js';
 import inquirer from 'inquirer';
 import ProductService from './services/ProductService.js';
-
+import './models/Product.js';
+import './models/Category.js';
+import './models/Stock.js';
+import './models/Warehouse.js';
+import './models/ParentStore.js';
+import './models/Sale.js'
+import './models/SaleLine.js';
+import './models/Store.js';
 
 (async () => {
   try {
@@ -12,7 +19,9 @@ import ProductService from './services/ProductService.js';
   }
 })();
 
+
 await sequelize.sync({ force: true });
+console.log('Base de données synchronisée avec succès !');
 
 async function menu() {
   const { action } = await inquirer.prompt({
@@ -44,7 +53,7 @@ async function menu() {
             message: 'Nom du produit :'
           });
           try {
-            await ProductService.searchProductByName(name);
+            console.log(await ProductService.searchProductByName(name));
           } catch (error) {
             console.error('Erreur lors de la recherche du produit :', error);
           }
@@ -56,7 +65,7 @@ async function menu() {
             message: 'Id du produit :'
           });
           try {
-            await ProductService.searchProductById(id);
+            console.log(await ProductService.searchProductById(id));
           } catch (error) {
             console.error('Erreur lors de la recherche du produit :', error);
           }
@@ -68,7 +77,7 @@ async function menu() {
             message: 'Nom de la catégorie :'
           });
           try {
-            await ProductService.searchProductByCategory(category);
+            console.log(await ProductService.searchProductByCategory(category));
           } catch (error) {
             console.error('Erreur lors de la recherche du produit :', error);
           }
@@ -100,8 +109,7 @@ async function menu() {
       ]);
 
       try {
-        await
-          ProductService.createProduct(name, price, stockQuantity, categoryName);;
+        console.log(await ProductService.createProduct(name, price, stockQuantity, categoryName));
       } catch (error) {
         console.error('Erreur lors de l\'ajout du produit :', error);
       }
@@ -120,7 +128,7 @@ async function menu() {
         }
       ]);
       try {
-        await ProductService.returnProduct(productId, quantity);
+        console.log(await ProductService.returnProduct(productId, quantity));
       }
       catch (error) {
         console.error('Erreur lors du retour du produit :', error);

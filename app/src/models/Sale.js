@@ -1,5 +1,6 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
+import SaleLine from './SaleLine.js';
 
 const Sale = sequelize.define(
     'Sale', {
@@ -7,14 +8,6 @@ const Sale = sequelize.define(
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    },
-    storeId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'stores',
-            key: 'id'
-        }
     },
     subTotal: {
         type: DataTypes.DECIMAL(10, 2),
@@ -29,3 +22,5 @@ const Sale = sequelize.define(
     timestamps: true
 }
 );
+
+export default Sale;

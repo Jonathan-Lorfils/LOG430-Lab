@@ -8,22 +8,6 @@ const SaleLine = sequelize.define(
         primaryKey: true,
         autoIncrement: true
     },
-    saleId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'sales',
-            key: 'id'
-        }
-    },
-    productId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'products',
-            key: 'id'
-        }
-    },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -33,7 +17,7 @@ const SaleLine = sequelize.define(
         allowNull: false
     }
 }, {
-    tableName: 'sale_lines',
+    tableName: 'saleLines',
     timestamps: true
 }
 );

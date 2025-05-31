@@ -1,6 +1,7 @@
-import ProductStock from '../../../../../../../../ÉTS/Été 2025/LOG430/Labo 00/LOG430-Lab/app/src/models/ProductStock.js';
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
+import Stock from './Stock.js';
+import Sale from './Sale.js';
 
 const Store = sequelize.define(
     'Store', {
@@ -16,19 +17,10 @@ const Store = sequelize.define(
     address: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    parentStoreId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'parent_stores',
-            key: 'id'
-        }
-    },
+    }
 }, {
     tableName: 'stores',
     timestamps: true,
-    freezeTableName: true,
 }
 );
 
