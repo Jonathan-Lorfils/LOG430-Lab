@@ -2,6 +2,8 @@ import sequelize from './database.js';
 import inquirer from 'inquirer';
 import ProductService from './services/ProductService.js';
 import './models/index.js';
+import CreateFakeData from './CreateFakeData.js';
+import ParentStoreService from './services/ParentStoreService.js';
 
 (async () => {
   try {
@@ -12,9 +14,10 @@ import './models/index.js';
   }
 })();
 
-
 await sequelize.sync({ force: true });
 console.log('Base de données synchronisée avec succès !');
+
+CreateFakeData.generate()
 
 async function menu() {
   const { action } = await inquirer.prompt({

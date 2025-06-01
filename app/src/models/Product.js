@@ -2,6 +2,7 @@ import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 import Stock from './Stock.js';
 import SaleLine from './SaleLine.js';
+import Replenishment from './Replenishment.js';
 
 const Product = sequelize.define(
     'Product', {

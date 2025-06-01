@@ -1,25 +1,26 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
-import Replenishment from './Replenishment.js';
 
-const Stock = sequelize.define(
-    'Stock', {
+const Replenishment = sequelize.define(
+    'Replenishment', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    quantity: {
+    requestedQuantity: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'pending'
     }
 }, {
-    tableName: 'stocks',
+    tableName: 'replenishments',
     timestamps: true
 }
 );
 
-Stock.hasMany(Replenishment);
-Replenishment.belongsTo(Stock);
-
-export default Stock;
+export default Replenishment;
