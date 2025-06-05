@@ -10,7 +10,18 @@ const StockService = {
             throw new Error('Stock not found');
         }
         return stock;
-    }
+    },
+
+    async getStocksByStoreId(storeId) {
+        const stocks = await Stock.findAll({
+            where: { StoreId: storeId },
+            include: [Product]
+        });
+        if (stocks.length === 0) {
+            throw new Error('No stocks found for this store');
+        }
+        return stocks;
+    },
 };
 
 export default StockService;

@@ -138,8 +138,8 @@ const CreateFakeData = {
 
         await this.createSale(1, 100.00);
 
-        await this.createSaleLine(1, 1, 2, 10.99);
-        await this.createSaleLine(1, 2, 1, 15.49);
+        await this.createSaleLine(1, 1, 50, 10.99);
+        await this.createSaleLine(1, 2, 299, 15.49);
         await this.createSaleLine(1, 3, 3, 7.99);
 
         await this.createStockStore(1, 1, 50);

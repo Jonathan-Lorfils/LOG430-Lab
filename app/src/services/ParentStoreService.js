@@ -5,8 +5,19 @@ import SaleLine from '../models/SaleLine.js';
 import Product from '../models/Product.js';
 import Warehouse from '../models/Warehouse.js';
 import Stock from '../models/Stock.js';
+import { get } from 'http';
 
 const ParentStoreService = {
+    async getAllStores() {
+        try {
+            const stores = await Store.findAll();
+            return stores;
+        } catch (error) {
+            console.error('Error fetching stores:', error);
+            throw error;
+        }
+    },
+
     async getAllStoresSalesByParentStoreId(id) {
         try {
             const stores = await Store.findAll({
@@ -48,49 +59,6 @@ const ParentStoreService = {
             return stores;
         } catch (error) {
             console.error('Error fetching store stocks:', error);
-            throw error;
-        }
-    },
-
-    async getMostSoldProductsByStoreId(storeId) {
-        try {
-            const store = await Store.findByPk(storeId, {
-                include: [
-                    {
-                        model: Sale,
-                        include: [
-                            {
-                                model: SaleLine,
-                                include: [Product]
-                            }
-                        ]
-                    }
-                ]
-            });
-
-            if (!store) {
-                throw new Error('Store not found');
-            }
-
-            const productSales = {};
-
-            store.Sales.forEach(sale => {
-                sale.SaleLines.forEach(saleLine => {
-                    const productName = saleLine.Product.name;
-                    if (!productSales[productName]) {
-                        productSales[productName] = 0;
-                    }
-                    productSales[productName] += saleLine.quantity;
-                });
-            });
-
-            const sortedProducts = Object.entries(productSales)
-                .sort(([, a], [, b]) => b - a)
-                .map(([name, quantity]) => ({ name, quantity }));
-
-            return sortedProducts;
-        } catch (error) {
-            console.error('Error fetching most sold products:', error);
             throw error;
         }
     },

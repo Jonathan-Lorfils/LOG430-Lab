@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport des Magasins</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a button {
+            padding: 8px 16px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        a button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Rapport des Magasins</h1>
+
+    <% if (stores.length===0) { %>
+        <p style="text-align: center;">Aucun magasin disponible.</p>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Adresse</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% stores.forEach(store=> { %>
+                        <tr>
+                            <td>
+                                <%= store.name %>
+                            </td>
+                            <td>
+                                <%= store.address %>
+                            </td>
+                            <td>
+                                <a href="/store/details/<%= store.id %>">
+                                    <button>Détails</button>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+</body>
+
+</html>

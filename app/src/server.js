@@ -4,6 +4,7 @@ import sequelize from './database.js';
 import CreateFakeData from './CreateFakeData.js';
 import WarehouseRouter from './routes/WarehouseRoutes.js';
 import ReplenishmentRouter from './routes/ReplenishmentRoutes.js';
+import StoreRouter from './routes/StoreRoutes.js';
 
 (async () => {
     try {
@@ -31,9 +32,6 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'src', 'views'));
 
-// Routes
-// app.use('/store', storeRoutes);
-
 app.get('/', (req, res) => {
     res.render('index', { title: 'Bienvenue dans l\'application de gestion de magasin' });
 }
@@ -52,11 +50,9 @@ app.get('/login', (req, res) => {
 
 app.use('/warehouse', WarehouseRouter);
 app.use('/replenishment', ReplenishmentRouter);
+app.use('/store', StoreRouter);
 
-
-// DB sync + start
-sequelize.sync().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Serveur démarré sur http://localhost:${PORT}`);
-    });
+app.listen(PORT, () => {
+    console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
+

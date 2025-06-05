@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Détails du magasin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        .store-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 90%;
+            margin: auto;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .sale-lines {
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-btn a {
+            text-decoration: none;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+        }
+
+        .back-btn a:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Détails du magasin</h1>
+
+    <div class="store-info">
+        <p><strong>Nom :</strong>
+            <%= store.name %>
+        </p>
+        <p><strong>Adresse :</strong>
+            <%= store.address %>
+        </p>
+    </div>
+
+    <h2>Ventes</h2>
+
+    <% if (sales.length===0) { %>
+        <p style="text-align: center;">Aucune vente enregistrée pour ce magasin.</p>
+        <% } else { %>
+            <% sales.forEach((sale, index)=> { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="4">Vente #<%= sale.id %> — <%= new Date(sale.saleDate).toLocaleString() %>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix Unitaire</th>
+                            <th>Total Ligne</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% sale.SaleLines.forEach(line=> { %>
+                            <tr>
+                                <td>
+                                    <%= line.Product.name %>
+                                </td>
+                                <td>
+                                    <%= line.quantity %>
+                                </td>
+                                <td>
+                                    <%= line.price %>$
+                                </td>
+                                <td>
+                                    <%= (line.quantity * line.price) %>$
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <tr>
+                                    <td colspan="3"><strong>Sous-total de la vente</strong></td>
+                                    <td><strong>
+                                            <%= sale.subTotal %>$
+                                        </strong></td>
+                                </tr>
+                    </tbody>
+                </table>
+                <% }) %>
+                    <% } %>
+
+                        <h2>Produits les plus vendus</h2>
+
+                        <% if (mostSoldProducts.length===0) { %>
+                            <p style="text-align: center;">Aucun produit vendu pour ce magasin.</p>
+                            <% } else { %>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Produit</th>
+                                            <th>Quantité Totale Vendue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% mostSoldProducts.forEach(product=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= product.name %>
+                                                </td>
+                                                <td>
+                                                    <%= product.quantity %>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                                <% } %>
+
+                                    <h2>Stocks du magasin</h2>
+
+                                    <% if (stocks.length===0) { %>
+                                        <p style="text-align: center;">Aucun produit en stock pour ce magasin.</p>
+                                        <% } else { %>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produit</th>
+                                                        <th>Quantité en stock</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% stocks.forEach(stock=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= stock.Product.name %>
+                                                            </td>
+                                                            <td>
+                                                                <%= stock.quantity %>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                            <% } %>
+
+                                                <div class="back-btn">
+                                                    <a href="/store/allStores">Retour au rapport</a>
+                                                </div>
+
+</body>
+
+</html>
