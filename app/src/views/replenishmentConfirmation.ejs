@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de Réapprovisionnement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .confirmation-box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        h1 {
+            color: #2e8b57;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .btn-retour {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2e8b57;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-retour:hover {
+            background-color: #256d48;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="confirmation-box">
+        <h1>Réapprovisionnement confirmé ✅</h1>
+        <p><strong>Quantité :</strong>
+            <%= replenishment.requestedQuantity %>
+        </p>
+        <p><strong>Status :</strong>
+            <%= replenishment.status %>
+        </p>
+        <br>
+        <a href="/warehouse/stocks" class="btn-retour">Retour à la liste</a>
+    </div>
+</body>
+
+</html>

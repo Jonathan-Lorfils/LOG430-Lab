@@ -1,28 +1,33 @@
+import Replenishment from '../models/Replenishment.js';
 import sequelize from '../database.js';
 
 const ReplenishmentService = {
-    async createReplenishment(storeId, productId, requestedQuantity) {
-        const Replenishment = sequelize.models.Replenishment;
-        const Stock = sequelize.models.Stock;
+    async createReplenishment(stockid, requestedQuantity) {
+        const t = await sequelize.transaction();
+        try {
+            const replenishment = await Replenishment.create({
+                StockId: stockid,
+                requestedQuantity: requestedQuantity,
+                status: 'pending'
+            }, { transaction: t });
 
-        // Find the stock for the given store and product
-        const stock = await Stock.findOne({
-            where: {
-                storeId: storeId,
-                productId: productId
-            }
-        });
+            await t.commit();
+            return replenishment;
+        } catch (error) {
+            await t.rollback();
+            console.error('Error creating replenishment:', error);
+            throw error;
+        }
+    },
 
-        if (!stock) {
-            throw new Error('Stock not found for the given store and product');
+    async updateReplenishmentStatus(replenishmentId, status) {
+        const replenishment = await Replenishment.findByPk(replenishmentId);
+        if (!replenishment) {
+            throw new Error('Replenishment not found');
         }
 
-        // Create a new replenishment record
-        const replenishment = await Replenishment.create({
-            stockId: stock.id,
-            requestedQuantity: requestedQuantity,
-            status: 'pending'
-        });
+        replenishment.status = status;
+        await replenishment.save();
 
         return replenishment;
     }

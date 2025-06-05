@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Réapprovisionnement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 80px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        form {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function redirectToConfirmationPage() {
+            const inputValue = document.getElementById("quantity").value;
+            if (inputValue) {
+                window.location.href = `/replenishment/create/${inputValue}/<%= stock.id %>`;
+            } else {
+                alert("Veuillez entrer une quantitée valide.");
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Réapprovisionnement</h1>
+    <p>Produit : <%= product.name %>
+    </p>
+
+
+    <input type="text" value="<%= product.name %>">
+    <label for="quantity">Quantité :</label>
+    <input type="number" id="quantity" name="quantity" min="1" required>
+    <br>
+    <button type="submit" onclick="redirectToConfirmationPage()">Confirmer</button>
+    <a href="/warehouse/stocks">
+        <button type="button">Annuler</button>
+    </a>
+
+</body>
+
+</html>

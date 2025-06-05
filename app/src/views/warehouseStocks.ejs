@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stock de l'entrepôt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        form {
+            display: inline;
+        }
+
+        button {
+            padding: 6px 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Stock de l'entrepôt <%= warehouse.name %>
+    </h1>
+    <p style="text-align:center;">Adresse : <%= warehouse.address %>
+    </p>
+
+    <% if (stocks.length===0) { %>
+        <p style="text-align:center;">Aucun stock trouvé pour cet entrepôt.</p>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom du produit</th>
+                        <th>Quantité</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% stocks.forEach(stock=> { %>
+                        <tr>
+                            <td>
+                                <%= stock.Product.name %>
+                            </td>
+                            <td>
+                                <%= stock.quantity %>
+                            </td>
+                            <td>
+                                <% if (stock.quantity===0) { %>
+                                    <a href="/replenishment/form/<%= stock.id %>">
+                                        <button>Réapprovisionner</button>
+                                    </a>
+                                    <% } else { %>
+                                        -
+                                        <% } %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+</body>
+
+</html>

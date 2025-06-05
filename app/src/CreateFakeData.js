@@ -48,11 +48,10 @@ const CreateFakeData = {
         }
     },
 
-    async createProduct(name, price, stockQuantity, categoryName) {
+    async createProduct(name, stockQuantity, categoryName) {
         try {
             const product = await Product.create({
                 name: name,
-                price: price,
                 stockQuantity: stockQuantity,
                 categoryName: categoryName
             });
@@ -92,11 +91,25 @@ const CreateFakeData = {
         }
     },
 
-    async createStock(productId, storeId, quantity) {
+    async createStockStore(productId, storeId, quantity) {
         try {
             const stock = Stock.create({
                 ProductId: productId,
                 StoreId: storeId,
+                quantity: quantity
+            });
+            return stock;
+        } catch (error) {
+            console.error('Error creating stock:', error);
+            throw error;
+        }
+    },
+
+    async createStockWarehouse(productId, warehouseId, quantity) {
+        try {
+            const stock = Stock.create({
+                ProductId: productId,
+                WarehouseId: warehouseId,
                 quantity: quantity
             });
             return stock;
@@ -129,20 +142,17 @@ const CreateFakeData = {
         await this.createSaleLine(1, 2, 1, 15.49);
         await this.createSaleLine(1, 3, 3, 7.99);
 
-        await this.createStock(1, 1, 50);
-        await this.createStock(2, 1, 30);
-        await this.createStock(3, 2, 20);
-        await this.createStock(4, 2, 10);
-        await this.createStock(5, 3, 100);
+        await this.createStockStore(1, 1, 50);
+        await this.createStockStore(2, 1, 30);
+        await this.createStockStore(3, 2, 20);
+        await this.createStockStore(4, 2, 10);
+        await this.createStockStore(5, 3, 100);
 
-        console.log(await ParentStoreService.getMostSoldProductsByStoreId(1))
-
-        /*
-        const store = await ParentStoreService.getStoreById(1)
-        console.log(store.Sales)
-        console.log(store.Sales[0].SaleLines)
-        console.log(store.Sales[0].SaleLines[0].Product)
-        */
+        await this.createStockWarehouse(1, 1, 200);
+        await this.createStockWarehouse(2, 1, 150);
+        await this.createStockWarehouse(3, 1, 100);
+        await this.createStockWarehouse(4, 1, 50);
+        await this.createStockWarehouse(5, 1, 0);
     }
 }
 
