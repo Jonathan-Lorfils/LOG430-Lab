@@ -1,4 +1,3 @@
-import sequelize from './database.js';
 import ParentStore from './models/ParentStore.js';
 import Store from './models/Store.js';
 import Sale from './models/Sale.js';
@@ -6,7 +5,6 @@ import Product from './models/Product.js';
 import SaleLine from './models/SaleLine.js';
 import Stock from './models/Stock.js';
 import Warehouse from './models/Warehouse.js';
-import ParentStoreService from './services/ParentStoreService.js';
 
 const CreateFakeData = {
     async createParentStore(name, address) {
@@ -137,16 +135,23 @@ const CreateFakeData = {
         await this.createProduct('Product 5', 5.49, 150, 'Category B');
 
         await this.createSale(1, 100.00);
+        await this.createSale(2, 1000.00);
+        await this.createSale(3, 2340.00);
+        await this.createSale(4, 5630.00);
+        await this.createSale(5, 98317.00);
 
-        await this.createSaleLine(1, 1, 50, 10.99);
-        await this.createSaleLine(1, 2, 299, 15.49);
-        await this.createSaleLine(1, 3, 3, 7.99);
+        await this.createSaleLine(1, 1, 35, 10.99);
+        await this.createSaleLine(2, 2, 299, 15.49);
+        await this.createSaleLine(3, 3, 600, 7.99);
 
         await this.createStockStore(1, 1, 50);
         await this.createStockStore(2, 1, 30);
         await this.createStockStore(3, 2, 20);
         await this.createStockStore(4, 2, 10);
         await this.createStockStore(5, 3, 100);
+        await this.createStockStore(1, 1, 0);
+        await this.createStockStore(2, 2, 0);
+        await this.createStockStore(3, 3, 0);
 
         await this.createStockWarehouse(1, 1, 200);
         await this.createStockWarehouse(2, 1, 150);

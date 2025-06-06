@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Gestionnaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Dashboard du Gestionnaire</h1>
+
+    <!-- Chiffre d'affaires par magasin -->
+    <div class="section">
+        <h2>Chiffre d'affaires par magasin</h2>
+        <% if (storeRevenueByStore.length===0) { %>
+            <p class="no-data">Aucun chiffre d'affaires enregistré.</p>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Magasin</th>
+                            <th>Chiffre d'affaires ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% storeRevenueByStore.forEach(store=> { %>
+                            <tr>
+                                <td>
+                                    <%= store.storeName %>
+                                </td>
+                                <td>
+                                    <%= parseFloat(store.totalRevenue).toFixed(2) %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+    </div>
+
+    <!-- Produits en rupture de stock -->
+    <div class="section">
+        <h2>Produits en rupture de stock</h2>
+        <% if (outOfStockProducts.length===0) { %>
+            <p class="no-data">Aucun produit en rupture de stock.</p>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Magasin</th>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% outOfStockProducts.forEach(product=> { %>
+                            <tr>
+                                <td>
+                                    <%= product.storeName %>
+                                </td>
+                                <td>
+                                    <%= product.productName %>
+                                </td>
+                                <td>
+                                    <%= product.quantity %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+    </div>
+
+    <!-- Produits les plus vendus par magasin -->
+    <div class="section">
+        <h2>Produits les plus vendus par magasin</h2>
+        <% if (trendyProducts.length===0) { %>
+            <p class="no-data">Aucune donnée disponible.</p>
+            <% } else { %>
+                <% trendyProducts.forEach(store=> { %>
+                    <h3>
+                        <%= store.storeName %>
+                    </h3>
+                    <% if (store.mostSoldProducts.length===0) { %>
+                        <p class="no-data">Aucun produit vendu.</p>
+                        <% } else { %>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Quantité vendue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% store.mostSoldProducts.forEach(([productName, quantity])=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= productName %>
+                                            </td>
+                                            <td>
+                                                <%= quantity %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                            <% } %>
+                                <br />
+                                <% }) %>
+                                    <% } %>
+    </div>
+
+</body>
+
+</html>

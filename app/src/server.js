@@ -5,6 +5,7 @@ import CreateFakeData from './CreateFakeData.js';
 import WarehouseRouter from './routes/WarehouseRoutes.js';
 import ReplenishmentRouter from './routes/ReplenishmentRoutes.js';
 import StoreRouter from './routes/StoreRoutes.js';
+import ParentStoreRouter from './routes/ParentStoreRoutes.js'
 
 (async () => {
     try {
@@ -51,6 +52,7 @@ app.get('/login', (req, res) => {
 app.use('/warehouse', WarehouseRouter);
 app.use('/replenishment', ReplenishmentRouter);
 app.use('/store', StoreRouter);
+app.use('/parentStore', ParentStoreRouter)
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);

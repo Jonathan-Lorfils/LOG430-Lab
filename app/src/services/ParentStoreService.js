@@ -5,7 +5,8 @@ import SaleLine from '../models/SaleLine.js';
 import Product from '../models/Product.js';
 import Warehouse from '../models/Warehouse.js';
 import Stock from '../models/Stock.js';
-import { get } from 'http';
+import ParentStore from '../models/ParentStore.js'
+
 
 const ParentStoreService = {
     async getAllStores() {
@@ -39,7 +40,6 @@ const ParentStoreService = {
             console.error('Error fetching stores:', error);
             throw error;
         }
-
     },
 
     async getAllStoreStocksByParentStoreId(parentStoreId) {
@@ -83,10 +83,11 @@ const ParentStoreService = {
         }
     },
 
-    async getAllStoreRevenueByParentStoreId(parentStoreId) {
+    async getAllStoreRevenue() {
         try {
+            const parentStoreId = await ParentStore.findOne().then(parentStore => parentStore.id);
             const stores = await Store.findAll({
-                where: { ParentStoreId: parentStoreId },
+                where: { ParentStoreId: 1 },
                 include: [{
                     model: Sale,
                     attributes: ['subTotal']
@@ -101,6 +102,72 @@ const ParentStoreService = {
             return revenueByStore;
         } catch (error) {
             console.error('Error fetching store revenue:', error);
+            throw error;
+        }
+    },
+
+    async getAllStocksEmptyQuantityByParentStoreId() {
+        try {
+            const stores = await Store.findAll({
+                where: { ParentStoreId: 1 },
+                include: [{
+                    model: Stock,
+                    where: { quantity: 0 },
+                    include: [Product]
+                }]
+            });
+
+            const emptyStocks = stores.flatMap(store =>
+                store.Stocks.map(stock => ({
+                    storeName: store.name,
+                    productName: stock.Product.name,
+                    quantity: stock.quantity
+                }))
+            );
+
+            return emptyStocks;
+        } catch (error) {
+            console.error('Error fetching empty stocks:', error);
+            throw error;
+        }
+    },
+
+    async getStoresMostSoldProductsByParentStoreId() {
+        try {
+            const stores = await Store.findAll({
+                where: { ParentStoreId: 1 },
+                include: [{
+                    model: Sale,
+                    include: [{
+                        model: SaleLine,
+                        include: [Product]
+                    }]
+                }]
+            });
+
+            const mostSoldProducts = stores.map(store => {
+                const productSales = store.Sales.flatMap(sale =>
+                    sale.SaleLines.map(saleLine => ({
+                        productName: saleLine.Product.name,
+                        quantity: saleLine.quantity
+                    }))
+                );
+
+                const productSalesCount = productSales.reduce((acc, sale) => {
+                    acc[sale.productName] = (acc[sale.productName] || 0) + sale.quantity;
+                    return acc;
+                }, {});
+
+                const sortedProducts = Object.entries(productSalesCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                return { storeName: store.name, mostSoldProducts: sortedProducts };
+            });
+
+            return mostSoldProducts;
+        } catch (error) {
+            console.error('Error fetching most sold products:', error);
             throw error;
         }
     }
