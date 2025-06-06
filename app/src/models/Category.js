@@ -19,4 +19,7 @@ const Category = sequelize.define(
 }
 );
 
+Category.hasMany(Product);
+Product.belongsTo(Category);
+
 export default Category;

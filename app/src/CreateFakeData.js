@@ -5,6 +5,7 @@ import Product from './models/Product.js';
 import SaleLine from './models/SaleLine.js';
 import Stock from './models/Stock.js';
 import Warehouse from './models/Warehouse.js';
+import Category from './models/Category.js';
 
 const CreateFakeData = {
     async createParentStore(name, address) {
@@ -48,10 +49,17 @@ const CreateFakeData = {
 
     async createProduct(name, stockQuantity, categoryName) {
         try {
+            const category = await Category.findOrCreate({
+                where: { name: categoryName },
+                defaults: { name: categoryName }
+            });
+            if (!category || !category[0]) {
+                throw new Error('Category creation failed');
+            }
             const product = await Product.create({
                 name: name,
                 stockQuantity: stockQuantity,
-                categoryName: categoryName
+                CategoryId: category[0].id
             });
             return product;
         } catch (error) {
@@ -128,11 +136,11 @@ const CreateFakeData = {
 
         await this.createWarehouse('Warehouse 1', 'Warehouse St', 1);
 
-        await this.createProduct('Product 1', 10.99, 100, 'Category A');
-        await this.createProduct('Product 2', 15.49, 50, 'Category B');
-        await this.createProduct('Product 3', 7.99, 200, 'Category A');
-        await this.createProduct('Product 4', 20.00, 30, 'Category C');
-        await this.createProduct('Product 5', 5.49, 150, 'Category B');
+        await this.createProduct('Product 1', 100, 'Category A');
+        await this.createProduct('Product 2', 50, 'Category B');
+        await this.createProduct('Product 3', 200, 'Category A');
+        await this.createProduct('Product 4', 30, 'Category C');
+        await this.createProduct('Product 5', 150, 'Category B');
 
         await this.createSale(1, 100.00);
         await this.createSale(2, 1000.00);

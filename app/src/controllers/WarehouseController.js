@@ -1,4 +1,4 @@
-import WarehouseService from '../services/WahouseService.js';
+import WarehouseService from '../services/WarehouseService.js';
 
 const WarehouseController = {
     async getWarehouseStocks(req, res) {
