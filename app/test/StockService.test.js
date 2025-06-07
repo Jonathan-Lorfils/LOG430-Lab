@@ -62,14 +62,16 @@ describe("StockService", () => {
         expect(result).toEqual(mockStocks);
     });
 
-    it("getStocksByStoreId should throw an error if no stocks found", async () => {
+    it("getStocksByStoreId should return empty array if no stocks found", async () => {
         Stock.findAll = jest.fn().mockResolvedValue([]);
 
-        await expect(StockService.getStocksByStoreId(999)).rejects.toThrow('No stocks found for this store');
+        const result = await StockService.getStocksByStoreId(999);
 
         expect(Stock.findAll).toHaveBeenCalledWith({
             where: { StoreId: 999 },
             include: [Product]
         });
+
+        expect(result).toEqual([]);
     });
 });
