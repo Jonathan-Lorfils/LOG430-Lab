@@ -2,10 +2,10 @@
 left to right direction
 actor "Employe" as e
 rectangle "Application POS" {
-  usecase "Rechercher un produit" as UC1
-  usecase "Ajouter un produit" as UC2
-  usecase "Retourner un produit" as UC3
-  usecase "Consulter les produits" as UC4
+  usecase "Consulter le rapport des magasins" as UC1
+  usecase "Consulter les provisions de l'entrepot" as UC2
+  usecase "Faire une demande de réapprovsionnement" as UC3
+  usecase "Consulter le tableau de bord" as UC4
 }
 e -- UC1
 e -- UC2

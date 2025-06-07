@@ -5,25 +5,36 @@ skinparam node {
     BorderColor Black
 }
 
-node "Caisse 1 (PC)" {
-    artifact "Application POS 1"
+node "PC Magasin 1" {
+    artifact "Navigateur Web 1"
 }
 
-node "Caisse 2 (PC)" {
-    artifact "Application POS 2"
+node "PC Magasin 2" {
+    artifact "Navigateur Web 2"
 }
 
-node "Caisse 3 (PC)" {
-    artifact "Application POS 3"
+node "PC Magasin 3" {
+    artifact "Navigateur Web 3"
 }
 
-node "Serveur BD" {
+node "PC Magasin 4" {
+    artifact "Navigateur Web 4"
+}
+
+node "PC Magasin 5" {
+    artifact "Navigateur Web 5"
+}
+
+node "Serveur (VM)" {
+    artifact "Application POS"
     database "PostgreSQL"
-}
+} 
 
-' Connexions entre les artefacts et la base de données
-"Application POS 1" -- "PostgreSQL"
-"Application POS 2" -- "PostgreSQL"
-"Application POS 3" -- "PostgreSQL"
+"Navigateur Web 1" -- "Application POS"
+"Navigateur Web 2" -- "Application POS"
+"Navigateur Web 3" -- "Application POS"
+"Navigateur Web 4" -- "Application POS"
+"Navigateur Web 5" -- "Application POS"
+"Application POS" -- "PostgreSQL"
 
 @enduml

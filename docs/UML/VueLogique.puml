@@ -1,18 +1,56 @@
-@startuml POS_Product_Category
-top to bottom direction
+@startuml VueLogique
+
+class ParentStore {
+  - nom : String
+  - adresse : String
+}
+
+class Warehouse {
+  - nom : String
+  - adresse : String
+}
+
+class Store {
+  - nom : String
+  - adresse : String
+}
 
 class Product {
-  +Integer id
-  +String name
-  +Float price
-  +Integer stockQuantity
+  - nom : String
 }
 
 class Category {
-  +Integer id
-  +String name
+  - name : String
 }
 
-Category "1" --> "*" Product : owns
+class Stock {
+  - quantity : int
+}
+
+class Sale {
+  - saleDate : Date
+  - subTotal : float
+}
+
+class SaleLine {
+  - price : float
+  - quantity : int
+}
+
+class Replenishment {
+  - requestedQuantity : int
+  - statut : String
+}
+
+Category "1" -- "*" Product : contains >
+ParentStore "1" -- "1" Warehouse : manage >
+ParentStore "1" -- "*" Store : manages >
+Store "1" -- "*" Stock : has >
+Store "1" -- "*" Sale : generates >
+Warehouse "1" -- "*" Stock : has >
+Product "1" -- "*" Stock : has >"
+Product "1" -- "*" SaleLine : sold in >"
+Stock "1" -- "*" Replenishment : generates >
+Sale "1" -- "*" SaleLine : contains >
 
 @enduml

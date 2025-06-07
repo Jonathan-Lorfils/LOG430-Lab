@@ -15,7 +15,8 @@ const Sale = sequelize.define(
     },
     saleDate: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
     tableName: 'sales',

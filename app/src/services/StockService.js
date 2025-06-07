@@ -17,9 +17,7 @@ const StockService = {
             where: { StoreId: storeId },
             include: [Product]
         });
-        if (stocks.length === 0) {
-            throw new Error('No stocks found for this store');
-        }
+
         return stocks;
     },
 };

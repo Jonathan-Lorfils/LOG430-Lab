@@ -12,7 +12,7 @@ const SaleLine = sequelize.define(
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    price: {
+    pricePerUnit: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     }

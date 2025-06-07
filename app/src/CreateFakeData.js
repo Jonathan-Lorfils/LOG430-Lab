@@ -47,7 +47,7 @@ const CreateFakeData = {
         }
     },
 
-    async createProduct(name, stockQuantity, categoryName) {
+    async createProduct(name, stockQuantity, categoryName, price, description) {
         try {
             const category = await Category.findOrCreate({
                 where: { name: categoryName },
@@ -59,7 +59,9 @@ const CreateFakeData = {
             const product = await Product.create({
                 name: name,
                 stockQuantity: stockQuantity,
-                CategoryId: category[0].id
+                CategoryId: category[0].id,
+                price: price || 0.00,
+                description: description || ''
             });
             return product;
         } catch (error) {
@@ -73,7 +75,6 @@ const CreateFakeData = {
             const sale = await Sale.create({
                 StoreId: storeId,
                 subTotal: subTotal,
-                date: new Date()
             });
             return sale;
         } catch (error) {
@@ -82,13 +83,19 @@ const CreateFakeData = {
         }
     },
 
-    async createSaleLine(saleId, productId, quantity, price) {
+    async createSaleLine(saleId, productId, quantity) {
         try {
+            const product = await Product.findByPk(productId);
+
+            if (!product) {
+                throw new Error(`Product with ID ${productId} not found`);
+            }
+
             const saleLine = await SaleLine.create({
                 SaleId: saleId,
                 ProductId: productId,
                 quantity: quantity,
-                price: price,
+                pricePerUnit: product.price,
             });
             return saleLine;
         } catch (error) {
@@ -136,11 +143,11 @@ const CreateFakeData = {
 
         await this.createWarehouse('Warehouse 1', 'Warehouse St', 1);
 
-        await this.createProduct('Product 1', 100, 'Category A');
-        await this.createProduct('Product 2', 50, 'Category B');
-        await this.createProduct('Product 3', 200, 'Category A');
-        await this.createProduct('Product 4', 30, 'Category C');
-        await this.createProduct('Product 5', 150, 'Category B');
+        await this.createProduct('Product 1', 100, 'Category A', 10.99, 'Description for Product 1');
+        await this.createProduct('Product 2', 50, 'Category B', 15.49, 'Description for Product 2');
+        await this.createProduct('Product 3', 200, 'Category A', 7.99, 'Description for Product 3');
+        await this.createProduct('Product 4', 30, 'Category C', 20.00, 'Description for Product 4');
+        await this.createProduct('Product 5', 150, 'Category B', 5.49, 'Description for Product 5');
 
         await this.createSale(1, 100.00);
         await this.createSale(2, 1000.00);
@@ -148,9 +155,9 @@ const CreateFakeData = {
         await this.createSale(4, 5630.00);
         await this.createSale(5, 98317.00);
 
-        await this.createSaleLine(1, 1, 35, 10.99);
-        await this.createSaleLine(2, 2, 299, 15.49);
-        await this.createSaleLine(3, 3, 600, 7.99);
+        await this.createSaleLine(1, 1, 35);
+        await this.createSaleLine(2, 2, 299);
+        await this.createSaleLine(3, 3, 600);
 
         await this.createStockStore(1, 1, 50);
         await this.createStockStore(2, 1, 30);
