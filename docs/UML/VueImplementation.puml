@@ -1,16 +1,57 @@
-@startuml ComposantsPOS
+@startuml VuePackagePOS
 
-package "Application POS (Node.js)" {
-  [Console UI (Inquirer.js)] --> [Produit Service]
-  [Console UI (Inquirer.js)] --> [Catégorie Service]
+package "Application" {
+  
+ package "data access layer" {
+    package "models" {
+      class ParentStore
+      class Product
+      class Replenishment
+      class Sale
+      class Stock
+      class Store
+      class Warehouse
+    }
+ }
+
+  package "business logic" {
+    package "controllers" {
+      class ParentStoreController
+      class ReplenishmentController
+      class StoreController
+      class WarehouseController
+    }
+
+    package "services" {
+      class ParentStoreService
+      class ReplenishmentService
+      class StockService
+      class StoreService
+      class WarehouseService
+    }
+  }
+
+  package "presentation layer" {
+    package "routes" {
+      class ParentStoreRoutes
+      class ReplenishmentRoutes
+      class StoreRoutes
+      class WarehouseRoutes
+    }
+
+    package "views" {
+      class ParentStoreDashboardView
+      class ReplenishmentView
+      class StoreDetailsView
+      class WarehouseStockView
+    }
+  }
 }
 
-[Produit Service] --> [Modèle Sequelize: Product]
-[Catégorie Service] --> [Modèle Sequelize: Category]
-
-database "Base de données PostgreSQL" as DB
-
-[Modèle Sequelize: Product] --> DB
-[Modèle Sequelize: Category] --> DB
+controllers --> services : uses
+services --> models : interacts
+routes --> controllers : calls
+views --> routes : navigates
+models --> controllers : provides data
 
 @enduml
