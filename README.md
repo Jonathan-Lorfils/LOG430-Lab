@@ -10,7 +10,7 @@ Présentement mon application POS me permet d’effectuer une recherche sur un p
 
 ## Requis 
 
-Le client souhaite désormais que l’application lui permette de gérer 5 magasins situés dans des quartiers différents**, un centre logistique, ainsi que d’offrir des fonctionnalités administratives pour les gestionnaires de la maison mère.
+Le client souhaite désormais que l’application lui permette de gérer 5 magasins situés dans des quartiers différents, un centre logistique, ainsi que d’offrir des fonctionnalités administratives pour les gestionnaires de la maison mère.
 
 ---
 
@@ -86,8 +86,11 @@ Le client souhaite pouvoir interagir avec l’application depuis chaque magasin,
 ![Vue implémentation](./out/docs/UML/VueImplementation/VuePackagePOS.png)
 
 Le diagramme suit la méthodologie MVC soit :
+
 Controller : Responsable de l’interaction entre l’application et l’utilisateur. Se charge d’appeler les services appropriés afin de récupérer les informations nécessaires puis retourne une vue à l’utilisateur. 
+
 Vue : Présente les données à l’utilisateur, fonctionne en collaboration avec le controlleur.
+
 Model : Contient la logique relié au données et leur logique d’accès. 
 
 
@@ -101,7 +104,7 @@ Model : Contient la logique relié au données et leur logique d’accès.
 
 ## Vue processus
 
-![Vue Processus Afficher Confirmation Replenishment](./out/docs/UML/VueProcessusAfficherConfirmationReplenishment/)
+![Vue Processus Afficher Confirmation Replenishment](./out/docs/UML/VueProcessusAfficherConfirmationReplenishment/VueProcessusAfficherConfirmationReplenishment.png)
 
 ![Vue Processus Afficher Formulaire Replenishment](./out/docs/UML/VueProcessusAfficherFormulaireReplenishment/VueProcessusAfficherFormulaireReplenishment.png)
 
@@ -145,7 +148,7 @@ Nécessite un structure du code plus stricte.
 
 ### Titre
 
-Implementation de MVC Status
+Implementation du patron de conception MVC
 
 ### Status
 
