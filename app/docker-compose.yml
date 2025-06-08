@@ -10,9 +10,11 @@ services:
     environment:
       - DATABASE_URL=postgres://POSTGRES_USER:POSTGRES_PASSWORD@db:5432/postgres
     working_dir: /app
-    command: node src/index.js
+    command: node src/server.js
     volumes:
       - .:/app
+    ports:
+      - "3000:3000"
 
   db:
     image: postgres:17

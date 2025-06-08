@@ -248,7 +248,7 @@ Prérequis:
    ```
 
    ```
-   git checkout labo01
+   git checkout labo02
    ```
 
 2. Lancer le container
