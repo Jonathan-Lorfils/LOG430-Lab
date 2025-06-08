@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    container_name: pos-console-app
+    container_name: pos-app
     stdin_open: true
     tty: true
     depends_on:
