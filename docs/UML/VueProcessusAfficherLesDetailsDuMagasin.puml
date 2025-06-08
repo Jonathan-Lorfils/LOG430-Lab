@@ -1,0 +1,18 @@
+@startuml VueProcessusAfficherLesDetailsDuMagasin
+
+actor "Manager" as Manager
+hide footbox
+
+Manager -> "StoreRouter" : localhost:3000/store/details/storeId
+"StoreRouter" -> "StoreController": StoreController.getStoreDetails()
+"StoreController" -> "StoreController": const storeId = req.params.storeid;
+"StoreController" -> "StoreService": getStoreDetailsByStoreId(storeId)
+"StoreService" --> "StoreController": store
+"StoreController" -> "StoreController": const sales = store.Sales;
+"StoreController" -> "StoreService": getMostSoldProductsByStoreId(storeId)
+"StoreService" --> "StoreController": mostSoldProducts
+"StoreController" -> "StoreService": getStocksByStoreId(storeId)
+"StoreService" --> "StoreController": stocks
+StoreController -> "Manager" : res.render("storeDetails", { store, sales, mostSoldProducts, stocks })
+
+@enduml

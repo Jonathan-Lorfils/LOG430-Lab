@@ -1,0 +1,14 @@
+@startuml VueProcessusAfficherFormulaireReplenishment
+
+actor "Manager" as Manager
+hide footbox
+
+Manager -> "ReplenishmentRouter" : localhost:3000/replenishment/form/stockid
+"ReplenishmentRouter" -> "ReplenishmentController": ReplenishmentController.replenishmentForm
+"ReplenishmentController" -> "ReplenishmentController": const stockId = req.params.stockid;
+"ReplenishmentController" -> "StockService": getStockById(stockId)
+"StockService" --> "ReplenishmentController": stock
+"ReplenishmentController" -> "ReplenishmentController": const product = stock.product
+ReplenishmentController -> "Manager" : res.render("replenishmentForm", { stock, product })
+
+@enduml

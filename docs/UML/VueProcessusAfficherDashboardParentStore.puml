@@ -1,0 +1,16 @@
+@startuml VueProcessusAfficherDashboardParentStore
+
+actor "Manager" as Manager
+hide footbox
+
+Manager -> "ParentStoreRouter" : localhost:3000/parentStore/dashboard
+"ParentStoreRouter" -> "ParentStoreController": ParentStoreController.dashboard
+"ParentStoreController" -> "ParentStoreService": getAllStoreRevenue()
+"ParentStoreService" --> "ParentStoreController": storeRevenueByStore
+"ParentStoreController" -> "ParentStoreService": getAllStocksEmptyQuantityByParentStoreId()
+"ParentStoreService" --> "ParentStoreController": outOfStockProducts
+"ParentStoreController" -> "ParentStoreService": getStoresMostSoldProductsByParentStoreId()
+"ParentStoreService" --> "ParentStoreController": trendyProducts
+ParentStoreController -> "Manager" : res.render("parentStoreDashboard", {storeRevenueByStore, outOfStockProducts, trendyProducts})
+
+@enduml

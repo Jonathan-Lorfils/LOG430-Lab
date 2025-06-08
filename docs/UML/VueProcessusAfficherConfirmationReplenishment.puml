@@ -1,0 +1,14 @@
+@startuml VueProcessusAfficherConfirmationReplenishment
+
+actor "Manager" as Manager
+hide footbox
+
+Manager -> "ReplenishmentRouter" : localhost:3000/create/quantity/stockid
+"ReplenishmentRouter" -> "ReplenishmentController": ReplenishmentController.createRepleplenishment
+"ReplenishmentController" -> "ReplenishmentController": const stockId = req.params.stockid;
+"ReplenishmentController" -> "ReplenishmentController": const requestedQuantity = parseInt(req.params.quantity, 10);
+"ReplenishmentController" -> "ReplenishmentService": createReplenishment(stockId, requestedQuantity)
+"ReplenishmentService" --> "ReplenishmentController": replenishment
+ReplenishmentController -> "Manager" : res.render("replenishmentConfirmation", { replenishment })
+
+@enduml

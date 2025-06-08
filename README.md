@@ -1,47 +1,95 @@
 # LOG430-Lab
 
-# Description Arc42
+## Introduction
+
+Dans le cadre de ce laboratoire 02, j’ai eu à faire évoluer l’architecture de mon application point de vente afin de convenir aux nouveaux besoins du client. 
 
 ## Contexte
 
-Cette application est un système point de vente permettant de :
+Présentement mon application POS me permet d’effectuer une recherche sur un produit basé sur le nom, identifiant ou la catégorie, ajouter un produit, effectuer un retour et consulter les produits disponibles. Cette application convenait aux objectifs fournis par le client dans le cadre du laboratoire 01, mais est obsolète face au requis du laboratoire 02.
 
-## Besoins fonctionnels
+## Requis 
 
-- Rechercher un produit
-    - par nom, identifiant et catégorie
-- Ajouter un produit
-- Retourner un produit
-    - mettre à jour son stock
-- Consulter les produits
+Le client souhaite désormais que l’application lui permette de gérer 5 magasins situés dans des quartiers différents**, un centre logistique, ainsi que d’offrir des fonctionnalités administratives pour les gestionnaires de la maison mère.
 
-## Besoins non fonctionnels
+---
 
-Architecture Client / Serveur
+Exigences fonctionnelles
 
-Robuste (gère les erreurs, ne plante pas en cas d’erreur)
+En tant que gestionnaire de la maison mère, je veux pouvoir :
+- Consulter un tableau de bord regroupant les informations suivantes par magasin :
+  - Chiffre d’affaires  
+  - Alerte de rupture de stock  
+  - Tendance hebdomadaire  
+  - Produit en surstock
+- Consulter un rapport regroupant les informations suivantes par magasin :
+  - Ventes  
+  - Produits les plus vendus  
+  - Stock restant
 
-Persistance des données
+En tant qu’employé d’un magasin, je veux pouvoir :
+- Consulter les stocks du centre logistique
+- Initier une demande de réapprovisionnement en cas de stock insuffisant
 
-Simple (facile à prendre en main pour l’usager)
 
-## Contrainte 
+## Objectif qualité
 
-Cette application doit :
+Qualités rechercher par le client 
+1	Permettre une évolutivité vers une potentielle interface web ou mobile.
+2	Synchronisation fiable et cohérente des données entre les différents magasins et la maison mère.
+3	Offrir une consultation centralisée des stocks disponibles et des transactions réalisées des les magasins
 
-Doit fonctionner sans interface graphique (terminal uniquement).
+| Objectif de qualité | Description                                                                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Convivialité**    | Je veux que mon application soit facile à prendre en main pour les employés des magasins ainsi que les gestionnaires de la maison mère. |
+| **Transférabilité** | Je veux que mon environnement puisse facilement évoluer vers un autre environnement.                                                    |
+| **Intégrité**       | Je veux m’assurer que les données soient cohérentes et restent fidèles aux opérations réelles.                                          |
 
-Doit persister les données de manière fiable.
 
-Doit être conteneurisable avec Docker pour faciliter le déploiement.
+## Stakeholder
+
+| Rôle / Nom                         | Fonctionnalités                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Gestionnaire de la maison mère** | - Consulter un tableau de bord regroupant les informations suivantes par magasin : <br> &nbsp;&nbsp;• Chiffre d’affaires <br> &nbsp;&nbsp;• Alerte de rupture de stock <br> &nbsp;&nbsp;• Tendance hebdomadaire <br> &nbsp;&nbsp;• Produit en surstock <br> <br> - Consulter un rapport regroupant les informations suivantes par magasin : <br> &nbsp;&nbsp;• Ventes <br> &nbsp;&nbsp;• Produits les plus vendus <br> &nbsp;&nbsp;• Stock restant |
+| **Employé d’un magasin**           | En tant qu’employé d’un magasin, je veux pouvoir : <br> - Consulter les stocks du centre logistique <br> - Initier une demande de réapprovisionnement en cas de stock insuffisant                                                                                                                                                                                                                                                                  |
+
+
+## Contraintes architecturales
+
+Contraintes
+L’architurecture de l’application doit être hébergé en utilisant la VM fournise.
+L’architurecture de l’application doit être dockeriser
+L’architurecture de l’application doit permettre une migration vers une interface web ou mobile.
+
+## Contexte technique
+
+Le client souhaite pouvoir interagir avec l’application depuis chaque magasin, tandis que l’application roule sur la VM mise à disposition.
+
+![Vue déploiement](./out/docs/UML/VueDeploiement/VueDeploiement.png)
+
+## Stratégie de solution
+
+| Problème identifié                                | Défauts                                                                                                                         | Solution proposée                                                                                              |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Architecture serveur / client à 2 tiers**       | - Fort couplage entre l’interface utilisateur et la logique métier  <br> - Évolution difficile vers une interface web ou mobile | - Migration vers une architecture 3 tiers (MVC) séparant l’interface, la logique métier et l’accès aux données |
+| **Interaction avec l’utilisateur via la console** | - Interface limitée  <br> - Peu de possibilités d’évolution de l’interface utilisateur (UI)                                     | - Création d’une interface web avec EJS                                                                        |
+| **Vue logique**                                   | - Obsolète face aux nouveaux requis                                                                                             | - Mise à jour de la vue logique pour représenter la nouvelle logique d’affaires                                |
 
 ## Vue logique
 
-![Vue logique](./out/docs/UML/VueLogique/POS_Product_Category.png)
+![Vue logique](./out/docs/UML/VueLogique/VueLogique.png)
+
+À noter que je n'ai pas fait d'héritage pour les entités Store et Warehouse étant donné que l'ORM que j'utilise présentement, Sequelize, ne le supporte pas pour le moment.
 
 ## Vue implémentation
 
-![Vue implémentation](./out/docs/UML/VueImplementation/ComposantsPOS.png)
+![Vue implémentation](./out/docs/UML/VueImplementation/VuePackagePOS.png)
+
+Le diagramme suit la méthodologie MVC soit :
+Controller : Responsable de l’interaction entre l’application et l’utilisateur. Se charge d’appeler les services appropriés afin de récupérer les informations nécessaires puis retourne une vue à l’utilisateur. 
+Vue : Présente les données à l’utilisateur, fonctionne en collaboration avec le controlleur.
+Model : Contient la logique relié au données et leur logique d’accès. 
+
 
 ## Vue déploiement
 
@@ -53,73 +101,76 @@ Doit être conteneurisable avec Docker pour faciliter le déploiement.
 
 ## Vue processus
 
-![Vue processus ajouter produit](./out/docs/UML/VueProcessusAjouterProduit/VueProcessusAjouterProduit.png)
+![Vue Processus Afficher Confirmation Replenishment](./out/docs/UML/VueProcessusAfficherConfirmationReplenishment/)
 
-![Vue processus consulter produit](./out/docs/UML/VueProcessusConsulterProduits/VueProcessusConsulterProduits.png)
+![Vue Processus Afficher Formulaire Replenishment](./out/docs/UML/VueProcessusAfficherFormulaireReplenishment/VueProcessusAfficherFormulaireReplenishment.png)
 
-![Vue processus rechercher produit par id](./out/docs/UML/VueProcessusRechercherProduitId/VueProcessusRechercherProduitId.png)
+![Vue Processus Afficher Les Details Du Magasin](./out/docs/UML/VueProcessusAfficherLesDetailsDuMagasin/VueProcessusAfficherLesDetailsDuMagasin.png)
 
-![Vue processus rechercher produit par nom](./out/docs/UML/VueProcessusRechercherProduitNom/VueProcessusRechercherProduitNom.png)
+![Vue Processus Afficher Stocks Entrepot](./out/docs/UML/VueProcessusAfficherStocksEntrepot/VueProcessusAfficherStocksEntrepot.png)
 
-![Vue processus rechercher produit par categorie](./out/docs/UML/VueProcessusRechercherProduitsCategorie/VueProcessusRechercherProduitCategorie.png)
-
-![Vue processus retourner produit](./out/docs/UML/VueProcessusRetournerProduit/VueProcessusRetournerProduit.png)
+![Vue Processus Afficher Tous Les Magasins](./out/docs/UML/VueProcessusAfficherTousLesMagasins/VueProcessusAfficherTousLesMagasins.png)
 
 ## ADR
 
 ### ADR 1
 
-### Titre 
+### Titre
 
-Choix de la plateforme
+Choix de l’architecture
 
 ### Status
 
-Accepted
+Accepté
 
 ### Contexte
 
-Dans le cadre de ce laboratoire, j’ai du choisir une technologique adapter au but de celui-ci soit de concevoir une application point de vente (POS) avec une architecture serveur à deux couches. Les utilisateurs intéragisses avec cette application au travers de la console.
+Dans le cadre de ce laboratoire, l’application point de vente doit pouvoir répondre aux besoins d’une entreprise possédant cinq magasins, un centre logistique et une maison mère. La structure précédente soit une architecture client / serveur 2 tier n’est plus suffisante afin de répondre aux besoins du client.
 
 ### Décision
 
-J’ai choisi d’opter pour Node.js ainsi que le language de programmation Javascript pour le dévelopement de mon application.
+Faire évoluer l’architecture actuel vers une architecture client / serveur 3 tier.
 
-### Conséquences
+#### Conséquence
 
-Propose une large variété de module très utile au développement de projet (Sequelize, Inquirer.js, Jest)
+Nécessite de modifier le code existant afin de convenir à cette nouvelle architecture.
 
-Facile à utiliser avec Docker et à mettre en place la pipieline CI/CD via Github Action
+Permet une meilleure séparation des responsabilités réduisant ainsi le couplage entre la logique métier et l’interface usager.
 
-Sa popularité fait en sorte qu’il est facile de trouver des informations en cas de problème
+Permet une meilleure évolutivité de l’application dans notre cas, vers une possible interface web ou mobile.
 
-Bonne documentation offerte
+Nécessite un structure du code plus stricte. 
 
 ### ADR 2
 
-### Titre 
+### Titre
 
-Stratégie de persistence
+Implementation de MVC Status
 
 ### Status
 
-Accepted
+Accepté
 
 ### Contexte
 
-Dans le cadre de ce laboratoire, l’application point de vente (POS) doit pouvoir manipuler les données des différents produits et catégories, ainsi que sauvegardés celle-ci de manière fiable et durable.
+Afin de répondre aux nouveaux besoins du client, il a été établi dans l’ADR précédent qu’il est nécessaire de faire évoluer l’architecture du logiciel. De plus, le fait de passer à une architecture 3 tier oblige de devoir choisir un patron de conception à suivre afin de séparer les différentes logiques de l’application.
 
 ### Décision
 
-J’ai choisi d’opter pour l’ORM Sequelize afin de gérer les interactions entre mon application et la base de données postgreSQL. 
+Adoption du patron de conception MVC :
 
-### Consequences
+Modèle : les entités métier contenant la logique d’accès aux données au travers de l’ORM Sequelize.
 
-Sequelize prend en charge la création de schéma ainsi que des relations rendant le développement plus facile
+Contrôleur : Interagit avec les services métiers et renvoie la vue à l’utilisateur.
 
-Sequelize prend en charge la synchronization des tables soit va effectuer les modifications nécessaire dans la base données si des modifications ont eu lieu dans le code.
+Vue : Sert d’interface utilisateur, est affiché dans le navigateur de l’utilisateur.
 
-Sequelize s’occupe de l’abstraction des requêtes SQL évitant de devoir écrire et exécuter chaque requête soi-même.
+### Conséquence
+
+Permet une meilleure structure du code et séparation des responsabilités
+
+Permet une évolutivité vers une interface web ou mobile
+
 
 ### Choix technologiques
 
@@ -162,6 +213,17 @@ Sequelize s’occupe de l’abstraction des requêtes SQL évitant de devoir éc
 - **Portabilité** : Fonctionne sur toutes plateforme Node.js
 - **Coût** : Gratuit
 - **Fiabilité** : Permet d’assurer la qualité du code via des tests automatisés.
+
+### Domain-Driven Design 
+
+Dans le cadre du développement de l’application POS j’ai identifié les sous-domaines suivants :  
+
+| Domaine                           | Type de domaine | Responsabilités principales                                                                                                    |
+| --------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Gestion des ventes**            | Domaine central | - Gérer les ventes  <br> - Mettre à jour les stocks                                                                            |
+| **Gestion de la logistique**      | Domaine support | - Gérer les demandes de réapprovisionnement  <br> - Faire le suivi des stocks                                                  |
+| **Supervision de la maison mère** | Domaine support | - Suivre la performance des magasins  <br> - Suivre les tendances et demandes des magasins <br> - Générer un rapport consolidé |
+
 
 ## Instructions d'exécution
 Prérequis:
@@ -217,62 +279,92 @@ Prérequis:
 ```
 .
 ├── app
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── eslint.config.js
-│   ├── jest.config.js
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── src
-│   │   ├── services
-│   │   │   ├── CategoryService.js
-│   │   │   └── ProductService.js
-│   │   ├── database.js
-│   │   ├── index.js
-│   │   └── models
-│   │       ├── Category.js
-│   │       └── Product.js
-│   └── test
-│       ├── CategoryService.test.js
-│       ├── ProductService.test.js
-│       └── script.test.js
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── eslint.config.js
+│   ├── jest.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── controllers
+│   │   │   ├── ParentStoreController.js
+│   │   │   ├── ReplenishmentController.js
+│   │   │   ├── StoreController.js
+│   │   │   └── WarehouseController.js
+│   │   ├── CreateFakeData.js
+│   │   ├── database.js
+│   │   ├── models
+│   │   │   ├── Category.js
+│   │   │   ├── index.js
+│   │   │   ├── ParentStore.js
+│   │   │   ├── Product.js
+│   │   │   ├── Replenishment.js
+│   │   │   ├── Sale.js
+│   │   │   ├── SaleLine.js
+│   │   │   ├── Stock.js
+│   │   │   ├── Store.js
+│   │   │   └── Warehouse.js
+│   │   ├── routes
+│   │   │   ├── ParentStoreRoutes.js
+│   │   │   ├── ReplenishmentRoutes.js
+│   │   │   ├── StoreRoutes.js
+│   │   │   └── WarehouseRoutes.js
+│   │   ├── server.js
+│   │   ├── services
+│   │   │   ├── ParentStoreService.js
+│   │   │   ├── ReplenishmentService.js
+│   │   │   ├── StockService.js
+│   │   │   ├── StoreService.js
+│   │   │   └── WarehouseService.js
+│   │   └── views
+│   │       ├── allStores.ejs
+│   │       ├── index.ejs
+│   │       ├── parentStoreDashboard.ejs
+│   │       ├── replenishmentConfirmation.ejs
+│   │       ├── replenishmentForm.ejs
+│   │       ├── storeDetails.ejs
+│   │       └── warehouseStocks.ejs
+│   └── test
+│       ├── ParentStoreService.test.js
+│       ├── ReplenishmentService.test.js
+│       ├── StockService.test.js
+│       ├── StoreService.test.js
+│       └── WarehouseService.test.js
 ├── docs
-│   ├── ADR
-│   │   ├── ADR1.md
-│   │   └── ADR2.md
-│   └── UML
-│       ├── VueCasUtilisation.puml
-│       ├── VueDeploiement.puml
-│       ├── VueImplementation.puml
-│       ├── VueLogique.puml
-│       ├── VueProcessusAjouterProduit.puml
-│       ├── VueProcessusConsulterProduits.puml
-│       ├── VueProcessusRechercherProduitId.puml
-│       ├── VueProcessusRechercherProduitNom.puml
-│       ├── VueProcessusRechercherProduitsCategorie.puml
-│       └── VueProcessusRetournerProduit.puml
+│   ├── ADR
+│   │   ├── ADR1.md
+│   │   └── ADR2.md
+│   └── UML
+│       ├── VueCasUtilisation.puml
+│       ├── VueDeploiement.puml
+│       ├── VueImplementation.puml
+│       ├── VueLogique.puml
+│       ├── VueProcessusAfficherConfirmationReplenishment.puml
+│       ├── VueProcessusAfficherDashboardParentStore.puml
+│       ├── VueProcessusAfficherFormulaireReplenishment.puml
+│       ├── VueProcessusAfficherLesDetailsDuMagasin.puml
+│       ├── VueProcessusAfficherStocksEntrepot.puml
+│       └── VueProcessusAfficherTousLesMagasins.puml
 ├── out
-│   └── docs
-│       └── UML
-│           ├── VueCasUtilisation
-│           │   └── VueCasUtilisation.png
-│           ├── VueDeploiement
-│           │   └── VueDeploiement.png
-│           ├── VueImplementation
-│           │   └── ComposantsPOS.png
-│           ├── VueLogique
-│           │   └── POS_Product_Category.png
-│           ├── VueProcessusAjouterProduit
-│           │   └── VueProcessusAjouterProduit.png
-│           ├── VueProcessusConsulterProduits
-│           │   └── VueProcessusConsulterProduits.png
-│           ├── VueProcessusRechercherProduitId
-│           │   └── VueProcessusRechercherProduitId.png
-│           ├── VueProcessusRechercherProduitNom
-│           │   └── VueProcessusRechercherProduitNom.png
-│           ├── VueProcessusRechercherProduitsCategorie
-│           │   └── VueProcessusRechercherProduitCategorie.png
-│           └── VueProcessusRetournerProduit
-│               └── VueProcessusRetournerProduit.png
+│   └── docs
+│       └── UML
+│           ├── VueCasUtilisation
+│           │   └── VueCasUtilisation.png
+│           ├── VueDeploiement
+│           │   └── VueDeploiement.png
+│           ├── VueImplementation
+│           │   └── VuePackagePOS.png
+│           ├── VueLogique
+│           │   └── VueLogique.png
+│           ├── VueProcessusAfficherConfirmationReplenishment
+│           │   └── VueProcessusAfficherConfirmationReplenishment.png
+│           ├── VueProcessusAfficherFormulaireReplenishment
+│           │   └── VueProcessusAfficherFormulaireReplenishment.png
+│           ├── VueProcessusAfficherLesDetailsDuMagasin
+│           │   └── VueProcessusAfficherLesDetailsDuMagasin.png
+│           ├── VueProcessusAfficherStocksEntrepot
+│           │   └── VueProcessusAfficherStocksEntrepot.png
+│           └── VueProcessusAfficherTousLesMagasins
+│               └── VueProcessusAfficherTousLesMagasins.png
 └── README.md
 ```

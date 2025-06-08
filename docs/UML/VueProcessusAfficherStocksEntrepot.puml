@@ -1,0 +1,13 @@
+@startuml VueProcessusAfficherStocksEntrepot
+
+actor "Manager" as Manager
+hide footbox
+
+Manager -> "WarehouseRouter" : localhost:3000/warehouse/stocks
+"WarehouseRouter" -> "WarehouseController": WarehouseController.getWarehouseStocks
+"WarehouseController" -> "WarehouseService": getWarehouseStocks()
+"WarehouseService" --> "WarehouseController": warehouse
+"WarehouseController" -> "WarehouseController": const stocks = warehouse.Stocks
+WarehouseController -> "Manager" : res.render("warehouseStocks", { warehouse, stocks })
+
+@enduml

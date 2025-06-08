@@ -1,0 +1,12 @@
+@startuml VueProcessusAfficherTousLesMagasins
+
+actor "Manager" as Manager
+hide footbox
+
+Manager -> "StoreRouter" : localhost:3000/store/allStores
+"StoreRouter" -> "StoreController": StoreController.getAllStores()
+"StoreController" -> "ParentStoreService": getAllStores()
+"ParentStoreService" --> "StoreController": stores
+StoreController -> "Manager" : res.render("allStores", { stores })
+
+@enduml
