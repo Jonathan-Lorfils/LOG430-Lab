@@ -1,6 +1,8 @@
 # LOG430-Lab
 
-Lien pour accéder à l'application : http://localhost:3000/
+Lien pour accéder à l'application une fois connecté à la VM : http://localhost:3000/
+
+Lien vers le repo github (chaque laboratoire à sa propre branche) : https://github.com/Jonathan-Lorfils/LOG430-Lab
 
 ## Introduction
 
@@ -203,21 +205,29 @@ Permet une évolutivité vers une interface web ou mobile
 - **Coût** : Gratuit et open source
 - **Fiabilité** : Fiable pour les petits projets tel que POS
 
-### 4. **Inquirer.js**
-
-- **Justification** : Bibliothèque permettant à l’utilisateur d’interagir via la console
-- **Simplicité** : API claire et intuitive pour concevoir des interfaces textuelles interactives
-- **Portabilité** : Fonctionne dans n’importe quel terminal
-- **Coût** : Gratuit, open source
-- **Fiabilité** : Fiable pour les petits projets tel que POS
-
-### 6. **Jest**
+### 4. **Jest**
 
 - **Justification** : Framework de test pour Node.js
 - **Simplicité** : Intégration facile, compatible avec la majorité des bibliothèques JS
 - **Portabilité** : Fonctionne sur toutes plateforme Node.js
 - **Coût** : Gratuit
 - **Fiabilité** : Permet d’assurer la qualité du code via des tests automatisés.
+
+### 5. EJS
+
+- **Justification** : Moteur de template qui permet de générer des pages HTML dynamiques à partir de données serveur
+- **Simplicité** : Syntaxe proche de HTML avec intégration facile de logique JS
+- **Portabilité** : Compatible avec Express
+- **Coût** : Gratuit et open source
+- **Fiabilité** : Suffisant pour des vues dynamiques simples
+
+### 6. Express
+
+- **Justification** : Framework permettant de créer des serveurs web en Node.js
+- **Simplicité** : Syntaxe simple, facilite la gestion des routes, middlewares et requêtes HTTP
+- **Portabilité**  : Fonctionne avec tout projet Node.js, s’intègre facilement à d’autres bibliothèques comme Sequelize ou EJS
+- **Coût**  : Gratuit et open source
+- **Fiabilité**  : Maintenu activement par la communauté et utilisé dans des milliers de projets professionnels
 
 ### Domain-Driven Design 
 
