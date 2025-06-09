@@ -1,5 +1,7 @@
 # LOG430-Lab
 
+Lien pour accéder à l'application : http://localhost:3000/
+
 ## Introduction
 
 Dans le cadre de ce laboratoire 02, j’ai eu à faire évoluer l’architecture de mon application point de vente afin de convenir aux nouveaux besoins du client. 
