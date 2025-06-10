@@ -6,7 +6,11 @@ import WarehouseRouter from './routes/WarehouseRoutes.js';
 import ReplenishmentRouter from './routes/ReplenishmentRoutes.js';
 import StoreRouter from './routes/StoreRoutes.js';
 import ParentStoreRouter from './routes/ParentStoreRoutes.js'
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import ApiRouter from './api/routes/ApiRoutes.js';
 
+// Tester la connexion à la base de données PostgreSQL
 (async () => {
     try {
         await sequelize.authenticate();
@@ -16,9 +20,11 @@ import ParentStoreRouter from './routes/ParentStoreRoutes.js'
     }
 })();
 
+// Synchroniser les modèles avec la base de données
 await sequelize.sync({ force: true });
 console.log('Base de données synchronisée avec succès !');
 
+// Générer des données factices
 CreateFakeData.generate()
 
 const app = express();
@@ -38,23 +44,35 @@ app.get('/', (req, res) => {
 }
 );
 
-app.get('/login', (req, res) => {
-    const role = req.query.role;
-    if (role === 'employee') {
-        res.redirect('/employee/dashboard');
-    } else if (role === 'manager') {
-        res.redirect('/manager/dashboard');
-    } else {
-        res.status(400).send('Rôle inconnu.');
-    }
-});
-
 app.use('/warehouse', WarehouseRouter);
 app.use('/replenishment', ReplenishmentRouter);
 app.use('/store', StoreRouter);
 app.use('/parentStore', ParentStoreRouter)
+app.use("/api/v1", ApiRouter);
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
+    console.log(`Documentation de l'API disponible sur http://localhost:${PORT}/api-docs`);
 });
 
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'POS API',
+            version: '1.0.0',
+            description: 'Documentation de l’API pour le système POS',
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+                description: 'Serveur local',
+            },
+        ],
+    },
+    apis: ['./src/api/routes/*.js'], // adapte ce chemin selon l’endroit où sont tes routes
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
