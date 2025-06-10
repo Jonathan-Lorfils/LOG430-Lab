@@ -54,9 +54,38 @@ Prérequis:
 
     -- Avant de tester les appels entrer le token statique en suivant les étapes:
 
-    ![Étape 1](./docs/images/Etape1.png)
+    ![Étape 1](./docs/images/Labo03-Instructions/Etape1.png)
 
-    ![Étape 2](./docs/images/Etape2.png)
+    ![Étape 2](./docs/images/Labo03-Instructions/Etape2.png)
+
+    ![Étape 3](./docs/images/Labo03-Instructions/Etape3.png)
+
+
+## Instruction de test
+
+### ParentStore 
+
+  ![Étape 1](./docs/images/ParentStore/ParentStoreEtape1.png)
+
+  ![Étape 2](./docs/images/ParentStore/ParentStoreEtape2.png)
+
+### Product 
+
+  ![Étape 1](./docs/images/Product/ProductEtape1.png)
+
+  ![Étape 2](./docs/images/Product/ProductEtape2.png)
+
+### Replenishment
+
+  ![Étape 1](./docs/images/Replenishment/ReplenishmentEtape1.png)
+
+  ![Étape 2](./docs/images/Replenishment/ReplenishmentEtape2.png)
+
+### Store
+
+  ![Étape 1](./docs/images/Store/StoreEtape1.png)
+
+  ![Étape 2](./docs/images/Store/StoreEtape2.png)
 
 ## Introduction
 
