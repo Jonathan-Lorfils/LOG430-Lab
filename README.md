@@ -1,8 +1,62 @@
 # LOG430-Lab
 
-Lien pour accéder à l'application une fois connecté à la VM : http://localhost:3000/
-
 Lien vers le repo github (chaque laboratoire à sa propre branche) : https://github.com/Jonathan-Lorfils/LOG430-Lab
+
+Lien vers la documentation Swagger UI : http://localhost:3000/api-docs
+
+## Instructions d'exécution
+Prérequis:
+    Git
+    Docker
+    Docker Compose
+
+
+1. Clone le projet :
+   - Se placer dans le dossier destination, y ouvrir une fenêtre de terminal/invite commande puis entrer la commande suivante:
+   ```
+   git clone https://github.com/Jonathan-Lorfils/LOG430-Lab.git
+   ```
+
+   - Ouvrir le dossier contenant le projet avec la commande :
+   
+   ```
+   cd LOG430-Lab
+   ```
+
+   ```
+   git checkout labo03
+   ```
+
+2. Lancer le container
+   - Ouvrir le répertoire avec la commande suivante :
+
+    ```
+    cd app
+    ```
+
+    - Construire le container
+    
+    ```
+    docker-compose build
+    ```
+
+    - Lancer le container
+
+    ```
+    docker-compose up
+    ```
+
+    -- Ouvrir le navigateur web de votre choix et accéder à l'url suivant :
+
+    ```
+    http://localhost:3000/api-docs
+    ```
+
+    -- Avant de tester les appels entrer le token statique en suivant les étapes:
+
+    ![Étape 1](./docs/images/Etape1.png)
+
+    ![Étape 2](./docs/images/Etape2.png)
 
 ## Introduction
 
@@ -239,55 +293,6 @@ Dans le cadre du développement de l’application POS j’ai identifié les sou
 | **Gestion de la logistique**      | Domaine support | - Gérer les demandes de réapprovisionnement  <br> - Faire le suivi des stocks                                                  |
 | **Supervision de la maison mère** | Domaine support | - Suivre la performance des magasins  <br> - Suivre les tendances et demandes des magasins <br> - Générer un rapport consolidé |
 
-
-## Instructions d'exécution
-Prérequis:
-    Git
-    Docker
-    Docker Compose
-
-
-1. Clone le projet :
-   - Se placer dans le dossier destination, y ouvrir une fenêtre de terminal/invite commande puis entrer la commande suivante:
-   ```
-   git clone https://github.com/Jonathan-Lorfils/LOG430-Lab.git
-   ```
-
-   - Ouvrir le dossier contenant le projet avec la commande :
-   
-   ```
-   cd LOG430-Lab
-   ```
-
-   ```
-   git checkout labo02
-   ```
-
-2. Lancer le container
-   - Ouvrir le répertoire avec la commande suivante :
-
-    ```
-    cd app
-    ```
-
-    - Construire le container
-    
-    ```
-    docker-compose build
-    ```
-
-    - Lancer le container
-
-    ```
-    docker-compose up
-    ```
-
-    -- Ouvrir un nouveau terminal et exécuter les commandes
-
-    ```
-    cd app
-    docker compose run --rm app
-    ```
 
 ## Structure
 
