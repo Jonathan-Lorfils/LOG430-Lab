@@ -9,6 +9,7 @@ import ParentStoreRouter from './routes/ParentStoreRoutes.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './api/routes/ApiRoutes.js';
+import tokenAuth from './tokenAuth.js';
 
 // Tester la connexion à la base de données PostgreSQL
 (async () => {
@@ -48,7 +49,7 @@ app.use('/warehouse', WarehouseRouter);
 app.use('/replenishment', ReplenishmentRouter);
 app.use('/store', StoreRouter);
 app.use('/parentStore', ParentStoreRouter)
-app.use("/api/v1", ApiRouter);
+app.use("/api/v1", tokenAuth, ApiRouter);
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
@@ -69,9 +70,24 @@ const swaggerOptions = {
                 description: 'Serveur local',
             },
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
     },
-    apis: ['./src/api/routes/*.js'], // adapte ce chemin selon l’endroit où sont tes routes
+    apis: ['./src/api/routes/*.js'],
 };
+
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
