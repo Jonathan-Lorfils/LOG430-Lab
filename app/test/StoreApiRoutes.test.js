@@ -9,12 +9,6 @@ afterAll(async () => {
     await sequelize.close();
 });
 
-beforeAll(async () => {
-    await sequelize.authenticate();
-    await sequelize.sync({ force: true });
-    await CreateFakeData.generate();
-});
-
 describe('GET /api/v1/stores/details/:storeid', () => {
     it('should return store details with a valid token', async () => {
         const response = await request(app)
