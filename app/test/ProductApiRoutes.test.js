@@ -4,6 +4,11 @@ import sequelize from '../src/database.js';
 
 const VALID_TOKEN = 'token-static-123';
 
+beforeAll(async () => {
+    await sequelize.sync({ force: true });
+    await CreateFakeData.generate();
+});
+
 afterAll(async () => {
     await sequelize.close();
 });
