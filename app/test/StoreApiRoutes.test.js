@@ -1,16 +1,18 @@
 import request from 'supertest';
 import app from '../src/app.js';
 import sequelize from '../src/database.js';
+import CreateFakeData from '../src/CreateFakeData.js';
 
 const VALID_TOKEN = 'token-static-123';
 
-beforeAll(async () => {
-    await sequelize.sync({ force: true });
-    await CreateFakeData.generate();
-});
-
 afterAll(async () => {
     await sequelize.close();
+});
+
+beforeAll(async () => {
+    await sequelize.authenticate();
+    await sequelize.sync({ force: true });
+    await CreateFakeData.generate();
 });
 
 describe('GET /api/v1/stores/details/:storeid', () => {
