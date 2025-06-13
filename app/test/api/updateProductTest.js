@@ -2,13 +2,17 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-    vus: 10,
-    duration: '15s',
+    vus: 1830,
+    duration: '30s',
 };
+
+function getRandomPrice() {
+    return (Math.random() * (50 - 5) + 5).toFixed(2);
+}
 
 export default function () {
     const token = 'token-static-123';
-    const productId = Math.floor(Math.random() * 5) + 1;
+    const productId = Math.floor(Math.random() * 20) + 1;
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -17,7 +21,7 @@ export default function () {
 
     const payload = JSON.stringify({
         name: 'Produit modifié ' + productId,
-        price: 19.99,
+        price: getRandomPrice(),
         description: 'Description du produit modifié ' + productId,
     });
 

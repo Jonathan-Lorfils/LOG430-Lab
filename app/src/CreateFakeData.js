@@ -6,6 +6,7 @@ import SaleLine from './models/SaleLine.js';
 import Stock from './models/Stock.js';
 import Warehouse from './models/Warehouse.js';
 import Category from './models/Category.js';
+import { faker } from '@faker-js/faker';
 
 const CreateFakeData = {
     async createParentStore(name, address) {
@@ -133,47 +134,63 @@ const CreateFakeData = {
     },
 
     async generate() {
-        await this.createParentStore('Parent Store 1', '123 Main St')
+        const parentStore = await this.createParentStore('Parent Store 1', '123 Main St');
 
-        await this.createStore('Store 1', '1 Elm St', 1);
-        await this.createStore('Store 2', '2 Elm St', 1);
-        await this.createStore('Store 3', '3 Elm St', 1);
-        await this.createStore('Store 4', '4 Elm St', 1);
-        await this.createStore('Store 5', '5 Elm St', 1);
+        const stores = [];
+        for (let i = 1; i <= 5; i++) {
+            const store = await this.createStore(`Store ${i}`, `${i} Elm St`, parentStore.id);
+            stores.push(store);
+        }
 
-        await this.createWarehouse('Warehouse 1', 'Warehouse St', 1);
+        const warehouse = await this.createWarehouse('Warehouse 1', 'Warehouse St', parentStore.id);
 
-        await this.createProduct('Product 1', 100, 'Category A', 10.99, 'Description for Product 1');
-        await this.createProduct('Product 2', 50, 'Category B', 15.49, 'Description for Product 2');
-        await this.createProduct('Product 3', 200, 'Category A', 7.99, 'Description for Product 3');
-        await this.createProduct('Product 4', 30, 'Category C', 20.00, 'Description for Product 4');
-        await this.createProduct('Product 5', 150, 'Category B', 5.49, 'Description for Product 5');
+        const categories = ['Category A', 'Category B', 'Category C', 'Category D'];
+        const products = [];
 
-        await this.createSale(1, 100.00);
-        await this.createSale(2, 1000.00);
-        await this.createSale(3, 2340.00);
-        await this.createSale(4, 5630.00);
-        await this.createSale(5, 98317.00);
+        for (let i = 1; i <= 20; i++) {
+            const name = `Product ${i}`;
+            const stockQuantity = faker.number.int({ min: 10, max: 200 });
+            const price = parseFloat(faker.commerce.price({ min: 5, max: 50 })).toFixed(2);
+            const category = faker.helpers.arrayElement(categories);
+            const description = faker.commerce.productDescription();
 
-        await this.createSaleLine(1, 1, 35);
-        await this.createSaleLine(2, 2, 299);
-        await this.createSaleLine(3, 3, 600);
+            const product = await this.createProduct(name, stockQuantity, category, price, description);
+            products.push(product);
 
-        await this.createStockStore(1, 1, 50);
-        await this.createStockStore(2, 1, 30);
-        await this.createStockStore(3, 2, 20);
-        await this.createStockStore(4, 2, 10);
-        await this.createStockStore(5, 3, 100);
-        await this.createStockStore(1, 1, 0);
-        await this.createStockStore(2, 2, 0);
-        await this.createStockStore(3, 3, 0);
+            await this.createStockWarehouse(product.id, warehouse.id, stockQuantity);
 
-        await this.createStockWarehouse(1, 1, 200);
-        await this.createStockWarehouse(2, 1, 150);
-        await this.createStockWarehouse(3, 1, 100);
-        await this.createStockWarehouse(4, 1, 50);
-        await this.createStockWarehouse(5, 1, 0);
+            const store = faker.helpers.arrayElement(stores);
+            const quantityInStore = faker.number.int({ min: 1, max: 20 });
+            await this.createStockStore(product.id, store.id, quantityInStore);
+        }
+
+        for (let i = 0; i < 50; i++) {
+            const store = faker.helpers.arrayElement(stores);
+            const sale = await this.createSale(store.id, 0);
+            let subTotal = 0;
+
+            const usedProductIds = new Set();
+
+            const saleLinesCount = faker.number.int({ min: 1, max: 5 });
+            for (let j = 0; j < saleLinesCount; j++) {
+                let product;
+                do {
+                    product = faker.helpers.arrayElement(products);
+                } while (usedProductIds.has(product.id));
+                usedProductIds.add(product.id);
+
+                const quantity = faker.number.int({ min: 1, max: 10 });
+
+                await this.createSaleLine(sale.id, product.id, quantity);
+                subTotal += product.price * quantity;
+            }
+
+            sale.subTotal = subTotal.toFixed(2);
+            await sale.save();
+        }
     }
+
+
 }
 
 export default CreateFakeData;

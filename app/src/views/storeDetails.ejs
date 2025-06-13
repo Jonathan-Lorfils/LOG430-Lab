@@ -103,10 +103,10 @@
                                     <%= line.quantity %>
                                 </td>
                                 <td>
-                                    <%= line.price %>$
+                                    <%= line.pricePerUnit %>$
                                 </td>
                                 <td>
-                                    <%= (line.quantity * line.price) %>$
+                                    <%= (line.quantity * line.pricePerUnit).toFixed(2) %>$
                                 </td>
                             </tr>
                             <% }) %>
