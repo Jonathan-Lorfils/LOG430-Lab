@@ -6,6 +6,7 @@ import Product from '../models/Product.js';
 import Warehouse from '../models/Warehouse.js';
 import Stock from '../models/Stock.js';
 import ParentStore from '../models/ParentStore.js'
+import logger from '../utils/logger.js';
 
 
 const ParentStoreService = {
@@ -85,7 +86,6 @@ const ParentStoreService = {
 
     async getAllStoreRevenue() {
         try {
-            const parentStoreId = await ParentStore.findOne().then(parentStore => parentStore.id);
             const stores = await Store.findAll({
                 where: { ParentStoreId: 1 },
                 include: [{
@@ -101,7 +101,7 @@ const ParentStoreService = {
 
             return revenueByStore;
         } catch (error) {
-            console.error('Error fetching store revenue:', error);
+            logger.error('Error fetching store revenue:', error);
             throw error;
         }
     },
@@ -127,7 +127,7 @@ const ParentStoreService = {
 
             return emptyStocks;
         } catch (error) {
-            console.error('Error fetching empty stocks:', error);
+            logger.error('Error fetching out of stock products:', error);
             throw error;
         }
     },
@@ -167,7 +167,7 @@ const ParentStoreService = {
 
             return mostSoldProducts;
         } catch (error) {
-            console.error('Error fetching most sold products:', error);
+            logger.error('Error fetching trendy products:', error);
             throw error;
         }
     }

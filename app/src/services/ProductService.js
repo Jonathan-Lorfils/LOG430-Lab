@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import logger from '../utils/logger.js';
 
 const ProductService = {
     async updateProduct(productId, productData) {
@@ -13,7 +14,7 @@ const ProductService = {
 
             return { success: true, message: 'Product updated successfully' };
         } catch (error) {
-            console.error('Error updating product:', error);
+            logger.error('Error updating product :', error)
             throw error;
         }
     }
