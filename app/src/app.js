@@ -8,6 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './api/routes/ApiRoutes.js';
 import tokenAuth from './tokenAuth.js';
+import { httpRequestDurationMicroseconds, client as promClient } from './utils/metrics.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,16 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        httpRequestDurationMicroseconds
+            .labels(req.method, req.originalUrl, res.statusCode)
+            .observe(duration);
+    });
+    next();
+});
 
 // Moteur de vue
 app.set('view engine', 'ejs');
@@ -31,6 +42,12 @@ app.use('/store', StoreRouter);
 app.use('/parentStore', ParentStoreRouter);
 app.use('/api/v1', tokenAuth, ApiRouter);
 
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', promClient.register.contentType);
+    res.end(await promClient.register.metrics());
+});
+
+// Swagger config
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
