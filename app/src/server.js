@@ -17,6 +17,8 @@ const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`Serveur démarré sur http://localhost:${PORT}`);
             console.log(`Documentation disponible sur http://localhost:${PORT}/api-docs`);
+            console.log(`Métriques disponible sur http://localhost:${PORT}/metrics`)
+            console.log(`Grafaba disponible sur http://localhost:3001`)
         });
     } catch (error) {
         console.error('Erreur serveur :', error);

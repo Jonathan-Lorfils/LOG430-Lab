@@ -15,6 +15,8 @@ services:
       - .:/app
     ports:
       - "3000:3000"
+    networks:
+      - monitoring
 
   db:
     image: postgres:17
@@ -31,3 +33,32 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - monitoring
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+networks:
+  monitoring:
+
+
+volumes:
+  grafana-storage:

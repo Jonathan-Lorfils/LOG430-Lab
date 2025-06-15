@@ -40,7 +40,8 @@ app.use('/warehouse', WarehouseRouter);
 app.use('/replenishment', ReplenishmentRouter);
 app.use('/store', StoreRouter);
 app.use('/parentStore', ParentStoreRouter);
-app.use('/api/v1', tokenAuth, ApiRouter);
+// app.use('/api/v1', tokenAuth, ApiRouter);
+app.use('/api/v1', ApiRouter);
 
 app.get('/metrics', async (req, res) => {
     res.set('Content-Type', promClient.register.contentType);
