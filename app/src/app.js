@@ -11,7 +11,6 @@ import tokenAuth from './tokenAuth.js';
 import { httpRequestDurationMicroseconds, client as promClient } from './utils/metrics.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -32,17 +31,16 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'src', 'views'));
 
+// Routes
 app.get('/', (req, res) => {
     res.render('index', { title: 'Bienvenue dans l\'application de gestion de magasin' });
 });
-
 app.use('/warehouse', WarehouseRouter);
 app.use('/replenishment', ReplenishmentRouter);
 app.use('/store', StoreRouter);
 app.use('/parentStore', ParentStoreRouter);
-// app.use('/api/v1', tokenAuth, ApiRouter);
-app.use('/api/v1', ApiRouter);
-
+app.use('/api/v1', tokenAuth, ApiRouter);
+// app.use('/api/v1', ApiRouter);
 app.get('/metrics', async (req, res) => {
     res.set('Content-Type', promClient.register.contentType);
     res.end(await promClient.register.metrics());
