@@ -7,8 +7,7 @@ import Product from '../models/Product.js';
 const StoreService = {
     async getStoreDetailsByStoreId(storeId) {
         try {
-            const store = await Store.findOne({
-                where: { id: storeId },
+            const store = await Store.findByPk(storeId, {
                 include: [
                     {
                         model: Sale,
