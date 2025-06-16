@@ -16,47 +16,10 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      db:
-        condition: service_healthy
+      app-migrator:
+        condition: service_completed_successfully
     environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
-    working_dir: /app
-    command: node src/server.js
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    networks:
-      - monitoring
-
-  app2:
-    build: .
-    container_name: pos-app2
-    stdin_open: true
-    tty: true
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
-    working_dir: /app
-    command: node src/server.js
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    networks:
-      - monitoring
-
-  app3:
-    build: .
-    container_name: pos-app3
-    stdin_open: true
-    tty: true
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
+      - INSTANCE_ID=app1
       - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
     working_dir: /app
     command: node src/server.js
@@ -72,8 +35,6 @@ services:
     container_name: nginx-lb
     depends_on:
       - app1
-      - app2
-      - app3
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:

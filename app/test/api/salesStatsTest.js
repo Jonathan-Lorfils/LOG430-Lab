@@ -15,7 +15,7 @@ export default function () {
     };
 
     const res = http.get(
-        'http://localhost:3000/api/v1/parentstore/salesStats',
+        'http://localhost:3000/api/v1/parentStore/salesStats',
         { headers }
     );
 
