@@ -70,6 +70,26 @@ services:
     networks:
       - monitoring
 
+  app4:
+    build: .
+    container_name: pos-app4
+    stdin_open: true
+    tty: true
+    depends_on:
+      app-migrator:
+        condition: service_completed_successfully
+    environment:
+      - INSTANCE_ID=app4
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
+    working_dir: /app
+    command: node src/server.js
+    volumes:
+      - .:/app
+    expose:
+      - "3000"
+    networks:
+      - monitoring
+
   nginx:
     image: nginx:latest
     container_name: nginx-lb
@@ -77,6 +97,7 @@ services:
       - app1
       - app2
       - app3
+      - app4
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
@@ -124,7 +145,6 @@ services:
 
 networks:
   monitoring:
-
 
 volumes:
   grafana-storage:

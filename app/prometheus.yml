@@ -8,3 +8,4 @@ scrape_configs:
       - targets: ['pos-app1:3000']
       - targets: ['pos-app2:3000']
       - targets: ['pos-app3:3000']
+      - targets: ['pos-app4:3000']
