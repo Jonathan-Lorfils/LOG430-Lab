@@ -1,5 +1,6 @@
 import ProductService from '../../services/ProductService.js';
 import logger from '../../utils/logger.js';
+import redis from '../../utils/redisClient.js';
 
 const ProductApiController = {
     async updateProduct(req, res) {
@@ -10,7 +11,10 @@ const ProductApiController = {
             const productData = req.body;
             logger.info(`Updating product with productId: ${productId}`);
             const result = await ProductService.updateProduct(productId, productData);
-            logger.info(`Product successfully updated with productId: ${productId}`);
+
+            // Invalidate cache
+            await redis.del('allProducts');
+            logger.info(`Cache 'allProducts' invalidated after product update for ID: ${productId}`);
 
             return res.status(200).json({
                 success: true,
