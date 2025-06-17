@@ -3,7 +3,7 @@ import StockService from '../../services/StockService.js';
 import logger from '../../utils/logger.js';
 import redis from '../../utils/redisClient.js';
 
-const StoreController = {
+const StoreApiController = {
     async getStoreDetails(req, res) {
         const storeId = req.params.storeid;
         const cacheKey = `storeDetails:${storeId}`;
@@ -53,4 +53,4 @@ const StoreController = {
     }
 };
 
-export default StoreController;
+export default StoreApiController;

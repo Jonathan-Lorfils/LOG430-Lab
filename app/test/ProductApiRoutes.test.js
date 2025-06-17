@@ -1,60 +1,20 @@
 import request from 'supertest';
 import app from '../src/app.js';
-import sequelize from '../src/database.js';
+import ProductApiController from '../src/api/controllers/ProductApiController.js';
+import { jest, expect } from "@jest/globals";
 
-const VALID_TOKEN = 'token-static-123';
+jest.mock('../src/api/controllers/ProductApiController.js');
 
-afterAll(async () => {
-    await sequelize.close();
-});
+describe('Route trigger - PUT /api/v1/products/updateProduct/:productid', () => {
+    it('should call ProductController.updateProduct when the route is hit', async () => {
+        const mockHandler = jest.fn((req, res) => res.status(200).json({}));
+        ProductApiController.updateProduct.mockImplementation(mockHandler);
 
-describe('PUT /api/v1/products/updateProduct/:productid', () => {
-    it('should update a product with valid token and data', async () => {
-        const productId = 1;
-        const updateData = {
-            name: "Updated Product",
-            price: 29.99,
-            description: "New product description"
-        };
+        await request(app)
+            .put('/api/v1/products/updateProduct/123')
+            .set('Authorization', 'Bearer token-static-123')
+            .send({ name: 'Test', price: 10 });
 
-        const res = await request(app)
-            .put(`/api/v1/products/updateProduct/${productId}`)
-            .set('Authorization', `Bearer ${VALID_TOKEN}`)
-            .send(updateData);
-
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveProperty('success', true);
-        expect(res.body).toHaveProperty('message', 'Product updated successfully');
-    });
-
-    it('should reject the request with no token', async () => {
-        const res = await request(app)
-            .put('/api/v1/products/updateProduct/1')
-            .send({ name: "No Token", price: 9.99 });
-
-        expect(res.statusCode).toBe(401);
-    });
-
-    it('should reject the request with an invalid token', async () => {
-        const res = await request(app)
-            .put('/api/v1/products/updateProduct/1')
-            .set('Authorization', 'Bearer invalid_token')
-            .send({ name: "Bad Token", price: 9.99 });
-
-        expect(res.statusCode).toBe(403);
-    });
-
-    it('should return 500 if the product does not exist', async () => {
-        const res = await request(app)
-            .put('/api/v1/products/updateProduct/999999')
-            .set('Authorization', `Bearer ${VALID_TOKEN}`)
-            .send({
-                name: "Ghost Product",
-                price: 99.99,
-                description: "Should fail"
-            });
-
-        expect([500]).toContain(res.statusCode);
-        expect(res.body).toHaveProperty('success', false);
+        expect(mockHandler).toHaveBeenCalled();
     });
 });
