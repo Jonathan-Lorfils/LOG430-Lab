@@ -24,7 +24,7 @@ Prérequis:
    ```
 
    ```
-   git checkout labo03
+   git checkout labo04
    ```
 
 2. Lancer le container
@@ -49,17 +49,12 @@ Prérequis:
     -- Ouvrir le navigateur web de votre choix et accéder à l'url suivant :
 
     ```
-    http://localhost:3000/api-docs
+    http://localhost:3000/api-docs // API doc
+
+    http://localhost:3001 // Graffana
+
+    http://localhost:9090 // Prometheus
     ```
-
-    -- Avant de tester les appels entrer le token statique en suivant les étapes:
-
-    ![Étape 1](./docs/images/Labo03-Instructions/Etape1.png)
-
-    ![Étape 2](./docs/images/Labo03-Instructions/Etape2.png)
-
-    ![Étape 3](./docs/images/Labo03-Instructions/Etape3.png)
-
 
 ## Instruction de test
 
