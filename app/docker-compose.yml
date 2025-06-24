@@ -1,160 +1,129 @@
 services:
-  app-migrator:
-    build: .
-    command: node src/migrate.js
-    depends_on:
-      db:
-        condition: service_healthy
+  # === PRODUCT SERVICE ===
+  product-db:
+    image: postgres
+    container_name: product-db
     environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
+      POSTGRES_DB: productdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - product-db-data:/var/lib/postgresql/data
     networks:
-      - monitoring
+      - pos-net
 
-  app1:
-    build: .
-    container_name: pos-app1
-    stdin_open: true
-    tty: true
-    depends_on:
-      app-migrator:
-        condition: service_completed_successfully
+  product-service:
+    build: ./microservices/product-service
+    container_name: product-service
     environment:
-      - INSTANCE_ID=app1
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
-    working_dir: /app
-    command: node src/server.js
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    networks:
-      - monitoring
-
-  app2:
-    build: .
-    container_name: pos-app2
-    stdin_open: true
-    tty: true
+      DATABASE_URL: postgres://postgres:XRoot123@product-db:5432/productdb
+      REDIS_HOST: redis
     depends_on:
-      app-migrator:
-        condition: service_completed_successfully
-    environment:
-      - INSTANCE_ID=app2
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
-    working_dir: /app
-    command: node src/server.js
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    networks:
-      - monitoring
-
-  app3:
-    build: .
-    container_name: pos-app3
-    stdin_open: true
-    tty: true
-    depends_on:
-      app-migrator:
-        condition: service_completed_successfully
-    environment:
-      - INSTANCE_ID=app3
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
-    working_dir: /app
-    command: node src/server.js
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    networks:
-      - monitoring
-
-  app4:
-    build: .
-    container_name: pos-app4
-    stdin_open: true
-    tty: true
-    depends_on:
-      app-migrator:
-        condition: service_completed_successfully
-    environment:
-      - INSTANCE_ID=app4
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/postgres
-    working_dir: /app
-    command: node src/server.js
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    networks:
-      - monitoring
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx-lb
-    depends_on:
-      - app1
-      - app2
-      - app3
-      - app4
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - "3000:80"
-    networks:
-      - monitoring
-
-  db:
-    image: postgres:17
-    container_name: postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: postgres
-    ports:
-      - "5432"
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - monitoring
-
-  redis:
-    image: redis:7
-    container_name: redis-cache
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - monitoring
-
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - monitoring
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
+      - product-db
+      - redis
     ports:
       - "3001:3000"
     networks:
-      - monitoring
+      - pos-net
+
+  # === SALES SERVICE ===
+  sales-db:
+    image: postgres
+    container_name: sales-db
+    environment:
+      POSTGRES_DB: salesdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - sales-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
 
-networks:
-  monitoring:
+  sales-service:
+    build: ./microservices/sales-service
+    container_name: sales-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@sales-db:5432/salesdb
+      REDIS_HOST: redis
+    depends_on:
+      - sales-db
+      - redis
+    ports:
+      - "3002:3000"
+    networks:
+      - pos-net
 
+  # === INVENTORY SERVICE ===
+  inventory-db:
+    image: postgres
+    container_name: inventory-db
+    environment:
+      POSTGRES_DB: inventorydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - inventory-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
 
+  inventory-service:
+    build: ./microservices/inventory-service
+    container_name: inventory-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@inventory-db:5432/inventorydb
+      REDIS_HOST: redis
+    depends_on:
+      - inventory-db
+      - redis
+    ports:
+      - "3003:3000"
+    networks:
+      - pos-net
+
+  # === STORE SERVICE ===
+  store-db:
+    image: postgres
+    container_name: store-db
+    environment:
+      POSTGRES_DB: storedb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - store-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
+
+  store-service:
+    build: ./microservices/store-service
+    container_name: store-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@store-db:5432/storedb
+      REDIS_HOST: redis
+    depends_on:
+      - store-db
+      - redis
+    ports:
+      - "3004:3000"
+    networks:
+      - pos-net
+
+  # === REDIS SERVICE ===
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - pos-net
+
+# === VOLUMES PERSISTENTS ===
 volumes:
-  grafana-storage:
+  product-db-data:
+  sales-db-data:
+  inventory-db-data:
+  store-db-data:
+
+    # === RÉSEAU PRIVÉ ===
+networks:
+  pos-net:
+    driver: bridge
