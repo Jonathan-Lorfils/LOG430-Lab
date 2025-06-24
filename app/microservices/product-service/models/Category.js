@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database.js';
+import Product from './Product.js';
 
 const Category = sequelize.define(
     'Category', {
@@ -17,5 +18,9 @@ const Category = sequelize.define(
     timestamps: true
 }
 );
+
+Category.hasMany(Product)
+Product.belongsTo(Category)
+
 
 export default Category;

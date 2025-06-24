@@ -1,6 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import ApiRouter from './routes/ApiRoutes.js';
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.get('/', (req, res) => {
     res.json({ message: 'Bienvenue dans le service vente' });
 });
 
+app.use('/api/v1', ApiRouter)
+
 // Swagger config
 const swaggerOptions = {
     definition: {
@@ -21,7 +24,7 @@ const swaggerOptions = {
         info: {
             title: 'POS API',
             version: '1.0.0',
-            description: 'Documentation de l’API pour le service produit',
+            description: 'Documentation de l’API pour le service vente',
         },
         servers: [
             {

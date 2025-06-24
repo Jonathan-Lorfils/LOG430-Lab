@@ -14,6 +14,8 @@ app.get('/', (req, res) => {
     res.json({ message: 'Bienvenue dans le service magasin' });
 });
 
+app.use('/api/v1',)
+
 // Swagger config
 const swaggerOptions = {
     definition: {
