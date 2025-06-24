@@ -17,6 +17,10 @@ const Warehouse = sequelize.define(
         type: DataTypes.STRING,
         allowNull: false
     },
+    ParentStoreId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
 }, {
     tableName: 'warehouses',
     timestamps: true,

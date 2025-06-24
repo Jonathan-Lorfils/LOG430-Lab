@@ -17,6 +17,10 @@ const Sale = sequelize.define(
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
+    },
+    StoreId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     tableName: 'sales',
