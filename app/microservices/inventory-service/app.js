@@ -1,6 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import ApiRouter from './routes/ApiRoutes.js';
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
     res.json({ message: 'Bienvenue dans le service inventaire' });
 });
+
+app.use('/api/v1', ApiRouter);
 
 // Swagger config
 const swaggerOptions = {
