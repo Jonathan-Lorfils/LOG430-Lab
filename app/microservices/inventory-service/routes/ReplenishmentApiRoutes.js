@@ -5,7 +5,7 @@ const ReplenishmentApiRouter = express.Router();
 
 /**
  * @swagger
- * /api/v1/replenishments/create/{stockid}/{quantity}:
+ * /api/v1/inventory/replenishments/create/{stockid}/{quantity}:
  *   post:
  *     summary: Créer un réapprovisionnement pour un stock donné
  *     tags:

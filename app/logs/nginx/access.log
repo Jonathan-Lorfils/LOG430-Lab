@@ -1,0 +1,1 @@
+192.168.65.1 - - [24/Jun/2025:22:35:54 +0000] "GET /api/v1/sales/ HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"

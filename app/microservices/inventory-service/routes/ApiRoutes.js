@@ -3,6 +3,6 @@ import ReplenishmentApiRouter from './ReplenishmentApiRoutes.js';
 
 const ApiRouter = express.Router();
 
-ApiRouter.use('/replenishments', ReplenishmentApiRouter);
+ApiRouter.use('/inventory/replenishments', ReplenishmentApiRouter);
 
 export default ApiRouter;

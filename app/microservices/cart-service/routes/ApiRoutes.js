@@ -3,7 +3,7 @@ import CartApiRouter from './CartApiRoutes.js';
 
 const ApiRouter = express.Router();
 
-ApiRouter.use('/cart', CartApiRouter);
+ApiRouter.use('/carts', CartApiRouter);
 
 
 export default ApiRouter;

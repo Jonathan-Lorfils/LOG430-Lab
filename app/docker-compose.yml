@@ -12,7 +12,6 @@ services:
     networks:
       - pos-net
 
-
   product-service:
     build: ./microservices/product-service
     container_name: product-service
@@ -27,7 +26,6 @@ services:
     networks:
       - pos-net
 
-
   # === SALES SERVICE ===
   sales-db:
     image: postgres
@@ -40,7 +38,6 @@ services:
       - sales-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
-
 
   sales-service:
     build: ./microservices/sales-service
@@ -56,7 +53,6 @@ services:
     networks:
       - pos-net
 
-
   # === INVENTORY SERVICE ===
   inventory-db:
     image: postgres
@@ -69,7 +65,6 @@ services:
       - inventory-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
-
 
   inventory-service:
     build: ./microservices/inventory-service
@@ -85,7 +80,6 @@ services:
     networks:
       - pos-net
 
-
   # === CUSTOMER SERVICE ===
   customer-db:
     image: postgres
@@ -98,7 +92,6 @@ services:
       - customer-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
-
 
   customer-service:
     build: ./microservices/customer-service
@@ -114,7 +107,6 @@ services:
     networks:
       - pos-net
 
-
   # === CART SERVICE ===
   cart-db:
     image: postgres
@@ -127,7 +119,6 @@ services:
       - cart-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
-
 
   cart-service:
     build: ./microservices/cart-service
@@ -143,7 +134,6 @@ services:
     networks:
       - pos-net
 
-
   # === CHECKOUT SERVICE ===
   checkout-db:
     image: postgres
@@ -156,7 +146,6 @@ services:
       - checkout-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
-
 
   checkout-service:
     build: ./microservices/checkout-service
@@ -171,7 +160,24 @@ services:
       - "3006:3000"
     networks:
       - pos-net
-
+      # === API GATEWAY ===
+  api-gateway:
+    image: nginx
+    container_name: api-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - product-service
+      - sales-service
+      - inventory-service
+      - customer-service
+      - cart-service
+      - checkout-service
+    networks:
+      - pos-net
 
   # === REDIS SERVICE ===
   redis:
@@ -182,7 +188,6 @@ services:
     networks:
       - pos-net
 
-
 # === VOLUMES PERSISTENTS ===
 volumes:
   product-db-data:
@@ -192,7 +197,7 @@ volumes:
   cart-db-data:
   checkout-db-data:
 
-# === RÉSEAU PRIVÉ ===
+    # === RÉSEAU PRIVÉ ===
 networks:
   pos-net:
     driver: bridge
