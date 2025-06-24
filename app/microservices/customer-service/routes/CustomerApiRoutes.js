@@ -1,0 +1,177 @@
+import express from 'express';
+import CustomerApiController from '../controllers/CustomerApiController.js';
+
+const CustomerApiRouter = express.Router();
+
+/**
+ * @swagger
+ * /api/v1/customers/customer/{id}:
+ *   get:
+ *     summary: Obtenir un client par ID
+ *     tags:
+ *       - Customers
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID du client à récupérer
+ *     responses:
+ *       200:
+ *         description: Client récupéré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Customer successfully fetched
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     firstName:
+ *                       type: string
+ *                       example: Jean
+ *                     lastName:
+ *                       type: string
+ *                       example: Dupont
+ *                     email:
+ *                       type: string
+ *                       example: jean.dupont@example.com
+ *                     phone:
+ *                       type: string
+ *                       example: "+1 514-123-4567"
+ *                     address:
+ *                       type: string
+ *                       example: 123 rue Principale, Montréal, QC
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-24T14:30:00Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-24T14:35:00Z
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ *                 error:
+ *                   type: string
+ *                   example: Une erreur inattendue est survenue
+ */
+CustomerApiRouter.get('/customer/:id', CustomerApiController.getCustomerById);
+
+/**
+ * @swagger
+ * /api/v1/customers/customer/create:
+ *   post:
+ *     summary: Créer un nouveau client
+ *     tags:
+ *       - Customers
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: Jean
+ *               lastName:
+ *                 type: string
+ *                 example: Dupont
+ *               email:
+ *                 type: string
+ *                 example: jean.dupont@example.com
+ *               phone:
+ *                 type: string
+ *                 example: "+1 514-123-4567"
+ *               address:
+ *                 type: string
+ *                 example: 123 rue Principale, Montréal, QC
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *     responses:
+ *       201:
+ *         description: Client créé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Customer successfully created
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 2
+ *                     firstName:
+ *                       type: string
+ *                       example: Jean
+ *                     lastName:
+ *                       type: string
+ *                       example: Dupont
+ *                     email:
+ *                       type: string
+ *                       example: jean.dupont@example.com
+ *                     phone:
+ *                       type: string
+ *                       example: "+1 514-123-4567"
+ *                     address:
+ *                       type: string
+ *                       example: 123 rue Principale, Montréal, QC
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-24T14:30:00Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-24T14:35:00Z
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ *                 error:
+ *                   type: string
+ *                   example: Erreur de validation ou email déjà utilisé
+ */
+CustomerApiRouter.post('/customer/create', CustomerApiController.createCustomer);
+
+export default CustomerApiRouter;

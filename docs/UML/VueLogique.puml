@@ -46,6 +46,8 @@ class Customer {
   - firstName : String
   - lastName : String
   - email : String
+  - password : String
+  - phone : String
   - address : String
 }
 
@@ -55,6 +57,7 @@ class Cart {
 }
 
 class CartItem {
+  - price : float
   - quantity : int
 }
 

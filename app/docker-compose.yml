@@ -12,6 +12,7 @@ services:
     networks:
       - pos-net
 
+
   product-service:
     build: ./microservices/product-service
     container_name: product-service
@@ -26,6 +27,7 @@ services:
     networks:
       - pos-net
 
+
   # === SALES SERVICE ===
   sales-db:
     image: postgres
@@ -38,6 +40,7 @@ services:
       - sales-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+
 
   sales-service:
     build: ./microservices/sales-service
@@ -53,6 +56,7 @@ services:
     networks:
       - pos-net
 
+
   # === INVENTORY SERVICE ===
   inventory-db:
     image: postgres
@@ -65,6 +69,7 @@ services:
       - inventory-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+
 
   inventory-service:
     build: ./microservices/inventory-service
@@ -80,6 +85,94 @@ services:
     networks:
       - pos-net
 
+
+  # === CUSTOMER SERVICE ===
+  customer-db:
+    image: postgres
+    container_name: customer-db
+    environment:
+      POSTGRES_DB: customerdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - customer-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
+
+
+  customer-service:
+    build: ./microservices/customer-service
+    container_name: customer-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@customer-db:5432/customerdb
+      REDIS_HOST: redis
+    depends_on:
+      - customer-db
+      - redis
+    ports:
+      - "3004:3000"
+    networks:
+      - pos-net
+
+
+  # === CART SERVICE ===
+  cart-db:
+    image: postgres
+    container_name: cart-db
+    environment:
+      POSTGRES_DB: cartdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - cart-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
+
+
+  cart-service:
+    build: ./microservices/cart-service
+    container_name: cart-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@cart-db:5432/cartdb
+      REDIS_HOST: redis
+    depends_on:
+      - cart-db
+      - redis
+    ports:
+      - "3005:3000"
+    networks:
+      - pos-net
+
+
+  # === CHECKOUT SERVICE ===
+  checkout-db:
+    image: postgres
+    container_name: checkout-db
+    environment:
+      POSTGRES_DB: checkoutdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - checkout-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
+
+
+  checkout-service:
+    build: ./microservices/checkout-service
+    container_name: checkout-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@checkout-db:5432/checkoutdb
+      REDIS_HOST: redis
+    depends_on:
+      - checkout-db
+      - redis
+    ports:
+      - "3006:3000"
+    networks:
+      - pos-net
+
+
   # === REDIS SERVICE ===
   redis:
     image: redis:7
@@ -89,13 +182,17 @@ services:
     networks:
       - pos-net
 
+
 # === VOLUMES PERSISTENTS ===
 volumes:
   product-db-data:
   sales-db-data:
   inventory-db-data:
+  customer-db-data:
+  cart-db-data:
+  checkout-db-data:
 
-    # === RÉSEAU PRIVÉ ===
+# === RÉSEAU PRIVÉ ===
 networks:
   pos-net:
     driver: bridge
