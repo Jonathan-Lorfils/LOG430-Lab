@@ -80,33 +80,6 @@ services:
     networks:
       - pos-net
 
-  # === STORE SERVICE ===
-  store-db:
-    image: postgres
-    container_name: store-db
-    environment:
-      POSTGRES_DB: storedb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: XRoot123
-    volumes:
-      - store-db-data:/var/lib/postgresql/data
-    networks:
-      - pos-net
-
-  store-service:
-    build: ./microservices/store-service
-    container_name: store-service
-    environment:
-      DATABASE_URL: postgres://postgres:XRoot123@store-db:5432/storedb
-      REDIS_HOST: redis
-    depends_on:
-      - store-db
-      - redis
-    ports:
-      - "3004:3000"
-    networks:
-      - pos-net
-
   # === REDIS SERVICE ===
   redis:
     image: redis:7
@@ -121,7 +94,6 @@ volumes:
   product-db-data:
   sales-db-data:
   inventory-db-data:
-  store-db-data:
 
     # === RÉSEAU PRIVÉ ===
 networks:
