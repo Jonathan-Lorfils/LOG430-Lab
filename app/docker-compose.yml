@@ -26,27 +26,27 @@ services:
     networks:
       - pos-net
 
-  # === SALES SERVICE ===
-  sales-db:
+  # === SALE SERVICE ===
+  sale-db:
     image: postgres
-    container_name: sales-db
+    container_name: sale-db
     environment:
-      POSTGRES_DB: salesdb
+      POSTGRES_DB: saledb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: XRoot123
     volumes:
-      - sales-db-data:/var/lib/postgresql/data
+      - sale-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
 
-  sales-service:
-    build: ./microservices/sales-service
-    container_name: sales-service
+  sale-service:
+    build: ./microservices/sale-service
+    container_name: sale-service
     environment:
-      DATABASE_URL: postgres://postgres:XRoot123@sales-db:5432/salesdb
+      DATABASE_URL: postgres://postgres:XRoot123@sale-db:5432/saledb
       REDIS_HOST: redis
     depends_on:
-      - sales-db
+      - sale-db
       - redis
     ports:
       - "3002:3000"
@@ -160,7 +160,8 @@ services:
       - "3006:3000"
     networks:
       - pos-net
-      # === API GATEWAY ===
+
+  # === API GATEWAY ===
   api-gateway:
     image: nginx
     container_name: api-gateway
@@ -171,7 +172,7 @@ services:
       - ./logs/nginx:/var/log/nginx
     depends_on:
       - product-service
-      - sales-service
+      - sale-service
       - inventory-service
       - customer-service
       - cart-service
@@ -191,7 +192,7 @@ services:
 # === VOLUMES PERSISTENTS ===
 volumes:
   product-db-data:
-  sales-db-data:
+  sale-db-data:
   inventory-db-data:
   customer-db-data:
   cart-db-data:

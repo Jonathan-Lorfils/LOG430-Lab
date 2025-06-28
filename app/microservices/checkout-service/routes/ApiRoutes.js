@@ -3,6 +3,6 @@ import OrderApiRouter from './OrderApiRoutes.js';
 
 const ApiRouter = express.Router();
 
-ApiRouter.use('/orders', OrderApiRouter);
+ApiRouter.use('/checkout', OrderApiRouter);
 
 export default ApiRouter;

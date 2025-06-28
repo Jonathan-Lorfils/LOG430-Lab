@@ -2,7 +2,7 @@ import express from 'express';
 
 const ApiRouter = express.Router();
 
-ApiRouter.use('/sales', (req, res) => {
+ApiRouter.use('/sale', (req, res) => {
     res.status(200).json({ message: 'Sales API endpoint' });
 });
 

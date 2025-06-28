@@ -3,6 +3,6 @@ import ProductApiRouter from './ProductApiRoutes.js';
 
 const ApiRouter = express.Router();
 
-ApiRouter.use('/products', ProductApiRouter);
+ApiRouter.use('/product', ProductApiRouter);
 
 export default ApiRouter;
