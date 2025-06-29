@@ -5,10 +5,10 @@ const CartApiRouter = express.Router();
 
 /**
  * @swagger
- * /api/v1/carts/createCart/{customerid}:
+ * /api/v1/cart/createCart/{customerid}:
  *   post:
  *     summary: Crée un panier pour un client
- *     tags: [Carts]
+ *     tags: [Cart]
  *     parameters:
  *       - in: path
  *         name: customerid
@@ -41,10 +41,10 @@ CartApiRouter.post('/createCart/:customerid', CartApiController.createCart);
 
 /**
  * @swagger
- * /api/v1/carts/{cartid}/addItem:
+ * /api/v1/cart/{cartid}/addItem:
  *   post:
  *     summary: Ajoute un item à un panier
- *     tags: [Carts]
+ *     tags: [Cart]
  *     parameters:
  *       - in: path
  *         name: cartid
@@ -86,10 +86,10 @@ CartApiRouter.post('/:cartid/addItem', CartApiController.addItemToCart);
 
 /**
  * @swagger
- * /api/v1/carts/{cartid}/deleteItem/{cartitemid}:
+ * /api/v1/cart/{cartid}/deleteItem/{cartitemid}:
  *   delete:
  *     summary: Supprime un item d’un panier
- *     tags: [Carts]
+ *     tags: [Cart]
  *     parameters:
  *       - in: path
  *         name: cartid
@@ -124,10 +124,10 @@ CartApiRouter.delete('/:cartid/deleteItem/:cartitemid', CartApiController.delete
 
 /**
  * @swagger
- * /api/v1/carts/customer/{customerid}:
+ * /api/v1/cart/customer/{customerid}:
  *   get:
  *     summary: Récupère le panier d’un client
- *     tags: [Carts]
+ *     tags: [Cart]
  *     parameters:
  *       - in: path
  *         name: customerid

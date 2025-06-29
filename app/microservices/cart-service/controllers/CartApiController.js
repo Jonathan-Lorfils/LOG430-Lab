@@ -12,8 +12,7 @@ const CartApiController = {
         try {
             const cart = await CartService.createCart(customerId);
 
-            // Cache le panier après création
-            await redis.setEx(`cart:${cart.id}`, CACHE_TTL, JSON.stringify(cart));
+            await redis.set(`cart:${cart.id}`, JSON.stringify(cart), 'EX', CACHE_TTL);
 
             logger.info(`Cart created successfully for customer ${customerId} with ID ${cart.id}`);
             return res.status(201).json({
@@ -117,7 +116,7 @@ const CartApiController = {
             }
 
             // Met en cache le panier
-            await redis.setEx(`cart:customer:${customerId}`, CACHE_TTL, JSON.stringify(cart));
+            await redis.set(`cart:customer:${customerId}`, JSON.stringify(cart), 'EX', CACHE_TTL);
 
             logger.info(`Cart retrieved successfully for customer ${customerId}`);
             return res.status(200).json({

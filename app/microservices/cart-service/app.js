@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './routes/ApiRoutes.js';
+import client from 'prom-client';
 
 const app = express();
 
@@ -52,5 +53,15 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Crée un Registry Prometheus
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+// Endpoint d’exportation Prometheus
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 export default app;

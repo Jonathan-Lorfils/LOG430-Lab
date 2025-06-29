@@ -117,6 +117,8 @@ services:
       POSTGRES_PASSWORD: XRoot123
     volumes:
       - cart-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
       - pos-net
 
@@ -196,12 +198,33 @@ services:
     networks:
       - pos-net
 
+  # === FAKE DATA GENERATION ===
+  generatedata:
+    build: ./tools/generatedata
+    container_name: generate-data
+    command: [ "node", "migrate.js" ]
+    depends_on:
+      - cart-db
+    networks:
+      - pos-net
+
   # === REDIS SERVICE ===
   redis:
     image: redis:7
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - pos-net
+
+  # === PROMETHEUS SERVICE ===
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - pos-net
 

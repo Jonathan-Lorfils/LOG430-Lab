@@ -2,10 +2,6 @@ global:
   scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'pos-app'
-    metrics_path: /metrics
+  - job_name: 'cart-service'
     static_configs:
-      - targets: ['pos-app1:3000']
-      - targets: ['pos-app2:3000']
-      - targets: ['pos-app3:3000']
-      - targets: ['pos-app4:3000']
+      - targets: ['cart-service-1:3000', 'cart-service-2:3000']

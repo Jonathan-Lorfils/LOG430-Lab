@@ -1,13 +1,13 @@
-import Cart from './models/Cart.js';
+import Cart from './models/Cart.js'
 import CartItem from './models/CartItem.js';
 import { faker } from '@faker-js/faker';
 
 const CreateFakeData = {
-    async createCart(userId) {
+    async createCart(customerId) {
         try {
             const cart = await Cart.create({
-                userId: userId,
-                totalPrice: 0,
+                customerId: customerId,
+                totalAmount: 0,
             });
             return cart;
         } catch (error) {
@@ -19,10 +19,16 @@ const CreateFakeData = {
     async createCartItem(cartId, productId, quantity) {
         try {
             const cartItem = await CartItem.create({
-                cartId: cartId,
-                productId: productId,
+                CartId: cartId,
+                ProductId: productId,
                 quantity: quantity,
-                price: faker.commerce.price(),
+                price: faker.commerce.price({
+                    min: 1,
+                    max: 100,
+                    dec: 2,
+                    symbol: '',
+                    raw: true,
+                }),
             });
             return cartItem;
         } catch (error) {
@@ -34,12 +40,12 @@ const CreateFakeData = {
     async generateFakeData(numCarts = 10, numItemsPerCart = 5) {
         try {
             for (let i = 0; i < numCarts; i++) {
-                const userId = faker.datatype.uuid();
+                const userId = i;
                 const cart = await this.createCart(userId);
 
                 for (let j = 0; j < numItemsPerCart; j++) {
-                    const productId = faker.datatype.uuid();
-                    const quantity = faker.datatype.number({ min: 1, max: 10 });
+                    const productId = i;
+                    const quantity = i + 10;
                     await this.createCartItem(cart.id, productId, quantity);
                 }
             }
