@@ -25,3 +25,5 @@
 2025/06/28 19:58:44 [error] 28#28: *3 no resolver defined to resolve sale-service, client: 192.168.65.1, server: , request: "GET /api/v1/sale HTTP/1.1", host: "localhost"
 2025/06/28 20:01:48 [emerg] 1#1: no "events" section in configuration
 2025/06/28 20:06:08 [emerg] 1#1: no "events" section in configuration
+2025/06/29 16:42:26 [emerg] 1#1: host not found in upstream "cart-service:3000" in /etc/nginx/nginx.conf:7
+2025/06/29 16:46:37 [emerg] 1#1: "proxy_pass" cannot have URI part in location given by regular expression, or inside named location, or inside "if" statement, or inside "limit_except" block in /etc/nginx/nginx.conf:16

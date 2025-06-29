@@ -134,6 +134,21 @@ services:
     networks:
       - pos-net
 
+  # === CART SERVICE INSTANCE 2 ===
+  cart-service-2:
+    build: ./microservices/cart-service
+    container_name: cart-service-2
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@cart-db:5432/cartdb
+      REDIS_HOST: redis
+    depends_on:
+      - cart-db
+      - redis
+    ports:
+      - "3007:3000"
+    networks:
+      - pos-net
+
   # === CHECKOUT SERVICE ===
   checkout-db:
     image: postgres
@@ -176,6 +191,7 @@ services:
       - inventory-service
       - customer-service
       - cart-service
+      - cart-service-2
       - checkout-service
     networks:
       - pos-net
