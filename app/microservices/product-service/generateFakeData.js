@@ -29,7 +29,7 @@ const GenerateFakeData = {
         }
     },
 
-    async generate(productCount = 10, categoryCount = 5) {
+    async generate(productCount = 20, categoryCount = 10) {
         try {
             // Create categories
             const categories = [];
