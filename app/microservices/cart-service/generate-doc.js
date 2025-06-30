@@ -1,30 +1,20 @@
-import express from 'express';
-import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import ApiRouter from './routes/ApiRoutes.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import logger from './utils/logger.js'
 
-const app = express();
-
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static('public'));
-
-// Routes
-app.get('/', (req, res) => {
-    res.json({ message: 'Bienvenue dans le service inventaire' });
-});
-
-app.use('/api/v1', ApiRouter);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Swagger config
-const swaggerOptions = {
+const options = {
     definition: {
         openapi: '3.0.0',
         info: {
             title: 'POS API',
             version: '1.0.0',
-            description: 'Documentation de l’API pour le service client',
+            description: 'Documentation de l’API pour le service produit',
         },
         servers: [
             {
@@ -50,7 +40,13 @@ const swaggerOptions = {
     apis: ['./routes/*.js'],
 };
 
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Générer le spec
+const swaggerSpec = swaggerJsdoc(options);
 
-export default app;
+// Chemin de sortie
+const outputPath = path.join(__dirname, 'swagger.json');
+
+// Sauvegarder le fichier
+fs.writeFileSync(outputPath, JSON.stringify(swaggerSpec, null, 2));
+
+logger.info(`Swagger file generated at ${outputPath}`);

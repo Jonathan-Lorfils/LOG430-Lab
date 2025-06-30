@@ -4,7 +4,8 @@
     "scripts": {
         "start": "node server.js",
         "test": "jest",
-        "eslint": "eslint ."
+        "eslint": "eslint .",
+        "generate-doc": "node generate-doc.js"
     },
     "dependencies": {
         "@babel/core": "^7.27.1",

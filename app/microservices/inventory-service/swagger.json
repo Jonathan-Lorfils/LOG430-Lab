@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "POS API",
+    "version": "1.0.0",
+    "description": "Documentation de l’API pour le service inventaire"
+  },
+  "servers": [
+    {
+      "url": "http://localhost",
+      "description": "Serveur local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/inventory/replenishments/create/{stockid}/{quantity}": {
+      "post": {
+        "summary": "Créer un réapprovisionnement pour un stock donné",
+        "tags": [
+          "Replenishments"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "stockid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID du stock à réapprovisionner"
+          },
+          {
+            "in": "path",
+            "name": "quantity",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Quantité à réapprovisionner"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Réapprovisionnement créé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Réapprovisionnement créé avec succès"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 42
+                        },
+                        "stockId": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-06-09T14:32:00.000Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-06-09T14:32:00.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Quantité invalide",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Quantité demandée invalide"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erreur interne du serveur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Erreur interne du serveur"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "TypeError: Cannot read properties of undefined"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

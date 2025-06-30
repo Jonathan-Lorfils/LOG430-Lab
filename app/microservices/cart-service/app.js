@@ -4,7 +4,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './routes/ApiRoutes.js';
 import client from 'prom-client';
 import { httpRequestDurationMicroseconds, client as promClient } from './utils/metrics.js';
-import fs from 'fs';
+import GenerateSwaggerDoc from './generate-doc.js';
 
 const app = express();
 
@@ -65,9 +65,6 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// Sauvegarder en fichier JSON
-fs.writeFileSync('./swagger.json', JSON.stringify(swaggerSpec, null, 2));
 
 // Crée un Registry Prometheus
 const register = new client.Registry();
