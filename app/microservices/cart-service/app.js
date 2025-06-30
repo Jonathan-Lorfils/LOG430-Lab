@@ -36,7 +36,7 @@ const swaggerOptions = {
         info: {
             title: 'POS API',
             version: '1.0.0',
-            description: 'Documentation de l’API pour le service produit',
+            description: 'Documentation de l’API pour le service panier',
         },
         servers: [
             {

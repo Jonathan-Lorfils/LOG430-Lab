@@ -24,7 +24,7 @@ Prérequis:
    ```
 
    ```
-   git checkout labo04
+   git checkout labo05
    ```
 
 2. Lancer le container
@@ -51,9 +51,9 @@ Prérequis:
     ```
     http://localhost:3000/api-docs // API doc
 
-    http://localhost:3001 // Graffana
 
-    http://localhost:9090 // Prometheus
+
+    
     ```
 
 ## Instruction de test
