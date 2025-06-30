@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './routes/ApiRoutes.js';
+import { httpRequestDurationMicroseconds, client as promClient } from './utils/metrics.js';
 
 const app = express();
 
@@ -9,6 +10,16 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        httpRequestDurationMicroseconds
+            .labels(req.method, req.originalUrl, res.statusCode)
+            .observe(duration);
+    });
+    next();
+});
 
 // Routes
 app.get('/', (req, res) => {
@@ -52,5 +63,12 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Endpoint d’exportation Prometheus
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', promClient.register.contentType);
+    res.end(await promClient.register.metrics());
+});
+
 
 export default app;
