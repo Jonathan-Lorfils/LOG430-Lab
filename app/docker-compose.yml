@@ -11,6 +11,11 @@ services:
       - product-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   product-service:
     build: ./microservices/product-service
@@ -19,8 +24,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@product-db:5432/productdb
       REDIS_HOST: redis
     depends_on:
-      - product-db
-      - redis
+      product-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3001:3000"
     networks:
@@ -38,6 +45,11 @@ services:
       - sale-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   sale-service:
     build: ./microservices/sale-service
@@ -46,8 +58,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@sale-db:5432/saledb
       REDIS_HOST: redis
     depends_on:
-      - sale-db
-      - redis
+      sale-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3002:3000"
     networks:
@@ -65,6 +79,11 @@ services:
       - inventory-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   inventory-service:
     build: ./microservices/inventory-service
@@ -73,8 +92,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@inventory-db:5432/inventorydb
       REDIS_HOST: redis
     depends_on:
-      - inventory-db
-      - redis
+      inventory-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3003:3000"
     networks:
@@ -92,6 +113,11 @@ services:
       - customer-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   customer-service:
     build: ./microservices/customer-service
@@ -100,8 +126,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@customer-db:5432/customerdb
       REDIS_HOST: redis
     depends_on:
-      - customer-db
-      - redis
+      customer-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3004:3000"
     networks:
@@ -122,6 +150,11 @@ services:
       - "5433:5432"
     networks:
       - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   cart-service:
     build: ./microservices/cart-service
@@ -130,8 +163,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@cart-db:5432/cartdb
       REDIS_HOST: redis
     depends_on:
-      - cart-db
-      - redis
+      cart-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3005:3000"
     networks:
@@ -145,8 +180,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@cart-db:5432/cartdb
       REDIS_HOST: redis
     depends_on:
-      - cart-db
-      - redis
+      cart-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3007:3000"
     networks:
@@ -164,6 +201,11 @@ services:
       - checkout-db-data:/var/lib/postgresql/data
     networks:
       - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   checkout-service:
     build: ./microservices/checkout-service
@@ -172,8 +214,10 @@ services:
       DATABASE_URL: postgres://postgres:XRoot123@checkout-db:5432/checkoutdb
       REDIS_HOST: redis
     depends_on:
-      - checkout-db
-      - redis
+      checkout-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "3006:3000"
     networks:
@@ -205,7 +249,8 @@ services:
     container_name: generate-data
     command: [ "node", "migrate.js" ]
     depends_on:
-      - cart-db
+      cart-db:
+        condition: service_healthy
     networks:
       - pos-net
 

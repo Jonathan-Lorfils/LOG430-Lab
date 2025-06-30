@@ -8,10 +8,6 @@ const OrderLine = sequelize.define(
         primaryKey: true,
         autoIncrement: true
     },
-    OrderId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
     ProductId: {
         type: DataTypes.INTEGER,
         allowNull: false,

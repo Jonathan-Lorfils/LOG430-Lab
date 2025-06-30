@@ -5,7 +5,7 @@ const CustomerApiRouter = express.Router();
 
 /**
  * @swagger
- * /api/v1/customers/customer/{id}:
+ * /api/v1/customer/customer/{id}:
  *   get:
  *     summary: Obtenir un client par ID
  *     tags:
@@ -81,7 +81,7 @@ CustomerApiRouter.get('/customer/:id', CustomerApiController.getCustomerById);
 
 /**
  * @swagger
- * /api/v1/customers/customer/create:
+ * /api/v1/customer/customer/create:
  *   post:
  *     summary: Créer un nouveau client
  *     tags:

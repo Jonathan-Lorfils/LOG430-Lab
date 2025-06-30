@@ -5,7 +5,7 @@ const OrderApiRouter = express.Router();
 
 /**
  * @swagger
- * /api/v1/orders/createOrder:
+ * /api/v1/checkout/createOrder:
  *   post:
  *     summary: Crée une commande pour un client
  *     tags: [Orders]
@@ -55,7 +55,7 @@ OrderApiRouter.post('/createOrder', OrderApiController.createOrder);
 
 /**
  * @swagger
- * /api/v1/orders/getOrderByCustomerId/{customerId}:
+ * /api/v1/checkout/getOrderByCustomerId/{customerId}:
  *   get:
  *     summary: Récupère toutes les commandes d’un client
  *     tags: [Orders]

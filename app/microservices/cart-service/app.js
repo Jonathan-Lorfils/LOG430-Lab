@@ -4,7 +4,6 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './routes/ApiRoutes.js';
 import client from 'prom-client';
 import { httpRequestDurationMicroseconds, client as promClient } from './utils/metrics.js';
-import GenerateSwaggerDoc from './generate-doc.js';
 
 const app = express();
 
