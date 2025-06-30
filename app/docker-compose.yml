@@ -217,7 +217,7 @@ services:
     networks:
       - pos-net
 
-  # === PROMETHEUS SERVICE ===
+  # === PROMETHEUS ===
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -225,6 +225,18 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - pos-net
+
+  # === GRAFANA ===
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
       - pos-net
 

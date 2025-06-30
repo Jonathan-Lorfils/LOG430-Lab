@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-    vus: 30,
+    vus: 200,
     duration: '30s',
 };
 
@@ -24,8 +24,7 @@ export default function () {
     check(res, {
         'status is 200 or 404': (r) => r.status === 200,
         'response has success field': (r) => r.json().success !== undefined,
-        'data has cartId if status 200': (r) =>
-            r.status === 200 ? r.json().data?.cartId !== undefined : true,
+        'data has cartId if status 200': (r) => Array.isArray(r.json().data?.CartItems),
     });
 
     sleep(1);
