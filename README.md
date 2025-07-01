@@ -2,8 +2,6 @@
 
 Lien vers le repo github (chaque laboratoire à sa propre branche) : https://github.com/Jonathan-Lorfils/LOG430-Lab
 
-Lien vers la documentation Swagger UI : http://localhost:3000/api-docs
-
 ## Instructions d'exécution
 Prérequis:
     Git
@@ -59,12 +57,6 @@ Prérequis:
 
 ## Instruction de test
 
-### ParentStore 
-
-  ![Étape 1](./docs/images/ParentStore/ParentStoreEtape1.png)
-
-  ![Étape 2](./docs/images/ParentStore/ParentStoreEtape2.png)
-
 ### Product 
 
   ![Étape 1](./docs/images/Product/ProductEtape1.png)
@@ -77,64 +69,64 @@ Prérequis:
 
   ![Étape 2](./docs/images/Replenishment/ReplenishmentEtape2.png)
 
-### Store
-
-  ![Étape 1](./docs/images/Store/StoreEtape1.png)
-
-  ![Étape 2](./docs/images/Store/StoreEtape2.png)
-
 ## Introduction
 
-Dans le cadre de ce laboratoire 02, j’ai eu à faire évoluer l’architecture de mon application point de vente afin de convenir aux nouveaux besoins du client. 
+Dans le cadre de ce laboratoire 05, j’ai eu à faire évoluer l’architecture de mon système multi-magasin vers une architecture orienté microservices, adaptée à un contexte de commerce életronique.
 
 ## Contexte
 
-Présentement mon application POS me permet d’effectuer une recherche sur un produit basé sur le nom, identifiant ou la catégorie, ajouter un produit, effectuer un retour et consulter les produits disponibles. Cette application convenait aux objectifs fournis par le client dans le cadre du laboratoire 01, mais est obsolète face au requis du laboratoire 02.
+Présentement mon système permet la gestion de plusieurs magasin et d'un entrepot sous la supervision d'une maison mère. Il est possible d'accéder au informations suivantes :
 
-## Requis 
+- Génération d'un rapport des ventes
+- Consulter les stock d'un magasin spécifique
+- Visualiser les performances des magasins
+- Mettre à jour les informations d'un produit.
 
-Le client souhaite désormais que l’application lui permette de gérer 5 magasins situés dans des quartiers différents, un centre logistique, ainsi que d’offrir des fonctionnalités administratives pour les gestionnaires de la maison mère.
+Toutes ces actions sont accessible au travers d'une API documenter par Swagger via http://localhost:3000/api-docs (sur la branche labo04).
 
+## Requis
+
+Le client souhaite désormais que système passe vers une architecture orienté microservices en plus d'ajouter des fonctionnalités propres au commercer électronique.
 ---
 
 Exigences fonctionnelles
 
-En tant que gestionnaire de la maison mère, je veux pouvoir :
-- Consulter un tableau de bord regroupant les informations suivantes par magasin :
-  - Chiffre d’affaires  
-  - Alerte de rupture de stock  
-  - Tendance hebdomadaire  
-  - Produit en surstock
-- Consulter un rapport regroupant les informations suivantes par magasin :
-  - Ventes  
-  - Produits les plus vendus  
-  - Stock restant
-
-En tant qu’employé d’un magasin, je veux pouvoir :
-- Consulter les stocks du centre logistique
-- Initier une demande de réapprovisionnement en cas de stock insuffisant
-
+En tant que client je souhaite pouvoir :
+- Créer un compte client
+- Ajouter des articles à mon panier d'achat
+- Retirer des articles de mon panier d'achat
+- Valider ma commande
 
 ## Objectif qualité
 
 Qualités rechercher par le client 
-1	Permettre une évolutivité vers une potentielle interface web ou mobile.
-2	Synchronisation fiable et cohérente des données entre les différents magasins et la maison mère.
-3	Offrir une consultation centralisée des stocks disponibles et des transactions réalisées des les magasins
-
-| Objectif de qualité | Description                                                                                                                             |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Convivialité**    | Je veux que mon application soit facile à prendre en main pour les employés des magasins ainsi que les gestionnaires de la maison mère. |
-| **Transférabilité** | Je veux que mon environnement puisse facilement évoluer vers un autre environnement.                                                    |
-| **Intégrité**       | Je veux m’assurer que les données soient cohérentes et restent fidèles aux opérations réelles.                                          |
+1	Offrir une bonne fiabilité aux usagers du système.
+2	Synchronisation fiable et cohérente des données entre les stocks et les produit présenter dans la magasin électronique.
+3 Offrir une bonne performance grâce à un traitement rapide des requêtes.
+  
+| Objectif de qualité | Description                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| **Fiabilité**       | Je veux que mon application soit fiable et résiliente en cas de panne ou gros volume de requête. |
+| **Performant**      | Je veux que mon système traite les requêtes des usagers dans un délai raisonnable.               |
+| **Intégrité**       | Je veux m’assurer que les données soient cohérentes et restent fidèles aux opérations réelles.   |
 
 
 ## Stakeholder
 
-| Rôle / Nom                         | Fonctionnalités                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Gestionnaire de la maison mère** | - Consulter un tableau de bord regroupant les informations suivantes par magasin : <br> &nbsp;&nbsp;• Chiffre d’affaires <br> &nbsp;&nbsp;• Alerte de rupture de stock <br> &nbsp;&nbsp;• Tendance hebdomadaire <br> &nbsp;&nbsp;• Produit en surstock <br> <br> - Consulter un rapport regroupant les informations suivantes par magasin : <br> &nbsp;&nbsp;• Ventes <br> &nbsp;&nbsp;• Produits les plus vendus <br> &nbsp;&nbsp;• Stock restant |
-| **Employé d’un magasin**           | En tant qu’employé d’un magasin, je veux pouvoir : <br> - Consulter les stocks du centre logistique <br> - Initier une demande de réapprovisionnement en cas de stock insuffisant                                                                                                                                                                                                                                                                  |
+| **Rôle**                                                  | **Attente**                                                                                                                                                                                                                                                                                                                                                                             |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Acquisiteur (personne optant pour l’usage du système)** | - Déploiement simple <br> - Facile à configurer et à maintenir <br> - Système stable, fiable et sécurisé <br> - Coût faible <br> - Respect des exigences internes et légales                                                                                                                                                                                                            |
+| **Évaluateur**                                            | - Système conforme aux normes <br> - Intégrité des données <br> - Traçabilité des actions sur les documents                                                                                                                                                                                                                                                                             |
+| **Communicateur**                                         | - Documentation accessible <br> - Cas d’utilisation simple                                                                                                                                                                                                                                                                                                                              |
+| **Développeur**                                           | - Code clair et bien documenté <br> - Facile de contribuer au répertoire                                                                                                                                                                                                                                                                                                                |
+| **Mainteneur**                                            | - Intégration fluide des contributions <br> - Architecture favorisant la maintenance et l’évolutivité                                                                                                                                                                                                                                                                                   |
+| **Fournisseur**                                           | - Stabilité du système <br> - Compatibilité avec les versions déployées                                                                                                                                                                                                                                                                                                                 |
+| **Support technique**                                     | - Utilisation intuitive <br> - Message d’erreur empêchant les mauvaises manipulations                                                                                                                                                                                                                                                                                                   |
+| **Administrateur système**                                | - Déploiement automatique <br> - Observabilité <br> - Haut taux de disponibilité                                                                                                                                                                                                                                                                                                        |
+| **Administrateur**                                        | - Gestion des usagers                                                                                                                                                                                                                                                                                                                                                                   |
+| **Testeur**                                               | - Documentation des cas d’usage <br> - Fonctionnalités testables et stables <br> - Contrôle qualité sur les versions finales                                                                                                                                                                                                                                                            |
+| **Usager**                                                | - Facilité de prise en main <br> - Accès rapide aux documents <br> - Pouvoir signer ou faire signer un document par un tiers facilement <br> - Persistance des données                                                                                                                                                                                                                  |
+| **Client**                                                | - Utilisation intuitive de l’application <br> - Facile d’accès (sans avoir à créer un compte) <br> - Un minimum d’assistance lors de l’utilisation <br> - Je veux pouvoir : <br> &nbsp;&nbsp;- Créer un compte client <br> &nbsp;&nbsp;- Ajouter des articles à mon panier d'achat <br> &nbsp;&nbsp;- Retirer des articles de mon panier d'achat <br> &nbsp;&nbsp;- Valider ma commande |
 
 
 ## Contraintes architecturales
@@ -142,21 +134,23 @@ Qualités rechercher par le client
 Contraintes
 L’architurecture de l’application doit être hébergé en utilisant la VM fournise.
 L’architurecture de l’application doit être dockeriser
-L’architurecture de l’application doit permettre une migration vers une interface web ou mobile.
+L'application doit être séparé en 3-4 services en se basant sur le système actuel
+L'application doit également avoir au moins 3 API lié à la gestion du commerce électronique
+Chaque service doit être déployé indépendamment dans son propre conteneur et avoir sa propre instance de persistance
 
 ## Contexte technique
 
-Le client souhaite pouvoir interagir avec l’application depuis chaque magasin, tandis que l’application roule sur la VM mise à disposition.
+Le système doit être orienté vers une architecture orienté microservice.
 
 ![Vue déploiement](./out/docs/UML/VueDeploiement/VueDeploiement.png)
 
 ## Stratégie de solution
 
-| Problème identifié                                | Défauts                                                                                                                         | Solution proposée                                                                                              |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| **Architecture serveur / client à 2 tiers**       | - Fort couplage entre l’interface utilisateur et la logique métier  <br> - Évolution difficile vers une interface web ou mobile | - Migration vers une architecture 3 tiers (MVC) séparant l’interface, la logique métier et l’accès aux données |
-| **Interaction avec l’utilisateur via la console** | - Interface limitée  <br> - Peu de possibilités d’évolution de l’interface utilisateur (UI)                                     | - Création d’une interface web avec EJS                                                                        |
-| **Vue logique**                                   | - Obsolète face aux nouveaux requis                                                                                             | - Mise à jour de la vue logique pour représenter la nouvelle logique d’affaires                                |
+| **Problème identifié**                  | **Défauts**                                                                                                                                                                                                         | **Solutions proposée**                                                        |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Architecture serveur / client à 3 tiers | Risques de goulot d’étranglement sur le serveur si la charge est élevée<br>Grosse dépendance vers la base de données pouvant devenir un goulot d’étranglement.<br>Si un tier tombe tout le système tombe également. | Migration vers une architecture orientée microservice                         |
+| Vue logique                             | Obsolète face aux nouveaux requis                                                                                                                                                                                   | Mise à jour de la vue logique pour représenter la nouvelle logique d’affaires |
+
 
 ## Vue logique
 
@@ -164,18 +158,11 @@ Le client souhaite pouvoir interagir avec l’application depuis chaque magasin,
 
 À noter que je n'ai pas fait d'héritage pour les entités Store et Warehouse étant donné que l'ORM que j'utilise présentement, Sequelize, ne le supporte pas pour le moment.
 
+De même pour OrderLine et SaleLine
+
 ## Vue implémentation
 
 ![Vue implémentation](./out/docs/UML/VueImplementation/VuePackagePOS.png)
-
-Le diagramme suit la méthodologie MVC soit :
-
-Controller : Responsable de l’interaction entre l’application et l’utilisateur. Se charge d’appeler les services appropriés afin de récupérer les informations nécessaires puis retourne une vue à l’utilisateur. 
-
-Vue : Présente les données à l’utilisateur, fonctionne en collaboration avec le controlleur.
-
-Model : Contient la logique relié au données et leur logique d’accès. 
-
 
 ## Vue déploiement
 
@@ -203,7 +190,7 @@ Model : Contient la logique relié au données et leur logique d’accès.
 
 ### Titre
 
-Choix de l’architecture
+Choix de l'architecture
 
 ### Status
 
@@ -211,27 +198,29 @@ Accepté
 
 ### Contexte
 
-Dans le cadre de ce laboratoire, l’application point de vente doit pouvoir répondre aux besoins d’une entreprise possédant cinq magasins, un centre logistique et une maison mère. La structure précédente soit une architecture client / serveur 2 tier n’est plus suffisante afin de répondre aux besoins du client.
+Dans le cadre de ce laboratoire, le système de gestion multi-magasin doit pouvoir répondre aux nouveaux besoins et intégrer des services de commerce électronique. La structure à 3 tier avec une API REST exposé n'est donc plus suffisante. 
 
 ### Décision
 
-Faire évoluer l’architecture actuel vers une architecture client / serveur 3 tier.
+Faire évoluer l'architecture vers un système orienté microservice.
 
 #### Conséquence
 
-Nécessite de modifier le code existant afin de convenir à cette nouvelle architecture.
+| **Avantages**                         | Explication                                                                          |
+| ------------------------------------- | ------------------------------------------------------------------------------------ |
+| Scalabilité indépendante              | Chaque microservice peut être déployé et mis à l’échelle séparément selon sa charge. |
+| Résilience améliorée                  | Une défaillance d’un service n’affecte pas nécessairement l’ensemble du système.     |
+| Séparation claire des responsabilités | Facilite le développement parallèle.                                                 |
+| **Inconvénients**                     |                                                                                      |
+| Complexité opérationnelle             | Nécessite un orchestrateur (Docker).                                                 |
+| Débogage plus complexe                | La distribution des responsabilités entre services rend le débogage plus complexe.   |
 
-Permet une meilleure séparation des responsabilités réduisant ainsi le couplage entre la logique métier et l’interface usager.
-
-Permet une meilleure évolutivité de l’application dans notre cas, vers une possible interface web ou mobile.
-
-Nécessite un structure du code plus stricte. 
 
 ### ADR 2
 
 ### Titre
 
-Implementation du patron de conception MVC
+Introduction d'un API Gateway avec NGINX
 
 ### Status
 
@@ -239,24 +228,28 @@ Accepté
 
 ### Contexte
 
-Afin de répondre aux nouveaux besoins du client, il a été établi dans l’ADR précédent qu’il est nécessaire de faire évoluer l’architecture du logiciel. De plus, le fait de passer à une architecture 3 tier oblige de devoir choisir un patron de conception à suivre afin de séparer les différentes logiques de l’application.
+Avec la migration vers une architecture microservices, chaque domaine métier (produits, ventes, utilisateurs) expose désormais ses propres endpoints RESTful. Sans API Gateway, le client devrait connaître l’adresse de chaque microservice.
 
 ### Décision
 
-Adoption du patron de conception MVC :
+Nous avons décidé d’introduire NGINX comme API Gateway. Il sera configuré pour :
 
-Modèle : les entités métier contenant la logique d’accès aux données au travers de l’ORM Sequelize.
+- Recevoir toutes les requêtes des clients sur une seule adresse.
 
-Contrôleur : Interagit avec les services métiers et renvoie la vue à l’utilisateur.
+- Router dynamiquement les requêtes vers le microservice approprié, en fonction du chemin.
 
-Vue : Sert d’interface utilisateur, est affiché dans le navigateur de l’utilisateur.
+- Ajouter des en-têtes globaux (ex. Authorization, X-API-GATEWAY) pour le monitoring et la traçabilité.
 
 ### Conséquence
 
-Permet une meilleure structure du code et séparation des responsabilités
-
-Permet une évolutivité vers une interface web ou mobile
-
+| **Avantages**              | Explication                                                                                          |
+| -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Reduction de la complexité | Centralisation du point d’entrée pour tous les microservices.                                        |
+| Évolutivité améliorée      | Possibilité d’ajouter des fonctionnalités transversales (caching, rate limiting) à l’avenir.         |
+| Sécurité améliorée         | Un seul point de filtrage.                                                                           |
+| **Inconvénients**          |                                                                                                      |
+| Latence                    | Légère latence supplémentaire due au proxying des requêtes.                                          |
+| SPOF                       | Introduit un point de défaillance unique (SPOF) si NGINX n’est pas configuré en haute disponibilité. |
 
 ### Choix technologiques
 
@@ -308,108 +301,55 @@ Permet une évolutivité vers une interface web ou mobile
 - **Coût**  : Gratuit et open source
 - **Fiabilité**  : Maintenu activement par la communauté et utilisé dans des milliers de projets professionnels
 
+### 7. **NGINX**
+
+- **Justification** : Serveur web performant, également utilisé comme reverse proxy et load balancer
+- **Simplicité** : Configuration simple permet de servir comme proxy des requêtes ou faire du load balancing
+- **Portabilité** : facile à déployer via Docker
+- **Coût** : Gratuit et open source
+- **Fiabilité** : Très utilisé en production, performant et stable même sous forte charge
+
+### 8. **Prometheus**
+
+- **Justification** : Système de monitoring et de collecte de métriques efficace
+- **Simplicité** : Facile à configurerm permet de collecter et stocker des métriques via HTTP endpoints
+- **Portabilité** : S’intègre bien avec des containers Docker ou Kubernetes
+- **Coût** : Gratuit et open source
+- **Fiabilité** : Permet d'obtenir des données crutiales sur le fonctionnement du système
+
+### 9. **Grafana**
+
+- **Justification** : Outil de visualisation de données et métriques sous forme de dashboards interactifs
+- **Simplicité** : Interface web intuitive permettant de créer rapidement des graphiques et alertes
+- **Portabilité** : Compatible avec Prometheus
+- **Coût** : Gratuit en version open source
+- **Fiabilité** : Utilisé mondialement pour ses capacités de visualisation robustes et sa large communauté de plugins
+
+### 10. **Swagger (OpenAPI)**
+
+- **Justification** : Permet de documenter, visualiser et tester des API REST de manière standardisée
+- **Simplicité** : Génération automatique de la documentation à partir de l’API ou écriture manuelle en YAML/JSON
+- **Portabilité** : Compatible avec Swagger-UI Express
+- **Coût** : Gratuit et open source
+- **Fiabilité** : Améliore la compréhension et la consommation des APIs, très utilisé dans l’industrie pour la collaboration entre équipes
+
+
 ### Domain-Driven Design 
 
-Dans le cadre du développement de l’application POS j’ai identifié les sous-domaines suivants :  
-
-| Domaine                           | Type de domaine | Responsabilités principales                                                                                                    |
-| --------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| **Gestion des ventes**            | Domaine central | - Gérer les ventes  <br> - Mettre à jour les stocks                                                                            |
-| **Gestion de la logistique**      | Domaine support | - Gérer les demandes de réapprovisionnement  <br> - Faire le suivi des stocks                                                  |
-| **Supervision de la maison mère** | Domaine support | - Suivre la performance des magasins  <br> - Suivre les tendances et demandes des magasins <br> - Générer un rapport consolidé |
+| Domaine              | Type de domaine    | Responsabilités principales                                                                                                             |
+| -------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Gestion de panier    | Domaine de support | Gérer la création, la modification et la suppression des paniers d’achat; ajouter ou retirer des articles; calculer le total du panier. |
+| Gestion de commande  | Domaine principal  | Gérer la création, la validation, le suivi et l’historique des commandes clients; maintenir le statut des commandes.                    |
+| Gestion de client    | Domaine principal  | Gérer les informations des clients (création de compte, authentification, profil); assurer la relation client.                          |
+| Gestion d’inventaire | Domaine principal  | Suivre les quantités de produits en stock dans les entrepôts et magasins; gérer les mouvements d’inventaire et le réapprovisionnement.  |
+| Gestion de produit   | Domaine principal  | Gérer le catalogue de produits incluant les informations, prix et disponibilité; maintenir l’intégrité des données produits.            |
+| Gestion de vente     | Domaine principal  | Gérer le processus de vente incluant le paiement, la génération de facture et l’enregistrement des transactions.                        |
 
 
 ## Structure
 
 ```
-.
-├── app
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── eslint.config.js
-│   ├── jest.config.js
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── src
-│   │   ├── controllers
-│   │   │   ├── ParentStoreController.js
-│   │   │   ├── ReplenishmentController.js
-│   │   │   ├── StoreController.js
-│   │   │   └── WarehouseController.js
-│   │   ├── CreateFakeData.js
-│   │   ├── database.js
-│   │   ├── models
-│   │   │   ├── Category.js
-│   │   │   ├── index.js
-│   │   │   ├── ParentStore.js
-│   │   │   ├── Product.js
-│   │   │   ├── Replenishment.js
-│   │   │   ├── Sale.js
-│   │   │   ├── SaleLine.js
-│   │   │   ├── Stock.js
-│   │   │   ├── Store.js
-│   │   │   └── Warehouse.js
-│   │   ├── routes
-│   │   │   ├── ParentStoreRoutes.js
-│   │   │   ├── ReplenishmentRoutes.js
-│   │   │   ├── StoreRoutes.js
-│   │   │   └── WarehouseRoutes.js
-│   │   ├── server.js
-│   │   ├── services
-│   │   │   ├── ParentStoreService.js
-│   │   │   ├── ReplenishmentService.js
-│   │   │   ├── StockService.js
-│   │   │   ├── StoreService.js
-│   │   │   └── WarehouseService.js
-│   │   └── views
-│   │       ├── allStores.ejs
-│   │       ├── index.ejs
-│   │       ├── parentStoreDashboard.ejs
-│   │       ├── replenishmentConfirmation.ejs
-│   │       ├── replenishmentForm.ejs
-│   │       ├── storeDetails.ejs
-│   │       └── warehouseStocks.ejs
-│   └── test
-│       ├── ParentStoreService.test.js
-│       ├── ReplenishmentService.test.js
-│       ├── StockService.test.js
-│       ├── StoreService.test.js
-│       └── WarehouseService.test.js
-├── docs
-│   ├── ADR
-│   │   ├── ADR1.md
-│   │   └── ADR2.md
-│   └── UML
-│       ├── VueCasUtilisation.puml
-│       ├── VueDeploiement.puml
-│       ├── VueImplementation.puml
-│       ├── VueLogique.puml
-│       ├── VueProcessusAfficherConfirmationReplenishment.puml
-│       ├── VueProcessusAfficherDashboardParentStore.puml
-│       ├── VueProcessusAfficherFormulaireReplenishment.puml
-│       ├── VueProcessusAfficherLesDetailsDuMagasin.puml
-│       ├── VueProcessusAfficherStocksEntrepot.puml
-│       └── VueProcessusAfficherTousLesMagasins.puml
-├── out
-│   └── docs
-│       └── UML
-│           ├── VueCasUtilisation
-│           │   └── VueCasUtilisation.png
-│           ├── VueDeploiement
-│           │   └── VueDeploiement.png
-│           ├── VueImplementation
-│           │   └── VuePackagePOS.png
-│           ├── VueLogique
-│           │   └── VueLogique.png
-│           ├── VueProcessusAfficherConfirmationReplenishment
-│           │   └── VueProcessusAfficherConfirmationReplenishment.png
-│           ├── VueProcessusAfficherFormulaireReplenishment
-│           │   └── VueProcessusAfficherFormulaireReplenishment.png
-│           ├── VueProcessusAfficherLesDetailsDuMagasin
-│           │   └── VueProcessusAfficherLesDetailsDuMagasin.png
-│           ├── VueProcessusAfficherStocksEntrepot
-│           │   └── VueProcessusAfficherStocksEntrepot.png
-│           └── VueProcessusAfficherTousLesMagasins
-│               └── VueProcessusAfficherTousLesMagasins.png
-└── README.md
+
+
+
 ```

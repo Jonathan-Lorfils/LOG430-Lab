@@ -1,14 +1,19 @@
-@startuml VueCasUtilisation
+@startuml VueCasUtilisationClient
+
 left to right direction
-actor "Employe" as e
+
+actor "Client" as c
+
 rectangle "Application POS" {
-  usecase "Consulter le rapport des magasins" as UC1
-  usecase "Consulter les provisions de l'entrepot" as UC2
-  usecase "Faire une demande de réapprovsionnement" as UC3
-  usecase "Consulter le tableau de bord" as UC4
+  usecase "Créer un compte client" as UC1
+  usecase "Ajouter des articles au panier" as UC2
+  usecase "Retirer des articles du panier" as UC3
+  usecase "Valider la commande" as UC4
 }
-e -- UC1
-e -- UC2
-e -- UC3
-e -- UC4
+
+c -- UC1
+c -- UC2
+c -- UC3
+c -- UC4
+
 @enduml

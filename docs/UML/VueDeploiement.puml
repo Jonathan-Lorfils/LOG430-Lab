@@ -1,40 +1,104 @@
 @startuml VueDeploiement
-skinparam componentStyle rectangle
+
+' Configuration visuelle
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor Black
+}
 skinparam node {
-    BackgroundColor #EEF
-    BorderColor Black
+  BackgroundColor #F9F9F9
+  BorderColor Black
 }
 
-node "PC Magasin 1" {
-    artifact "Navigateur Web 1"
+title POS Microservices Deployment View
+
+node "Docker Host" {
+
+  node "pos-net (Bridge Network)" {
+
+    ' === API Gateway ===
+    node "API Gateway\n(NGINX)" as api_gateway
+
+    ' === Microservices Group ===
+    folder "Microservices" {
+
+      ' === Product Service ===
+      node "Product Service\n(Node.js)" as product_service
+      database "Product DB\n(PostgreSQL)" as product_db
+
+      ' === Sale Service ===
+      node "Sale Service\n(Node.js)" as sale_service
+      database "Sale DB\n(PostgreSQL)" as sale_db
+
+      ' === Inventory Service ===
+      node "Inventory Service\n(Node.js)" as inventory_service
+      database "Inventory DB\n(PostgreSQL)" as inventory_db
+
+      ' === Customer Service ===
+      node "Customer Service\n(Node.js)" as customer_service
+      database "Customer DB\n(PostgreSQL)" as customer_db
+
+      ' === Cart Service ===
+      node "Cart Service\n(Node.js)" as cart_service
+
+      ' === Cart Service Instance 2 ===
+      node "Cart Service #2\n(Node.js)" as cart_service2
+
+      ' === Cart DB ===
+      database "Cart DB\n(PostgreSQL)" as cart_db
+
+      ' === Checkout Service ===
+      node "Checkout Service\n(Node.js)" as checkout_service
+      database "Checkout DB\n(PostgreSQL)" as checkout_db
+    }
+
+    ' === Infrastructure Services ===
+    folder "Infrastructure" {
+      node "Redis Cache\n(Redis:7)" as redis
+      node "Prometheus\n(Monitoring)" as prometheus
+      node "Grafana\n(Dashboard)" as grafana
+    }
+
+    ' === Tooling ===
+    folder "Data Generation" {
+      node "Generate Data\n(migrate.js)" as generate_data
+    }
+  }
 }
 
-node "PC Magasin 2" {
-    artifact "Navigateur Web 2"
-}
+' === Connexions API Gateway ===
+api_gateway --> product_service : HTTP
+api_gateway --> sale_service : HTTP
+api_gateway --> inventory_service : HTTP
+api_gateway --> customer_service : HTTP
+api_gateway --> cart_service : HTTP
+api_gateway --> cart_service2 : HTTP
+api_gateway --> checkout_service : HTTP
 
-node "PC Magasin 3" {
-    artifact "Navigateur Web 3"
-}
+' === Connexions microservices -> DB ===
+product_service --> product_db : SQL
+sale_service --> sale_db : SQL
+inventory_service --> inventory_db : SQL
+customer_service --> customer_db : SQL
+cart_service --> cart_db : SQL
+cart_service2 --> cart_db : SQL
+checkout_service --> checkout_db : SQL
 
-node "PC Magasin 4" {
-    artifact "Navigateur Web 4"
-}
+' === Connexions microservices -> Redis ===
+product_service --> redis : Cache Ops
+sale_service --> redis : Cache Ops
+inventory_service --> redis : Cache Ops
+customer_service --> redis : Cache Ops
+cart_service --> redis : Cache Ops
+cart_service2 --> redis : Cache Ops
+checkout_service --> redis : Cache Ops
 
-node "PC Magasin 5" {
-    artifact "Navigateur Web 5"
-}
+' === Monitoring ===
+prometheus --> cart_service : Metrics
+prometheus --> cart_service2 : Metrics
+grafana --> prometheus : Query Metrics
 
-node "Serveur (VM)" {
-    artifact "Application POS"
-    database "PostgreSQL"
-} 
-
-"Navigateur Web 1" -- "Application POS"
-"Navigateur Web 2" -- "Application POS"
-"Navigateur Web 3" -- "Application POS"
-"Navigateur Web 4" -- "Application POS"
-"Navigateur Web 5" -- "Application POS"
-"Application POS" -- "PostgreSQL"
+' === Data generation ===
+generate_data --> cart_db : Populate
 
 @enduml

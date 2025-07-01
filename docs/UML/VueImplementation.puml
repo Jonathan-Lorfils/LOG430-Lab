@@ -1,57 +1,124 @@
 @startuml VuePackagePOS
 
-package "Application" {
-  
- package "data access layer" {
-    package "models" {
-      class ParentStore
-      class Product
-      class Replenishment
-      class Sale
-      class Stock
-      class Store
-      class Warehouse
-    }
- }
+title POS Microservices - Implementation View
 
-  package "business logic" {
-    package "controllers" {
-      class ParentStoreController
-      class ReplenishmentController
-      class StoreController
-      class WarehouseController
+skinparam packageStyle rectangle
+
+package "POS Microservices" {
+
+  ' === Product Service ===
+  package "Product Service" {
+
+    package "data access layer" {
+      class ProductModel
     }
 
-    package "services" {
-      class ParentStoreService
-      class ReplenishmentService
-      class StockService
-      class StoreService
-      class WarehouseService
+    package "business logic" {
+      class ProductService
     }
+
+    package "presentation layer" {
+      class ProductController
+    }
+
+    ProductController --> ProductService : uses
+    ProductService --> ProductModel : interacts
   }
 
-  package "presentation layer" {
-    package "routes" {
-      class ParentStoreRoutes
-      class ReplenishmentRoutes
-      class StoreRoutes
-      class WarehouseRoutes
+  ' === Sale Service ===
+  package "Sale Service" {
+
+    package "data access layer" {
+      class SaleModel
     }
 
-    package "views" {
-      class ParentStoreDashboardView
-      class ReplenishmentView
-      class StoreDetailsView
-      class WarehouseStockView
+    package "business logic" {
+      class SaleService
     }
+
+    package "presentation layer" {
+      class SaleController
+    }
+
+    SaleController --> SaleService : uses
+    SaleService --> SaleModel : interacts
+  }
+
+  ' === Inventory Service ===
+  package "Inventory Service" {
+
+    package "data access layer" {
+      class InventoryModel
+    }
+
+    package "business logic" {
+      class InventoryService
+    }
+
+    package "presentation layer" {
+      class InventoryController
+    }
+
+    InventoryController --> InventoryService : uses
+    InventoryService --> InventoryModel : interacts
+  }
+
+  ' === Customer Service ===
+  package "Customer Service" {
+
+    package "data access layer" {
+      class CustomerModel
+    }
+
+    package "business logic" {
+      class CustomerService
+    }
+
+    package "presentation layer" {
+      class CustomerController
+    }
+
+    CustomerController --> CustomerService : uses
+    CustomerService --> CustomerModel : interacts
+  }
+
+  ' === Cart Service ===
+  package "Cart Service" {
+
+    package "data access layer" {
+      class CartModel
+    }
+
+    package "business logic" {
+      class CartService
+    }
+
+    package "presentation layer" {
+      class CartController
+    }
+
+    CartController --> CartService : uses
+    CartService --> CartModel : interacts
+  }
+
+  ' === Checkout Service ===
+  package "Checkout Service" {
+
+    package "data access layer" {
+      class CheckoutModel
+    }
+
+    package "business logic" {
+      class CheckoutService
+    }
+
+    package "presentation layer" {
+      class CheckoutController
+    }
+
+    CheckoutController --> CheckoutService : uses
+    CheckoutService --> CheckoutModel : interacts
   }
 }
-
-controllers --> services : uses
-services --> models : interacts
-routes --> controllers : calls
-views --> routes : navigates
-models --> controllers : provides data
 
 @enduml
