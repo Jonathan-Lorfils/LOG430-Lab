@@ -1,0 +1,12 @@
+@startuml SequenceCreateOrder
+actor Client
+participant "OrderApiController" as Controller
+participant "OrderService" as Service
+participant "Redis" as Cache
+
+Client -> Controller : POST /api/v1/checkout/createOrder\n(customerId, orderLines)
+Controller -> Service : createOrder(customerId, orderLines)
+Service --> Controller : order
+Controller -> Cache : del(orders:{customerId})
+Controller --> Client : 201 Created (order data)
+@enduml

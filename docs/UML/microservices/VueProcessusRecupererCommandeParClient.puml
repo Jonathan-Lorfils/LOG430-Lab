@@ -1,0 +1,18 @@
+@startuml SequenceGetOrdersByCustomer
+actor Client
+participant "OrderApiController" as Controller
+participant "Redis" as Cache
+participant "OrderService" as Service
+
+Client -> Controller : GET /api/v1/checkout/getOrderByCustomerId/{customerId}
+Controller -> Cache : get(orders:{customerId})
+alt Cache hit
+    Cache --> Controller : orders
+    Controller --> Client : 200 OK (orders from cache)
+else Cache miss
+    Controller -> Service : getOrderByCustomerId(customerId)
+    Service --> Controller : orders
+    Controller -> Cache : set(orders:{customerId}, orders)
+    Controller --> Client : 200 OK (orders data)
+end
+@enduml

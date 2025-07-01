@@ -1,0 +1,12 @@
+@startuml SequenceDeleteItemFromCart
+actor Client
+participant "CartApiController" as Controller
+participant "CartService" as Service
+participant "Redis" as Cache
+
+Client -> Controller : DELETE /api/v1/cart/{cartid}/deleteItem/{cartitemid}
+Controller -> Service : deleteItemFromCart(cartId, cartItemId)
+Service --> Controller : result
+Controller -> Cache : del(cart:{cartId})
+Controller --> Client : 200 OK (result data)
+@enduml

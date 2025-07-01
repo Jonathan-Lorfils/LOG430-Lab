@@ -1,0 +1,14 @@
+@startuml SequenceCreateReplenishment
+actor Client
+participant "ReplenishmentApiController" as Controller
+participant "ReplenishmentService" as Service
+
+Client -> Controller : POST /api/v1/inventory/replenishments/create/{stockid}/{quantity}
+alt Invalid quantity
+    Controller --> Client : 400 Bad Request (Invalid quantity)
+else Valid quantity
+    Controller -> Service : createReplenishment(stockId, quantity)
+    Service --> Controller : replenishment
+    Controller --> Client : 201 Created (replenishment data)
+end
+@enduml

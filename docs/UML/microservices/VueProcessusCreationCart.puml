@@ -1,0 +1,12 @@
+@startuml SequenceCreateCart
+actor Client
+participant "CartApiController" as Controller
+participant "CartService" as Service
+participant "Redis" as Cache
+
+Client -> Controller : POST /api/v1/cart/createCart/{customerid}
+Controller -> Service : createCart(customerId)
+Service --> Controller : cart
+Controller -> Cache : set(cart:{cart.id}, cart, EX 5min)
+Controller --> Client : 201 Created (cart data)
+@enduml

@@ -1,0 +1,10 @@
+@startuml SequenceGetCustomerById
+actor Client
+participant "CustomerApiController" as Controller
+participant "CustomerService" as Service
+
+Client -> Controller : GET /api/v1/customer/customer/{id}
+Controller -> Service : getCustomerById(id)
+Service --> Controller : customer
+Controller --> Client : 200 OK (customer data)
+@enduml

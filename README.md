@@ -174,15 +174,46 @@ De même pour OrderLine et SaleLine
 
 ## Vue processus
 
-![Vue Processus Afficher Confirmation Replenishment](./out/docs/UML/VueProcessusAfficherConfirmationReplenishment/VueProcessusAfficherConfirmationReplenishment.png)
+### Vue Processus ajout d'un Item au Panier
 
-![Vue Processus Afficher Formulaire Replenishment](./out/docs/UML/VueProcessusAfficherFormulaireReplenishment/VueProcessusAfficherFormulaireReplenishment.png)
+![Vue Processus ajout d'un Item au Panier](./out/docs/UML/microservices/VueProcessusAjoutItem/SequenceAddItemToCart.png)
 
-![Vue Processus Afficher Les Details Du Magasin](./out/docs/UML/VueProcessusAfficherLesDetailsDuMagasin/VueProcessusAfficherLesDetailsDuMagasin.png)
+### Vue Processus retirer un Item du Panier
 
-![Vue Processus Afficher Stocks Entrepot](./out/docs/UML/VueProcessusAfficherStocksEntrepot/VueProcessusAfficherStocksEntrepot.png)
+![Vue Processus retirer un Item du Panier](./out/docs/UML/microservices/VueProcessusSupprimerItem/SequenceDeleteItemFromCart.png)
 
-![Vue Processus Afficher Tous Les Magasins](./out/docs/UML/VueProcessusAfficherTousLesMagasins/VueProcessusAfficherTousLesMagasins.png)
+### Vue Processus ajout d'un Panier à un Client
+
+![Vue Processus ajout d'un Panier à un Client](./out/docs/UML/microservices/VueProcessusCreationCart/SequenceCreateCart.png)
+
+### Vue Processus ajout d'un Client
+
+![Vue Processus ajout d'un Client](./out/docs/UML/microservices/VueProcessusCreateClient/SequenceCreateCustomer.png)
+
+### Vue Processus ajout d'un Replenishment
+
+![Vue Processus ajout d'un Replenishment](./out/docs/UML/microservices/VueProcessusCreateReplenishment/SequenceCreateReplenishment.png)
+
+### Vue Processus créer une Commande
+
+![Vue Processus créer une Commande](./out/docs/UML/microservices/VueProcessusCreerCommande/SequenceCreateOrder.png)
+
+### Vue Processus mettre à jour un Produit
+
+![Vue Processus mettre à jour un Produit](./out/docs/UML/microservices/VueProcessusMettreAJourProduit/SequenceUpdateProduct.png)
+
+### Vue Processus récuperer Panier par ClientId
+
+![Vue Processus récuperer Panier par ClientId](./out/docs/UML/microservices/VueProcessusRecupererCart/SequenceGetCartByCustomer.png)
+
+### Vue Processus récuperer Client par ClientId
+
+![Vue Processus récuperer Client par ClientId](./out/docs/UML/microservices/VueProcessusRecupererClientParId/SequenceGetCustomerById.png)
+
+### Vue Processus récuperer Commandes par ClientId
+
+![Vue Processus récuperer Commandes par ClientId](./out/docs/UML/microservices/VueProcessusRecupererCommandeParClient/SequenceGetOrdersByCustomer.png)
+
 
 ## ADR
 
@@ -350,6 +381,331 @@ Nous avons décidé d’introduire NGINX comme API Gateway. Il sera configuré p
 
 ```
 
-
+.
+├── app
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── eslint.config.js
+│   ├── jest.config.js
+│   ├── logs
+│   │   └── nginx
+│   │       ├── access.log
+│   │       └── error.log
+│   ├── microservices
+│   │   ├── cart-service
+│   │   │   ├── app.js
+│   │   │   ├── controllers
+│   │   │   │   └── CartApiController.js
+│   │   │   ├── database.js
+│   │   │   ├── Dockerfile
+│   │   │   ├── generate-doc.js
+│   │   │   ├── models
+│   │   │   │   ├── Cart.js
+│   │   │   │   └── CartItem.js
+│   │   │   ├── package-lock.json
+│   │   │   ├── package.json
+│   │   │   ├── routes
+│   │   │   │   ├── ApiRoutes.js
+│   │   │   │   └── CartApiRoutes.js
+│   │   │   ├── server.js
+│   │   │   ├── services
+│   │   │   │   └── CartService.js
+│   │   │   ├── swagger.json
+│   │   │   └── utils
+│   │   │       ├── logger.js
+│   │   │       ├── metrics.js
+│   │   │       └── redisClient.js
+│   │   ├── checkout-service
+│   │   │   ├── app.js
+│   │   │   ├── controllers
+│   │   │   │   └── OrderApiController.js
+│   │   │   ├── database.js
+│   │   │   ├── Dockerfile
+│   │   │   ├── generate-doc.js
+│   │   │   ├── generateFakeData.js
+│   │   │   ├── models
+│   │   │   │   ├── Order.js
+│   │   │   │   └── OrderLine.js
+│   │   │   ├── package-lock.json
+│   │   │   ├── package.json
+│   │   │   ├── routes
+│   │   │   │   ├── ApiRoutes.js
+│   │   │   │   └── OrderApiRoutes.js
+│   │   │   ├── server.js
+│   │   │   ├── services
+│   │   │   │   └── OrderService.js
+│   │   │   ├── swagger.json
+│   │   │   └── utils
+│   │   │       ├── logger.js
+│   │   │       └── redisClient.js
+│   │   ├── customer-service
+│   │   │   ├── app.js
+│   │   │   ├── controllers
+│   │   │   │   └── CustomerApiController.js
+│   │   │   ├── database.js
+│   │   │   ├── Dockerfile
+│   │   │   ├── generate-doc.js
+│   │   │   ├── generateFakeData.js
+│   │   │   ├── models
+│   │   │   │   └── Customer.js
+│   │   │   ├── package-lock.json
+│   │   │   ├── package.json
+│   │   │   ├── routes
+│   │   │   │   ├── ApiRoutes.js
+│   │   │   │   └── CustomerApiRoutes.js
+│   │   │   ├── server.js
+│   │   │   ├── services
+│   │   │   │   └── CustomerService.js
+│   │   │   ├── swagger.json
+│   │   │   └── utils
+│   │   │       └── logger.js
+│   │   ├── inventory-service
+│   │   │   ├── app.js
+│   │   │   ├── controllers
+│   │   │   │   └── ReplenishmentApiController.js
+│   │   │   ├── database.js
+│   │   │   ├── Dockerfile
+│   │   │   ├── generate-doc.js
+│   │   │   ├── generateFakeData.js
+│   │   │   ├── models
+│   │   │   │   ├── Replenishment.js
+│   │   │   │   ├── Stock.js
+│   │   │   │   └── Warehouse.js
+│   │   │   ├── package-lock.json
+│   │   │   ├── package.json
+│   │   │   ├── routes
+│   │   │   │   ├── ApiRoutes.js
+│   │   │   │   └── ReplenishmentApiRoutes.js
+│   │   │   ├── server.js
+│   │   │   ├── services
+│   │   │   │   └── ReplenishmentService.js
+│   │   │   ├── swagger.json
+│   │   │   └── utils
+│   │   │       └── logger.js
+│   │   ├── product-service
+│   │   │   ├── app.js
+│   │   │   ├── controllers
+│   │   │   │   └── ProductApiController.js
+│   │   │   ├── database.js
+│   │   │   ├── Dockerfile
+│   │   │   ├── generate-doc.js
+│   │   │   ├── generateFakeData.js
+│   │   │   ├── models
+│   │   │   │   ├── Category.js
+│   │   │   │   └── Product.js
+│   │   │   ├── package-lock.json
+│   │   │   ├── package.json
+│   │   │   ├── routes
+│   │   │   │   ├── ApiRoutes.js
+│   │   │   │   └── ProductApiRoutes.js
+│   │   │   ├── server.js
+│   │   │   ├── services
+│   │   │   │   └── ProductService.js
+│   │   │   ├── swagger.json
+│   │   │   └── utils
+│   │   │       ├── logger.js
+│   │   │       ├── metrics.js
+│   │   │       └── redisClient.js
+│   │   └── sale-service
+│   │       ├── app.js
+│   │       ├── controllers
+│   │       ├── database.js
+│   │       ├── Dockerfile
+│   │       ├── models
+│   │       │   ├── Sale.js
+│   │       │   └── SaleLine.js
+│   │       ├── package-lock.json
+│   │       ├── package.json
+│   │       ├── routes
+│   │       │   └── ApiRoutes.js
+│   │       ├── server.js
+│   │       ├── services
+│   │       └── utils
+│   │           └── logger.js
+│   ├── nginx
+│   │   └── nginx.conf
+│   ├── output
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── prometheus.yml
+│   ├── src
+│   │   ├── api
+│   │   │   ├── controllers
+│   │   │   │   ├── ParentStoreApiController.js
+│   │   │   │   ├── ProductApiController.js
+│   │   │   │   ├── ReplenishmentApiController.js
+│   │   │   │   └── StoreApiController.js
+│   │   │   └── routes
+│   │   │       ├── ApiRoutes.js
+│   │   │       ├── ParentStoreApiRoutes.js
+│   │   │       ├── ProductApiRoutes.js
+│   │   │       ├── ReplenishmentApiRoutes.js
+│   │   │       └── StoreApiRoutes.js
+│   │   ├── app.js
+│   │   ├── controllers
+│   │   │   ├── ParentStoreController.js
+│   │   │   ├── ReplenishmentController.js
+│   │   │   ├── StoreController.js
+│   │   │   └── WarehouseController.js
+│   │   ├── CreateFakeData.js
+│   │   ├── database.js
+│   │   ├── migrate.js
+│   │   ├── models
+│   │   │   ├── Category.js
+│   │   │   ├── index.js
+│   │   │   ├── ParentStore.js
+│   │   │   ├── Product.js
+│   │   │   ├── Replenishment.js
+│   │   │   ├── Sale.js
+│   │   │   ├── SaleLine.js
+│   │   │   ├── Stock.js
+│   │   │   ├── Store.js
+│   │   │   └── Warehouse.js
+│   │   ├── routes
+│   │   │   ├── ParentStoreRoutes.js
+│   │   │   ├── ReplenishmentRoutes.js
+│   │   │   ├── StoreRoutes.js
+│   │   │   └── WarehouseRoutes.js
+│   │   ├── server.js
+│   │   ├── services
+│   │   │   ├── ParentStoreService.js
+│   │   │   ├── ProductService.js
+│   │   │   ├── ReplenishmentService.js
+│   │   │   ├── StockService.js
+│   │   │   ├── StoreService.js
+│   │   │   └── WarehouseService.js
+│   │   ├── tokenAuth.js
+│   │   ├── utils
+│   │   │   ├── logger.js
+│   │   │   ├── metrics.js
+│   │   │   └── redisClient.js
+│   │   └── views
+│   │       ├── allStores.ejs
+│   │       ├── index.ejs
+│   │       ├── parentStoreDashboard.ejs
+│   │       ├── replenishmentConfirmation.ejs
+│   │       ├── replenishmentForm.ejs
+│   │       ├── storeDetails.ejs
+│   │       └── warehouseStocks.ejs
+│   ├── test
+│   │   ├── api
+│   │   │   ├── salesStatsTest.js
+│   │   │   ├── storeDetailsTest.js
+│   │   │   └── updateProductTest.js
+│   │   ├── microservice
+│   │   │   ├── cartApiTest.js
+│   │   │   └── updateProductApiTest.js
+│   │   ├── ParentStoreApiRoutes.test.js
+│   │   ├── ParentStoreService.test.js
+│   │   ├── ProductApiRoutes.test.js
+│   │   ├── ReplenishmentApiRoutes.test.js
+│   │   ├── ReplenishmentService.test.js
+│   │   ├── StockService.test.js
+│   │   ├── StoreApiRoutes.test.js
+│   │   ├── StoreService.test.js
+│   │   └── WarehouseService.test.js
+│   └── tools
+│       └── generatedata
+│           ├── createFakeData.js
+│           ├── database.js
+│           ├── Dockerfile
+│           ├── migrate.js
+│           ├── models
+│           │   ├── Cart.js
+│           │   └── CartItem.js
+│           ├── package.json
+│           └── utils
+│               └── logger.js
+├── docs
+│   ├── ADR
+│   │   ├── ADR1.md
+│   │   ├── ADR2.md
+│   │   ├── ADR3.md
+│   │   ├── ADR4.md
+│   │   ├── ADR5.md
+│   │   └── ADR6.md
+│   ├── images
+│   │   ├── Labo03-Instructions
+│   │   │   ├── Etape1.png
+│   │   │   ├── Etape2.png
+│   │   │   └── Etape3.png
+│   │   ├── ParentStore
+│   │   │   ├── ParentStoreEtape1.png
+│   │   │   └── ParentStoreEtape2.png
+│   │   ├── Product
+│   │   │   ├── ProductEtape1.png
+│   │   │   └── ProductEtape2.png
+│   │   ├── Replenishment
+│   │   │   ├── ReplenishmentEtape1.png
+│   │   │   └── ReplenishmentEtape2.png
+│   │   └── Store
+│   │       ├── StoreEtape1.png
+│   │       └── StoreEtape2.png
+│   └── UML
+│       ├── microservices
+│       │   ├── VueProcessusAjoutItem.puml
+│       │   ├── VueProcessusCreateClient.puml
+│       │   ├── VueProcessusCreateReplenishment.puml
+│       │   ├── VueProcessusCreationCart.puml
+│       │   ├── VueProcessusCreerCommande.puml
+│       │   ├── VueProcessusMettreAJourProduit.puml
+│       │   ├── VueProcessusRecupererCart.puml
+│       │   ├── VueProcessusRecupererClientParId.puml
+│       │   ├── VueProcessusRecupererCommandeParClient.puml
+│       │   └── VueProcessusSupprimerItem.puml
+│       ├── VueCasUtilisation.puml
+│       ├── VueDeploiement.puml
+│       ├── VueImplementation.puml
+│       ├── VueLogique.puml
+│       ├── VueProcessusAfficherConfirmationReplenishment.puml
+│       ├── VueProcessusAfficherDashboardParentStore.puml
+│       ├── VueProcessusAfficherFormulaireReplenishment.puml
+│       ├── VueProcessusAfficherLesDetailsDuMagasin.puml
+│       ├── VueProcessusAfficherStocksEntrepot.puml
+│       └── VueProcessusAfficherTousLesMagasins.puml
+├── out
+│   └── docs
+│       └── UML
+│           ├── microservices
+│           │   ├── VueProcessusAjoutItem
+│           │   │   └── SequenceAddItemToCart.png
+│           │   ├── VueProcessusCreateClient
+│           │   │   └── SequenceCreateCustomer.png
+│           │   ├── VueProcessusCreateReplenishment
+│           │   │   └── SequenceCreateReplenishment.png
+│           │   ├── VueProcessusCreationCart
+│           │   │   └── SequenceCreateCart.png
+│           │   ├── VueProcessusCreerCommande
+│           │   │   └── SequenceCreateOrder.png
+│           │   ├── VueProcessusMettreAJourProduit
+│           │   │   └── SequenceUpdateProduct.png
+│           │   ├── VueProcessusRecupererCart
+│           │   │   └── SequenceGetCartByCustomer.png
+│           │   ├── VueProcessusRecupererClientParId
+│           │   │   └── SequenceGetCustomerById.png
+│           │   ├── VueProcessusRecupererCommandeParClient
+│           │   │   └── SequenceGetOrdersByCustomer.png
+│           │   └── VueProcessusSupprimerItem
+│           │       └── SequenceDeleteItemFromCart.png
+│           ├── VueCasUtilisation
+│           │   ├── VueCasUtilisation.png
+│           │   └── VueCasUtilisationClient.png
+│           ├── VueDeploiement
+│           │   └── VueDeploiement.png
+│           ├── VueImplementation
+│           │   └── VuePackagePOS.png
+│           ├── VueLogique
+│           │   └── VueLogique.png
+│           ├── VueProcessusAfficherConfirmationReplenishment
+│           │   └── VueProcessusAfficherConfirmationReplenishment.png
+│           ├── VueProcessusAfficherFormulaireReplenishment
+│           │   └── VueProcessusAfficherFormulaireReplenishment.png
+│           ├── VueProcessusAfficherLesDetailsDuMagasin
+│           │   └── VueProcessusAfficherLesDetailsDuMagasin.png
+│           ├── VueProcessusAfficherStocksEntrepot
+│           │   └── VueProcessusAfficherStocksEntrepot.png
+│           └── VueProcessusAfficherTousLesMagasins
+│               └── VueProcessusAfficherTousLesMagasins.png
+└── README.md
 
 ```

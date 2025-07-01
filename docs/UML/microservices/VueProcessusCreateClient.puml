@@ -1,0 +1,10 @@
+@startuml SequenceCreateCustomer
+actor Client
+participant "CustomerApiController" as Controller
+participant "CustomerService" as Service
+
+Client -> Controller : POST /api/v1/customer/customer/create\n(customerData)
+Controller -> Service : createCustomer(customerData)
+Service --> Controller : customer
+Controller --> Client : 201 Created (customer data)
+@enduml

@@ -1,0 +1,18 @@
+@startuml SequenceGetCartByCustomer
+actor Client
+participant "CartApiController" as Controller
+participant "Redis" as Cache
+participant "CartService" as Service
+
+Client -> Controller : GET /api/v1/cart/customer/{customerid}
+Controller -> Cache : get(cart:customer:{customerid})
+alt Cache hit
+    Cache --> Controller : cart
+    Controller --> Client : 200 OK (cart from cache)
+else Cache miss
+    Controller -> Service : getCartByCustomerId(customerid)
+    Service --> Controller : cart
+    Controller -> Cache : set(cart:customer:{customerid}, cart, EX 5min)
+    Controller --> Client : 200 OK (cart data)
+end
+@enduml

@@ -1,0 +1,12 @@
+@startuml SequenceUpdateProduct
+actor Client
+participant "ProductApiController" as Controller
+participant "ProductService" as Service
+participant "Redis" as Cache
+
+Client -> Controller : PUT /api/v1/products/updateProduct/{productid}\n(productData)
+Controller -> Service : updateProduct(productId, productData)
+Service --> Controller : result
+Controller -> Cache : del(allProducts)
+Controller --> Client : 200 OK (update result)
+@enduml
