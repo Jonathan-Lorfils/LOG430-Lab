@@ -2,6 +2,6 @@ global:
   scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'product-service'
+  - job_name: 'cart-service'
     static_configs:
-      - targets: ['product-service:3000']
+      - targets: ['cart-service-1:3000', 'cart-service-2:3000']

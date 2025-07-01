@@ -54,8 +54,12 @@ const CartService = {
                 throw new Error('Cart not found');
             }
 
-            const cartItem = await CartItem.findByPk(cartItemId);
-            if (!cartItem || cartItem.CartId !== cartId) {
+            const cartItem = await CartItem.findOne({
+                where: { id: cartItemId, CartId: cartId },
+                transaction: t
+            });
+
+            if (!cartItem || Number(cartItem.CartId) !== Number(cartId)) {
                 throw new Error('Cart item not found');
             }
 

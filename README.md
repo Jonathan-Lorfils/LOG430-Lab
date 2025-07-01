@@ -49,11 +49,12 @@ Prérequis:
     -- Ouvrir le navigateur web de votre choix et accéder à l'url suivant :
 
     ```
-    http://localhost:3000/api-docs // API doc
-
-
-
-    
+    Service produit : http://localhost:3001/api-docs/
+    Service vente : http://localhost:3002/api-docs/
+    Service inventaire : http://localhost:3003/api-docs/
+    Service client : http://localhost:3004/api-docs/
+    Service panier : http://localhost:3005/api-docs/
+    Service commande (checkout) : http://localhost:3006/api-docs/
     ```
 
 ## Instruction de test
