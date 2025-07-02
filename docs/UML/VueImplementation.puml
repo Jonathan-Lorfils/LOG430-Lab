@@ -119,6 +119,25 @@ package "POS Microservices" {
     CheckoutController --> CheckoutService : uses
     CheckoutService --> CheckoutModel : interacts
   }
+
+    ' === Store Service ===
+  package "Store Service" {
+
+    package "data access layer" {
+      class StoreModel
+    }
+
+    package "business logic" {
+      class StoreService
+    }
+
+    package "presentation layer" {
+      class StoreController
+    }
+
+    StoreController --> StoreService : uses
+    StoreService --> StoreModel : interacts
+  }
 }
 
 @enduml

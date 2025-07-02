@@ -17,6 +17,10 @@ const Stock = sequelize.define(
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    StoreId: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    }
 }, {
     tableName: 'stocks',
     timestamps: true

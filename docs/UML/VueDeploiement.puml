@@ -34,6 +34,10 @@ node "Docker Host" {
       node "Inventory Service\n(Node.js)" as inventory_service
       database "Inventory DB\n(PostgreSQL)" as inventory_db
 
+      ' === Store Service ===
+      node "Store Service\n(Node.js)" as store_service
+      database "Store DB\n(PostgreSQL)" as store_db
+
       ' === Customer Service ===
       node "Customer Service\n(Node.js)" as customer_service
       database "Customer DB\n(PostgreSQL)" as customer_db
@@ -83,6 +87,7 @@ customer_service --> customer_db : SQL
 cart_service --> cart_db : SQL
 cart_service2 --> cart_db : SQL
 checkout_service --> checkout_db : SQL
+store_service --> store_db : SQL
 
 ' === Connexions microservices -> Redis ===
 product_service --> redis : Cache Ops
@@ -92,6 +97,7 @@ customer_service --> redis : Cache Ops
 cart_service --> redis : Cache Ops
 cart_service2 --> redis : Cache Ops
 checkout_service --> redis : Cache Ops
+store_service --> redis : Cache Ops
 
 ' === Monitoring ===
 prometheus --> cart_service : Metrics
