@@ -53,6 +53,7 @@ Prérequis:
     Service client : http://localhost:3004/api-docs/
     Service panier : http://localhost:3005/api-docs/
     Service commande (checkout) : http://localhost:3006/api-docs/
+    Service magasin : http://localhost:3008/api-docs/
     ```
 
 ## Instruction de test
