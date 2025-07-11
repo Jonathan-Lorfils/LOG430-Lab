@@ -5,7 +5,7 @@ const StockApiRouter = express.Router();
 
 /**
  * @swagger
- * /api/v1/stocks/check-availability/{stockid}/{quantity}:
+ * /api/v1/inventory/stocks/check-availability/{stockid}/{quantity}:
  *   get:
  *     summary: Vérifie la disponibilité d'un stock spécifique
  *     description: |
