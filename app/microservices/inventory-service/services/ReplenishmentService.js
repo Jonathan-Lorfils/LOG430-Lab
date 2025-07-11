@@ -1,5 +1,6 @@
 import Replenishment from '../models/Replenishment.js';
 import sequelize from '../database.js';
+import logger from '../utils/logger.js';
 
 const ReplenishmentService = {
     async createReplenishment(stockid, requestedQuantity) {
@@ -12,10 +13,11 @@ const ReplenishmentService = {
             }, { transaction: t });
 
             await t.commit();
+            logger.info('Replenishment created successfully for Stock:', replenishment.StockId);
             return replenishment;
         } catch (error) {
             await t.rollback();
-            console.error('Error creating replenishment:', error);
+            logger.error('Error creating replenishment:', error);
             throw error;
         }
     },
@@ -28,7 +30,7 @@ const ReplenishmentService = {
 
         replenishment.status = status;
         await replenishment.save();
-
+        logger.info(`Replenishment status updated to ${status} for ID:`, replenishmentId);
         return replenishment;
     }
 };

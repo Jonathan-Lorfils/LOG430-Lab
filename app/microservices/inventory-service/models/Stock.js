@@ -1,6 +1,7 @@
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 import Replenishment from './Replenishment.js';
+import StockReservation from './StockReservation.js';
 
 const Stock = sequelize.define(
     'Stock', {
@@ -29,5 +30,8 @@ const Stock = sequelize.define(
 
 Stock.hasMany(Replenishment);
 Replenishment.belongsTo(Stock);
+
+Stock.hasMany(StockReservation)
+StockReservation.belongsTo(Stock);
 
 export default Stock;

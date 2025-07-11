@@ -17,6 +17,8 @@ class Store {
 
 class Product {
   - nom : String
+  - description : String
+  - price : float
 }
 
 class Category {
@@ -27,6 +29,17 @@ class Stock {
   - quantity : int
 }
 
+class StockReservation {
+  - reservationDate : Date
+  - quantity : int
+  - status : String
+}
+
+class Replenishment {
+  - requestedQuantity : int
+  - status : String
+}
+
 class Sale {
   - saleDate : Date
   - subTotal : float
@@ -35,11 +48,6 @@ class Sale {
 class SaleLine {
   - price : float
   - quantity : int
-}
-
-class Replenishment {
-  - requestedQuantity : int
-  - statut : String
 }
 
 class Customer {
@@ -72,24 +80,37 @@ class OrderLine {
   - price : float
 }
 
-' Relations existantes
-Category "1" -- "*" Product : contains >
-ParentStore "1" -- "1" Warehouse : manage >
-ParentStore "1" -- "*" Store : manages >
-Store "1" -- "*" Stock : has >
-Store "1" -- "*" Sale : generates >
-Warehouse "1" -- "*" Stock : has >
-Product "1" -- "*" Stock : has >"
-Product "1" -- "*" SaleLine : sold in >"
-Stock "1" -- "*" Replenishment : generates >
-Sale "1" -- "*" SaleLine : contains >
+class Payment {
+  - paymentDate : Date
+  - amount : float
+  - status : String
+  - method : String
+}
 
-' Relations e-commerce
+Category "1" -- "*" Product : contains >
+
+ParentStore "1" -- "1" Warehouse : manages >
+ParentStore "1" -- "*" Store : manages >
+Warehouse "1" -- "*" Stock : stores >
+Store "1" -- "*" Stock : has >
+
+Product "1" -- "*" Stock : is stocked as >
+Stock "1" -- "*" StockReservation : reserves >
+Stock "1" -- "*" Replenishment : generates >
+
+Store "1" -- "*" Sale : generates >
+Sale "1" -- "*" SaleLine : contains >
+Product "1" -- "*" SaleLine : sold in >
+
 Customer "1" -- "1" Cart : owns >
 Cart "1" -- "*" CartItem : contains >
 CartItem "*" -- "1" Product : refers to >
+
 Customer "1" -- "*" Order : places >
 Order "1" -- "*" OrderLine : contains >
 Product "1" -- "*" OrderLine : appears in >
+
+Order "1" -- "*" StockReservation : reserves >
+Order "1" -- "1" Payment : paid by >
 
 @enduml
