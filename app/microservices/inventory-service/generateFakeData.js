@@ -45,20 +45,27 @@ const GenerateFakeData = {
         }
     },
 
-    async generate(warehousesCount = 5, stocksPerWarehouse = 5, replenishmentsPerStock = 3) {
+    async generate(numberOfStocks = 5, numberOfReplenishments = 3) {
+        const warehouse = await this.createWarehouse('Main Warehouse', '123 Main St', 1);
         try {
-            for (let i = 0; i < warehousesCount; i++) {
-                const warehouse = await this.createWarehouse(`Warehouse ${i + 1}`, `Address ${i + 1}`, i + 1);
-                for (let j = 0; j < stocksPerWarehouse; j++) {
-                    const stock = await this.createStock(j + 1, j + 1, warehouse.id);
-                    for (let k = 0; k < replenishmentsPerStock; k++) {
-                        await this.createReplenishment(k + 1, 'pending', stock.id);
-                    }
-                }
+            for (let i = 0; i < numberOfStocks; i++) {
+                const quantity = Math.floor(Math.random() * 100) + 1;
+                const productId = Math.floor(Math.random() * 10) + 1;
+
+                await this.createStock(quantity, productId, warehouse.id);
             }
+
+            for (let i = 0; i < numberOfReplenishments; i++) {
+                const requestedQuantity = Math.floor(Math.random() * 50) + 1;
+                const status = Math.random() > 0.5 ? 'pending' : 'completed';
+                const stockId = Math.floor(Math.random() * numberOfStocks) + 1;
+
+                await this.createReplenishment(requestedQuantity, status, stockId);
+            }
+
+            console.log(`${numberOfStocks} stocks generated successfully.`);
         } catch (error) {
             console.error('Error generating fake data:', error);
-            throw error;
         }
     }
 };

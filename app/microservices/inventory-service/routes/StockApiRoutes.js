@@ -1,11 +1,11 @@
 import express from 'express';
-import StockApiController from '../controllers/StockApiController';
+import StockApiController from '../controllers/StockApiController.js';
 
 const StockApiRouter = express.Router();
 
 /**
  * @swagger
- * /api/v1/inventory/stocks/check-availability/{stockid}/{quantity}:
+ * /api/v1/inventory/stocks/check-availability/{productId}/{requiredQty}:
  *   get:
  *     summary: Vérifie la disponibilité d'un stock spécifique
  *     description: |
@@ -14,14 +14,14 @@ const StockApiRouter = express.Router();
  *       - Stocks
  *     parameters:
  *       - in: path
- *         name: stockid
+ *         name: productId
  *         required: true
  *         schema:
  *           type: integer
  *           example: 1
- *         description: ID du stock à vérifier
+ *         description: ID du produit à vérifier
  *       - in: path
- *         name: quantity
+ *         name: requiredQty
  *         required: true
  *         schema:
  *           type: integer
@@ -72,6 +72,6 @@ const StockApiRouter = express.Router();
  *                   example: "Database connection error"
  */
 
-StockApiRouter.get('/check-availability/:stockid/:quantity', StockApiController.checkStockAvailability);
+StockApiRouter.get('/check-availability/:productId/:requiredQty', StockApiController.checkStockAvailability);
 
 export default StockApiRouter;

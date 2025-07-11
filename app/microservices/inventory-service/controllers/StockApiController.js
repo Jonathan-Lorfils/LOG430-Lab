@@ -3,21 +3,21 @@ import StockService from '../services/StockService.js';
 
 const StockApiController = {
     async checkStockAvailability(req, res) {
-        const stockId = req.params.stockid;
-        const requestedQuantity = parseInt(req.params.quantity, 10);
-        logger.info(`Request received for /api/v1/stocks/check-availability with stockId: ${stockId} and quantity: ${requestedQuantity}`);
+        const productId = req.params.productId;
+        const requestedQuantity = parseInt(req.params.requiredQty, 10);
+        logger.info(`Request received for /api/v1/stocks/check-availability with stockId: ${productId} and quantity: ${requestedQuantity}`);
 
         try {
             if (isNaN(requestedQuantity) || requestedQuantity <= 0) {
-                logger.warn(`Invalid requested quantity: ${requestedQuantity} for stockId: ${stockId}`);
+                logger.warn(`Invalid requested quantity: ${requestedQuantity} for stockId: ${productId}`);
                 return res.status(400).json({
                     success: false,
                     message: 'Invalid requested quantity'
                 });
             }
 
-            const isAvailable = await StockService.checkStockAvailability(stockId, requestedQuantity);
-            logger.info(`Stock availability checked for stockId: ${stockId}`);
+            const isAvailable = await StockService.checkStockAvailability(productId, requestedQuantity);
+            logger.info(`Stock availability checked for stockId: ${productId}`);
 
             return res.status(200).json({
                 success: isAvailable,
@@ -25,7 +25,7 @@ const StockApiController = {
             });
 
         } catch (error) {
-            logger.error(`Error while checking stock availability for stockId: ${stockId}`, {
+            logger.error(`Error while checking stock availability for stockId: ${productId}`, {
                 error: error.message
             });
 

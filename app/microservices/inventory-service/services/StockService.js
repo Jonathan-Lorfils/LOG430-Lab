@@ -1,27 +1,31 @@
 import sequelize from '../database.js';
 import logger from '../utils/logger.js';
 import Stock from '../models/Stock.js';
+import { Op } from 'sequelize';
 
 const StockService = {
-    async checkStockAvailability(productId, warehouseId, requiredQuantity) {
+    async checkStockAvailability(productId, requiredQuantity) {
         try {
             const stock = await Stock.findOne({
                 where: {
                     ProductId: productId,
-                    StoreId: warehouseId
+                    WarehouseId: 1,
+                    quantity: {
+                        [Op.gte]: requiredQuantity
+                    }
                 }
             });
 
             if (!stock) {
-                logger.warn(`No stock found for Product ID ${productId} in Warehouse ID ${warehouseId}`);
+                logger.warn(`No stock found for Product ID ${productId} in Warehouse`);
                 return false;
             }
 
             if (stock.quantity >= requiredQuantity) {
-                logger.info(`Stock available for Product ID ${productId} in Warehouse ID ${warehouseId}`);
+                logger.info(`Stock available for Product ID ${productId} in Warehouse`);
                 return true;
             } else {
-                logger.warn(`Insufficient stock for Product ID ${productId} in Warehouse ID ${warehouseId}`);
+                logger.warn(`Insufficient stock for Product ID ${productId} in Warehouse`);
                 return false;
             }
         } catch (error) {
@@ -36,7 +40,7 @@ const StockService = {
                 where: {
                     ProductId: productId,
                     quantity: {
-                        [sequelize.Op.gte]: quantity
+                        [Op.gte]: quantity
                     }
                 }
             });
