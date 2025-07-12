@@ -34,21 +34,22 @@ const StockService = {
         }
     },
 
-    async getAvailableStockId(productId, quantity) {
+    async getAvailableStockId(ProductId, quantity) {
         try {
             const stock = await Stock.findOne({
                 where: {
-                    ProductId: productId,
+                    ProductId: ProductId,
+                    WarehouseId: 1,
                     quantity: {
                         [Op.gte]: quantity
                     }
                 }
             });
             if (!stock) {
-                logger.warn(`No available stock found for Product ID ${productId} with required quantity ${quantity}`);
+                logger.warn(`No available stock found for Product ID ${ProductId} with required quantity ${quantity}`);
                 return null;
             }
-            logger.info(`Available stock found for Product ID ${productId}: Stock ID ${stock.id}`);
+            logger.info(`Available stock found for Product ID ${ProductId}: Stock ID ${stock.id}`);
             return stock.id;
         } catch (error) {
             logger.error(`Error retrieving available stock ID: ${error.message}`);

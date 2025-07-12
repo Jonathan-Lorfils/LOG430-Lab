@@ -4,13 +4,10 @@ import logger from '../utils/logger.js';
 import StockService from './StockService.js';
 
 const StockReservationService = {
-    async reserveStock(quantity, OrderId) {
+    async reserveStock(ProductId, quantity, OrderId) {
         const t = await sequelize.transaction();
         try {
-            const stockReservation = await this.createStockReservation({
-                quantity,
-                OrderId
-            }, t);
+            const stockReservation = await this.createStockReservation(ProductId, quantity, OrderId);
 
             await t.commit();
             logger.info('Stock reservation created successfully for Order:', stockReservation.OrderId);
@@ -43,7 +40,7 @@ const StockReservationService = {
         }
     },
 
-    async createStockReservation(quantity, OrderId) {
+    async createStockReservation(ProductId, quantity, OrderId) {
         const t = await sequelize.transaction();
         try {
             const stockId = await StockService.getAvailableStockId(ProductId, quantity);

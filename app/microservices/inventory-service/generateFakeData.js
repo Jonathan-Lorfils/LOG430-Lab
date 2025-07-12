@@ -45,7 +45,7 @@ const GenerateFakeData = {
         }
     },
 
-    async generate(numberOfStocks = 5, numberOfReplenishments = 3) {
+    async generate(numberOfStocks = 10, numberOfReplenishments = 6) {
         const warehouse = await this.createWarehouse('Main Warehouse', '123 Main St', 1);
         try {
             for (let i = 0; i < numberOfStocks; i++) {

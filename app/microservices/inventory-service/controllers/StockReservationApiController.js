@@ -5,7 +5,7 @@ const StockReservationApiController = {
     async reserveStock(req, res) {
         const { quantity, ProductId, OrderId } = req.body;
         logger.info(`Request received for /api/v1/stock-reservations with quantity: ${quantity}, ProductId: ${ProductId}, OrderId: ${OrderId}`);
-        
+
         try {
             if (!quantity || !ProductId || !OrderId) {
                 logger.warn('Invalid request body for stock reservation creation');
@@ -15,7 +15,7 @@ const StockReservationApiController = {
                 });
             }
 
-            const stockReservation = await StockReservationService.reserveStock(quantity, ProductId, OrderId);
+            const stockReservation = await StockReservationService.reserveStock(ProductId, quantity, OrderId);
             logger.info(`Stock reservation created successfully for OrderId: ${OrderId}`);
 
             return res.status(201).json({
