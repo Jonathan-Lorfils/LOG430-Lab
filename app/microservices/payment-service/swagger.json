@@ -1,0 +1,149 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "POS API",
+    "version": "1.0.0",
+    "description": "Documentation de l’API pour le service payement"
+  },
+  "servers": [
+    {
+      "url": "http://localhost",
+      "description": "Serveur local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/payment/process-payment": {
+      "post": {
+        "summary": "Traite un paiement pour une commande",
+        "description": "Crée un enregistrement de paiement pour une commande existante, puis le traite en changeant son statut à `completed`.\n",
+        "tags": [
+          "Paiement"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "method",
+                  "OrderId"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 99.99
+                  },
+                  "method": {
+                    "type": "string",
+                    "description": "Méthode de paiement (ex: 'credit_card', 'paypal')",
+                    "example": "credit_card"
+                  },
+                  "OrderId": {
+                    "type": "integer",
+                    "description": "Identifiant de la commande associée",
+                    "example": 123
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Paiement traité avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "amount": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 99.99
+                    },
+                    "method": {
+                      "type": "string",
+                      "example": "credit_card"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "completed"
+                    },
+                    "OrderId": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-07-13T14:00:00.000Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-07-13T14:00:01.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Champs requis manquants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Missing required fields"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erreur interne du serveur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

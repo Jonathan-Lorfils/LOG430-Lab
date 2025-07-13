@@ -257,6 +257,40 @@ services:
     networks:
       - pos-net
 
+  # === PAYMENT SERVICE ===
+  payment-db:
+    image: postgres
+    container_name: payment-db
+    environment:
+      POSTGRES_DB: paymentdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  payment-service:
+    build: ./microservices/payment-service
+    container_name: payment-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@payment-db:5432/paymentdb
+      REDIS_HOST: redis
+    depends_on:
+      payment-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "3009:3000"
+    networks:
+      - pos-net
+
   # === API GATEWAY ===
   api-gateway:
     image: nginx
@@ -275,6 +309,7 @@ services:
       - cart-service-2
       - checkout-service
       - store-service
+      - payment-service
     networks:
       - pos-net
 
@@ -332,6 +367,7 @@ volumes:
   cart-db-data:
   checkout-db-data:
   store-db-data:
+  payment-db-data:
 
     # === RÉSEAU PRIVÉ ===
 networks:
