@@ -80,6 +80,27 @@ const StockReservationService = {
             throw error;
         }
     },
+
+    async cancelStockReservation(id) {
+        const t = await sequelize.transaction();
+        try {
+            const stockReservation = await StockReservation.findByPk(id, { transaction: t });
+            if (!stockReservation) {
+                throw new Error('Stock reservation not found');
+            }
+
+            await StockService.releaseStock(stockReservation.StockId, stockReservation.quantity, { transaction: t });
+            await stockReservation.destroy({ transaction: t });
+
+            await t.commit();
+            logger.info('Stock reservation cancelled successfully for ID:', id);
+            return stockReservation;
+        } catch (error) {
+            await t.rollback();
+            logger.error('Error cancelling stock reservation:', error);
+            throw error;
+        }
+    }
 }
 
 export default StockReservationService;

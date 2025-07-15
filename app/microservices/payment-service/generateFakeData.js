@@ -7,7 +7,7 @@ const generateFakeData = {
                 amount: amount,
                 method: method,
                 OrderId: OrderId,
-                status: 'pending' // Default status
+                status: 'completed'
             });
             return payment;
         } catch (error) {

@@ -67,6 +67,58 @@ const OrderApiController = {
                 error: error.message
             });
         }
+    },
+
+    async confirmOrder(req, res) {
+        const orderId = req.params.orderId;
+        logger.info(`Request received for POST /api/v1/orders/confirmOrder with orderId: ${orderId}`);
+
+        try {
+            const order = await OrderService.confirmOrder(orderId);
+            logger.info(`Order confirmed successfully for orderId: ${orderId}`, { order });
+
+            return res.status(200).json({
+                success: true,
+                message: 'Order confirmed successfully',
+                order
+            });
+        } catch (error) {
+            logger.error(`Error while confirming order for orderId: ${orderId}`, {
+                error: error.message
+            });
+
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
+    },
+
+    async cancelOrder(req, res) {
+        const orderId = req.params.orderId;
+        logger.info(`Request received for POST /api/v1/orders/cancelOrder with orderId: ${orderId}`);
+
+        try {
+            const order = await OrderService.cancelOrder(orderId);
+            logger.info(`Order cancelled successfully for orderId: ${orderId}`, { order });
+
+            return res.status(200).json({
+                success: true,
+                message: 'Order cancelled successfully',
+                order
+            });
+        } catch (error) {
+            logger.error(`Error while cancelling order for orderId: ${orderId}`, {
+                error: error.message
+            });
+
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
     }
 };
 

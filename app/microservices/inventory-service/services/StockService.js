@@ -82,6 +82,27 @@ const StockService = {
             logger.error(`Error updating stock quantity: ${error.message}`);
             throw error;
         }
+    },
+
+    async releaseStock(stockId, quantity) {
+        const t = await sequelize.transaction();
+        try {
+            const stock = await Stock.findByPk(stockId, { transaction: t });
+            if (!stock) {
+                logger.warn(`Stock with ID ${stockId} not found`);
+                throw new Error('Stock not found');
+            }
+
+            stock.quantity += quantity;
+            await stock.save({ transaction: t });
+            await t.commit();
+            logger.info(`Stock released successfully for Stock ID ${stockId}. New quantity: ${stock.quantity}`);
+            return stock;
+        } catch (error) {
+            await t.rollback();
+            logger.error(`Error releasing stock: ${error.message}`);
+            throw error;
+        }
     }
 }
 

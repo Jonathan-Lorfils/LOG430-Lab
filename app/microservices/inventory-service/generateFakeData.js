@@ -84,7 +84,7 @@ const GenerateFakeData = {
                 const orderId = i + 1;
                 const productId = i + 1;
                 const quantity = Math.floor(Math.random() * 5) + 1;
-                const status = Math.random() > 0.5 ? 'pending' : 'completed';
+                const status = 'completed';
                 const reservationDate = new Date().toISOString();
 
                 await this.createStockReservation(orderId, productId, quantity, status, reservationDate);
