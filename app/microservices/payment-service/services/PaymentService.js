@@ -38,6 +38,18 @@ const PaymentService = {
             logger.error(`Error processing payment: ${error.message}`);
             throw error;
         }
+    },
+
+    async getPaymentByOrderId(OrderId) {
+        try {
+            const payments = await Payment.findOne({
+                where: { OrderId },
+            });
+            return payments;
+        } catch (error) {
+            logger.error(`Error fetching payments for Order ID ${OrderId}: ${error.message}`);
+            throw error;
+        }
     }
 }
 

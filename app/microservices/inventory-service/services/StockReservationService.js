@@ -66,8 +66,20 @@ const StockReservationService = {
             logger.error('Error creating stock reservation and updating stock quantity:', error);
             throw error;
         }
-    }
+    },
 
+    async getStockReservationByOrderId(OrderId) {
+        try {
+            const stockReservations = await StockReservation.findAll({
+                where: { OrderId },
+            });
+
+            return stockReservations;
+        } catch (error) {
+            logger.error('Error fetching stock reservations for OrderId:', OrderId, error);
+            throw error;
+        }
+    },
 }
 
 export default StockReservationService;

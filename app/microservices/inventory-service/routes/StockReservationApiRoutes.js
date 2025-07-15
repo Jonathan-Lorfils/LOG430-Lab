@@ -82,7 +82,90 @@ const StockReservationApiRouter = express.Router();
  *                   type: string
  *                   example: "Database connection error"
  */
-
 StockReservationApiRouter.post('/reserveStock', StockReservationApiController.reserveStock);
+
+/**
+ * @swagger
+ * /api/v1/inventory/stock-reservations/getStockReservationByOrderId/{id}:
+ *   get:
+ *     summary: Récupérer les réservations de stock associées à une commande
+ *     description: |
+ *       Cette route permet d'obtenir toutes les réservations de stock associées à un identifiant de commande (`OrderId`) donné.
+ *     tags:
+ *       - Stock Reservations
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 42
+ *         description: Identifiant de la commande (OrderId)
+ *     responses:
+ *       200:
+ *         description: Réservations de stock trouvées
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       OrderId:
+ *                         type: integer
+ *                         example: 42
+ *                       ProductId:
+ *                         type: integer
+ *                         example: 7
+ *                       quantity:
+ *                         type: integer
+ *                         example: 10
+ *                       status:
+ *                         type: string
+ *                         example: "reserved"
+ *                       reservationDate:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-07-14T13:00:00Z"
+ *       404:
+ *         description: Aucune réservation de stock trouvée pour l'OrderId fourni
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Stock reservation not found"
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 error:
+ *                   type: string
+ *                   example: "Database error"
+ */
+StockReservationApiRouter.get('/getStockReservationByOrderId/:id', StockReservationApiController.getStockReservationByOrderId);
 
 export default StockReservationApiRouter;

@@ -52,6 +52,47 @@ const OrderService = {
             logger.error('Error fetching orders for customer:', error);
             throw error;
         }
+    },
+
+    async confirmOrder(orderId) {
+        const t = await sequelize.transaction();
+        try {
+            const order = await Order.findByPk(orderId, { transaction: t });
+            if (!order) {
+                throw new Error('Order not found');
+            }
+
+            const stockResponse = await axios.get(`http://localhost:3000/api/v1/inventory/stock-reservations/getStockReservationByOrderId/${orderId}`);
+
+            const stockReservations = stockResponse.data;
+
+            for (const reservation of stockReservations) {
+                if (reservation.status !== 'completed') {
+                    throw new Error('Stock reservation is not completed');
+                }
+            }
+
+            // valider que le paiement a été effectué
+            const paymentResponse = await axios.get(`http://localhost:3000/api/v1/payment/payments/getPaymentByOrderId/${orderId}`);
+
+            const payment = paymentResponse.data;
+
+            if (!payment || payment.status !== 'completed') {
+                throw new Error('Payment not completed');
+            }
+
+            // Mettre à jour le statut de la commande
+            order.status = 'confirmed';
+            await order.save({ transaction: t });
+
+            await t.commit();
+            logger.info(`Order confirmed: ${order.id}`);
+            return order;
+        } catch (error) {
+            await t.rollback();
+            logger.error('Error confirming order:', error);
+            throw error;
+        }
     }
 }
 

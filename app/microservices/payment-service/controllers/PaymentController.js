@@ -22,6 +22,22 @@ const PaymentController = {
             logger.error(`Error in processAndCreatePayment: ${error.message}`);
             return res.status(500).json({ error: 'Internal server error' });
         }
+    },
+
+    async getPaymentByOrderId(req, res) {
+        const { OrderId } = req.params;
+
+        if (!OrderId) {
+            return res.status(400).json({ error: 'Order ID is required' });
+        }
+
+        try {
+            const payments = await PaymentService.getPaymentByOrderId(OrderId);
+            return res.status(200).json(payments);
+        } catch (error) {
+            logger.error(`Error fetching payments for Order ID ${OrderId}: ${error.message}`);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
     }
 };
 

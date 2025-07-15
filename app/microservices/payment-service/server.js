@@ -1,6 +1,7 @@
 import app from './app.js';
 import logger from './utils/logger.js';
 import sequelize from './database.js';
+import generateFakeData from './generateFakeData.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -9,6 +10,8 @@ logger.info('Connexion to postgresql successfully !')
 
 logger.info('Starting database sync...')
 await sequelize.sync({ force: true });
+
+await generateFakeData.generate();
 logger.info('Database synchronized successfully')
 
 app.listen(PORT, () => {

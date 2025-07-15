@@ -32,6 +32,35 @@ const StockReservationApiController = {
                 error: error.message
             });
         }
+    },
+
+    async getStockReservationByOrderId(req, res) {
+        const { id } = req.params;
+        logger.info(`Request received for /api/v1/stock-reservations/getStockReservationByOrderId/${id}`);
+
+        try {
+            const stockReservation = await StockReservationService.getStockReservationByOrderId(id);
+            if (!stockReservation || stockReservation.length === 0) {
+                logger.warn(`Stock reservation not found for ID: ${id}`);
+                return res.status(404).json({
+                    success: false,
+                    message: 'Stock reservation not found'
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: stockReservation
+            });
+
+        } catch (error) {
+            logger.error('Error while fetching stock reservation:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
     }
 }
 
