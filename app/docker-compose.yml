@@ -291,6 +291,20 @@ services:
     networks:
       - pos-net
 
+  # === ORCHESTRATOR SERVICE ===
+  orchestrator-service:
+    build: ./microservices/orchestrator-service
+    container_name: orchestrator-service
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      redis:
+        condition: service_started
+    ports:
+      - "3010:3000"
+    networks:
+      - pos-net
+
   # === API GATEWAY ===
   api-gateway:
     image: nginx
@@ -310,6 +324,7 @@ services:
       - checkout-service
       - store-service
       - payment-service
+      - orchestrator-service
     networks:
       - pos-net
 

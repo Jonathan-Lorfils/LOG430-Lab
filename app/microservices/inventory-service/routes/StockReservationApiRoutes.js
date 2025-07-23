@@ -168,4 +168,52 @@ StockReservationApiRouter.post('/reserveStock', StockReservationApiController.re
  */
 StockReservationApiRouter.get('/getStockReservationByOrderId/:id', StockReservationApiController.getStockReservationByOrderId);
 
+/**
+ * @swagger
+ * /api/v1/inventory/stock-reservations/cancelStockReservation/{orderId}:
+ *   post:
+ *     summary: Annule une réservation de stock par Order ID
+ *     description: Libère les stocks associés à une commande donnée et supprime les réservations correspondantes.
+ *     tags: [Stock Reservations]
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *         description: ID de la commande pour laquelle la réservation de stock doit être annulée
+ *     responses:
+ *       200:
+ *         description: Réservation de stock annulée avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Stock reservation cancelled successfully
+ *       400:
+ *         description: ID de commande manquant ou invalide
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Order ID is required
+ *       404:
+ *         description: Aucune réservation de stock trouvée pour cet ID de commande
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: No stock reservation found for the provided Order ID
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal server error
+ *               error: Error message
+ */
+StockReservationApiRouter.post('/cancelStockReservation/:orderId', StockReservationApiController.cancelStockReservationByOrderId);
+
 export default StockReservationApiRouter;

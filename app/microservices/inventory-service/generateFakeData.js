@@ -46,14 +46,15 @@ const GenerateFakeData = {
         }
     },
 
-    async createStockReservation(orderId, productId, quantity, status, reservationDate) {
+    async createStockReservation(orderId, productId, quantity, status, reservationDate, stockId) {
         try {
             const stockReservation = await StockReservation.create({
                 OrderId: orderId,
                 ProductId: productId,
                 quantity: quantity,
                 status: status,
-                reservationDate: reservationDate
+                reservationDate: reservationDate,
+                StockId: stockId
             });
             return stockReservation;
         } catch (error) {
@@ -86,8 +87,8 @@ const GenerateFakeData = {
                 const quantity = Math.floor(Math.random() * 5) + 1;
                 const status = 'completed';
                 const reservationDate = new Date().toISOString();
-
-                await this.createStockReservation(orderId, productId, quantity, status, reservationDate);
+                const stockId = i + 1;
+                await this.createStockReservation(orderId, productId, quantity, status, reservationDate, stockId);
             }
 
             console.log(`${numberOfStocks} stocks generated successfully.`);

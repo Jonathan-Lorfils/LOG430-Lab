@@ -61,6 +61,43 @@ const StockReservationApiController = {
                 error: error.message
             });
         }
+    },
+
+    async cancelStockReservationByOrderId(req, res) {
+        const { orderId } = req.params;
+        logger.info(`Request received for /api/v1/stock-reservations/cancelStockReservation with OrderId: ${orderId}`);
+
+        try {
+            if (!orderId) {
+                logger.warn('OrderId is required to cancel stock reservation');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Order ID is required'
+                });
+            }
+
+            const result = await StockReservationService.cancelStockReservationByOrderId(orderId);
+            if (!result.success) {
+                logger.warn(`No stock reservation found for OrderId: ${orderId}`);
+                return res.status(404).json({
+                    success: false,
+                    message: 'No stock reservation found for the provided Order ID'
+                });
+            }
+
+            logger.info(`Stock reservation cancelled successfully for OrderId: ${orderId}`);
+            return res.status(200).json({
+                success: true,
+                message: 'Stock reservation cancelled successfully'
+            });
+        } catch (error) {
+            logger.error('Error while cancelling stock reservation:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
     }
 }
 

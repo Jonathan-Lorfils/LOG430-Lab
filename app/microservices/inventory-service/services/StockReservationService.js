@@ -81,20 +81,33 @@ const StockReservationService = {
         }
     },
 
-    async cancelStockReservation(id) {
+    async cancelStockReservationByOrderId(orderId) {
         const t = await sequelize.transaction();
+
         try {
-            const stockReservation = await StockReservation.findByPk(id, { transaction: t });
-            if (!stockReservation) {
+            const stockReservations = await StockReservation.findAll({
+                where: { OrderId: orderId },
+                transaction: t
+            });
+            if (!stockReservations || stockReservations.length === 0) {
                 throw new Error('Stock reservation not found');
             }
 
-            await StockService.releaseStock(stockReservation.StockId, stockReservation.quantity, { transaction: t });
-            await stockReservation.destroy({ transaction: t });
+            for (const stockReservation of stockReservations) {
+                const result = await StockService.releaseStock(stockReservation.StockId, stockReservation.quantity, { transaction: t });
+                if (!result.success) {
+                    throw new Error(`Failed to release stock for StockId: ${stockReservation.StockId}`);
+                }
+                await stockReservation.destroy({ transaction: t });
+                logger.info(`Stock reservation cancelled successfully for OrderId: ${orderId}`);
+            }
 
             await t.commit();
-            logger.info('Stock reservation cancelled successfully for ID:', id);
-            return stockReservation;
+            logger.info('Stock reservation cancelled successfully for OrderID:', orderId);
+            return {
+                success: true,
+                message: 'Stock reservation cancelled successfully'
+            };
         } catch (error) {
             await t.rollback();
             logger.error('Error cancelling stock reservation:', error);

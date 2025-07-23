@@ -97,7 +97,7 @@ const StockService = {
             await stock.save({ transaction: t });
             await t.commit();
             logger.info(`Stock released successfully for Stock ID ${stockId}. New quantity: ${stock.quantity}`);
-            return stock;
+            return { success: true, message: 'Stock released successfully', stock };
         } catch (error) {
             await t.rollback();
             logger.error(`Error releasing stock: ${error.message}`);
