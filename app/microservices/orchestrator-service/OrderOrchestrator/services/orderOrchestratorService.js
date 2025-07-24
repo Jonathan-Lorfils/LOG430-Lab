@@ -1,6 +1,5 @@
 import axios from 'axios';
 import logger from '../../utils/logger.js';
-import { publishEvent } from '../../eventPublisher.js';
 
 const updateOrderState = async (orderId, newState) => {
     try {
@@ -29,11 +28,6 @@ const OrderOrchestratorService = {
             }
 
             await updateOrderState(orderId, 'STOCK_VERIFIED');
-            await publishEvent('order-events', {
-                type: 'StockVerified',
-                orderId,
-                timestamp: new Date().toISOString()
-            });
 
             // 2. Réservation du stock
             let stockReservations = [];
@@ -51,11 +45,6 @@ const OrderOrchestratorService = {
             }
 
             await updateOrderState(orderId, 'STOCK_RESERVED');
-            await publishEvent('order-events', {
-                type: 'StockReserved',
-                orderId,
-                timestamp: new Date().toISOString()
-            });
 
             // 3. Paiement
             const payment = await axios.post('http://payment-service:3000/api/v1/payment/process-payment', {
@@ -66,12 +55,6 @@ const OrderOrchestratorService = {
             if (!payment.data.success) throw new Error('Paiement échoué');
 
             await updateOrderState(orderId, 'PAYMENT_COMPLETED');
-            await publishEvent('order-events', {
-                type: 'PaymentCompleted',
-                orderId,
-                amount: orderDetails.amount,
-                timestamp: new Date().toISOString()
-            });
 
             // 4. Confirmation de la commande
             const orderConfirmation = await axios.post(`http://checkout-service:3000/api/v1/checkout/confirmOrder/${orderId}`);
@@ -80,11 +63,6 @@ const OrderOrchestratorService = {
             }
 
             await updateOrderState(orderId, 'CONFIRMED');
-            await publishEvent('order-events', {
-                type: 'OrderConfirmed',
-                orderId,
-                timestamp: new Date().toISOString()
-            });
 
             logger.info(`Commande ${orderId} confirmée avec succès.`);
             return {
@@ -95,12 +73,6 @@ const OrderOrchestratorService = {
             logger.error(`Erreur lors de l'orchestration de la commande ${orderId}: ${error.message}`);
 
             await updateOrderState(orderId, 'CANCELLED');
-            await publishEvent('order-events', {
-                type: 'OrderFailed',
-                orderId,
-                reason: error.message,
-                timestamp: new Date().toISOString()
-            });
 
             try {
                 await axios.post(`http://inventory-service:3000/api/v1/inventory/stock-reservations/cancelStockReservation/${orderId}`);
