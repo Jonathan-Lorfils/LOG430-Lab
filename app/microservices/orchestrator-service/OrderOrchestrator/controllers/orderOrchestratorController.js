@@ -1,7 +1,7 @@
-import orderOrchestratorService from "../services/orderOrchestratorService.js"
+import OrderOrchestratorService from '../services/OrderOrchestratorService.js';
 import logger from '../../utils/logger.js';
 
-const orderOrchestratorController = {
+const OrderOrchestratorController = {
     async orchestrateOrder(req, res) {
         const orderDetails = req.body;
         if (!orderDetails || !orderDetails.orderId || !orderDetails.OrderLines || orderDetails.OrderLines.length === 0) {
@@ -14,7 +14,7 @@ const orderOrchestratorController = {
         logger.info(`Orchestration de la commande ${orderDetails.orderId} en cours...`);
 
         try {
-            const result = await orderOrchestratorService.orchestrateOrder(orderDetails);
+            const result = await OrderOrchestratorService.orchestrateOrder(orderDetails);
             if (!result.success) {
                 return res.status(500).json({
                     success: false,
@@ -36,4 +36,4 @@ const orderOrchestratorController = {
     }
 }
 
-export default orderOrchestratorController;
+export default OrderOrchestratorController;

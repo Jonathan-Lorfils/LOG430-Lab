@@ -67,7 +67,7 @@ const GenerateFakeData = {
         const warehouse = await this.createWarehouse('Main Warehouse', '123 Main St', 1);
         try {
             for (let i = 0; i < numberOfStocks; i++) {
-                const quantity = Math.floor(Math.random() * 100) + 1;
+                const quantity = 9999;
                 const productId = i + 1;
 
                 await this.createStock(quantity, productId, warehouse.id);

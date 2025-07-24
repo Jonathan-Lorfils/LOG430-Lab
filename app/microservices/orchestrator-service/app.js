@@ -47,7 +47,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./routes/*.js'],
+    apis: ['./OrderOrchestrator/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
