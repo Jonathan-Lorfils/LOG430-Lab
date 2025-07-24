@@ -195,4 +195,66 @@ OrderApiRouter.post('/confirmOrder/:orderId', OrderApiController.confirmOrder);
  */
 OrderApiRouter.post('/cancelOrder/:orderId', OrderApiController.cancelOrder);
 
+/**
+ * @swagger
+ * /api/v1/checkout/updateOrderStatus:
+ *   post:
+ *     summary: Met à jour le statut d'une commande
+ *     description: >
+ *       Met à jour le statut d'une commande existante selon l'identifiant et le nouveau statut fournis.
+ *       
+ *       Valeurs possibles pour `status` :
+ *       - CREATED
+ *       - STOCK_VERIFIED
+ *       - STOCK_RESERVED
+ *       - PAYMENT_COMPLETED
+ *       - CONFIRMED
+ *       - CANCELLED
+ *     tags: [Orders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               orderId:
+ *                 type: integer
+ *                 example: 1
+ *               status:
+ *                 type: string
+ *                 enum: [CREATED, STOCK_VERIFIED, STOCK_RESERVED, PAYMENT_COMPLETED, CONFIRMED, CANCELLED]
+ *                 example: CONFIRMED
+ *     responses:
+ *       200:
+ *         description: Statut de la commande mis à jour avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Order status updated successfully
+ *               order:
+ *                 id: 1
+ *                 customerId: 55
+ *                 status: "CONFIRMED"
+ *                 createdAt: "2025-06-24T15:30:00Z"
+ *                 updatedAt: "2025-07-23T16:45:00Z"
+ *       404:
+ *         description: Commande introuvable
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Order not found
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal server error
+ *               error: "Détail de l'erreur"
+ */
+OrderApiRouter.post('/updateOrderStatus', OrderApiController.updateOrderStatus);
+
 export default OrderApiRouter;

@@ -2,7 +2,7 @@ import logger from '../utils/logger.js';
 import Order from '../models/Order.js';
 import OrderLine from '../models/OrderLine.js';
 import sequelize from '../database.js';
-import axios from 'axios';
+import OrderStates from '../enum/OrderStates.js';
 
 const OrderService = {
     async createOrder(customerId, orderLines) {
@@ -93,6 +93,33 @@ const OrderService = {
         } catch (error) {
             await t.rollback();
             logger.error('Error cancelling order:', error);
+            throw error;
+        }
+    },
+
+    async updateOrderStatus(orderId, status) {
+        const t = await sequelize.transaction();
+        try {
+            const normalizedStatus = status.toUpperCase();
+
+            if (!Object.values(OrderStates).includes(normalizedStatus)) {
+                throw new Error(`Invalid status: ${status}`);
+            }
+
+            const order = await Order.findByPk(orderId, { transaction: t });
+            if (!order) {
+                throw new Error('Order not found');
+            }
+
+            order.status = normalizedStatus;
+            await order.save({ transaction: t });
+
+            await t.commit();
+            logger.info(`Order status updated: ${order.id} to ${normalizedStatus}`);
+            return order;
+        } catch (error) {
+            await t.rollback();
+            logger.error('Error updating order status:', error);
             throw error;
         }
     }

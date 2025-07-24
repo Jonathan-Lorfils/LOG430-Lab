@@ -1,0 +1,10 @@
+export const OrderStates = {
+    CREATED: 'CREATED',
+    STOCK_VERIFIED: 'STOCK_VERIFIED',
+    STOCK_RESERVED: 'STOCK_RESERVED',
+    PAYMENT_COMPLETED: 'PAYMENT_COMPLETED',
+    CONFIRMED: 'CONFIRMED',
+    CANCELLED: 'CANCELLED',
+};
+
+export default OrderStates;

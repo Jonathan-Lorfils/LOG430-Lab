@@ -41,31 +41,31 @@ const orderOrchestratorService = {
             if (!payment.data.success) throw new Error('Paiement échoué');
 
             // 4. Confirmation de la commande
-            await axios.post(`http://checkout-service/api/v1/checkout/confirmOrder/${orderId}`);
+            const orderConfirmation = await axios.post(`http://checkout-service/api/v1/checkout/confirmOrder/${orderId}`);
+
+            if (!orderConfirmation.data.success) {
+                throw new Error('Échec de la confirmation de la commande');
+            }
 
             logger.info(`Commande ${orderId} confirmée avec succès.`);
-
+            return {
+                success: true,
+                message: `Commande ${orderId} orchestrée avec succès.`,
+            };
         } catch (error) {
-            console.error(`Saga échouée : ${error.message}`);
+            logger.error(`Erreur lors de l'orchestration de la commande ${orderId}: ${error.message}`);
 
-            // Compensation : libérer chaque item un par un
-            for (const orderLine of orderDetails.OrderLines) {
-                try {
-                    await axios.post('http://stock-service/api/v1/stock/release', {
-                        productId: orderLine.productId,
-                        quantity: orderLine.quantity
-                    });
-                    logger.error(`Stock libéré pour produit ${item.productId}`);
-                } catch (releaseError) {
-                    logger.error(`Échec de la libération du stock pour le produit ${item.productId}: ${releaseError.message}`);
-                }
+            // Libération des réservations de stock
+            try {
+                await axios.post(`http://inventory-service/api/v1/inventory/stock-reservations/cancelStockReservation/${orderId}`);
+                logger.info(`Réservations de stock libérées pour la commande ${orderId}`);
+            } catch (releaseError) {
+                logger.error(`Échec de la libération des réservations de stock pour la commande ${orderId}: ${releaseError.message}`);
             }
 
             // Annuler la commande
             try {
-                await axios.post(`http://checkout-service/api/v1/checkout/cancelOrder/${orderId}`, {
-                    reason: error.message
-                });
+                await axios.post(`http://checkout-service/api/v1/checkout/cancelOrder/${orderId}`);
                 console.log(`Commande ${orderId} annulée.`);
             } catch (cancelError) {
                 console.error(`Erreur lors de l'annulation de la commande ${orderId}: ${cancelError.message}`);

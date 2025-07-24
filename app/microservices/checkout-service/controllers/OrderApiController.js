@@ -119,6 +119,32 @@ const OrderApiController = {
                 error: error.message
             });
         }
+    },
+
+    async updateOrderStatus(req, res) {
+        const { orderId, status } = req.body;
+        logger.info(`Request received for POST /api/v1/orders/updateOrderStatus with orderId: ${orderId} and status: ${status}`);
+
+        try {
+            const order = await OrderService.updateOrderStatus(orderId, status);
+            logger.info(`Order status updated successfully for orderId: ${orderId}`, { order });
+
+            return res.status(200).json({
+                success: true,
+                message: 'Order status updated successfully',
+                order
+            });
+        } catch (error) {
+            logger.error(`Error while updating order status for orderId: ${orderId}`, {
+                error: error.message
+            });
+
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
     }
 };
 
