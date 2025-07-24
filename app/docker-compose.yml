@@ -300,8 +300,28 @@ services:
     depends_on:
       redis:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "3010:3000"
+    networks:
+      - pos-net
+
+  # === RABBITMQ ===
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - pos-net
 

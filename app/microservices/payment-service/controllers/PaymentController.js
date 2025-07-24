@@ -16,7 +16,6 @@ const PaymentController = {
             const payment = await PaymentService.createPayment(amount, method, OrderId);
 
             // Process payment
-            console.log("stockReservations:", JSON.stringify(payment, null, 2));
             const processedPayment = await PaymentService.processPayment(payment.id);
 
             if (!processedPayment) {
