@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import ApiRouter from './ApiRoutes.js';
+import { register } from 'prom-client';
 
 const app = express();
 
@@ -16,6 +17,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1', ApiRouter);
+
+// Prometheus metrics endpoint
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 // Swagger config
 const swaggerOptions = {

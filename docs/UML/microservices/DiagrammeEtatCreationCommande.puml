@@ -1,0 +1,45 @@
+@startuml
+title Machine d'état – Orchestration d'une commande
+
+skinparam state {
+  BackgroundColor White
+  BorderColor Black
+  FontName Arial
+  FontSize 14
+}
+skinparam ArrowColor DimGray
+skinparam ArrowFontColor Black
+skinparam ArrowFontName Arial
+skinparam ArrowThickness 1
+skinparam backgroundColor #f9f9f9
+skinparam Shadowing false
+
+[*] --> EnAttente : Nouvelle commande
+
+EnAttente --> StockVerifie : Stock disponible
+StockVerifie --> StockReserve : Réservation réussie
+StockReserve --> PaiementEffectue : Paiement accepté
+PaiementEffectue --> Confirmee : Confirmation réussie
+
+' Transitions d'erreur
+EnAttente --> Annulee : Stock insuffisant
+StockVerifie --> Annulee : Échec réservation
+StockReserve --> Annulee : Paiement échoué
+PaiementEffectue --> Annulee : Échec confirmation
+
+Confirmee --> [*] : Fin du processus
+Annulee --> [*] : Fin du processus
+
+note right of EnAttente
+  Commande créée, en attente de traitement
+end note
+
+note right of Annulee
+  Une erreur est survenue, commande annulée
+end note
+
+note right of Confirmee
+  Processus complété avec succès
+end note
+
+@enduml
