@@ -8,7 +8,6 @@ Prérequis:
     Docker
     Docker Compose
 
-
 1. Clone le projet :
    - Se placer dans le dossier destination, y ouvrir une fenêtre de terminal/invite commande puis entrer la commande suivante:
    ```
@@ -22,7 +21,7 @@ Prérequis:
    ```
 
    ```
-   git checkout labo05
+   git checkout labo06
    ```
 
 2. Lancer le container
@@ -54,21 +53,131 @@ Prérequis:
     Service panier : http://localhost:3005/api-docs/
     Service commande (checkout) : http://localhost:3006/api-docs/
     Service magasin : http://localhost:3008/api-docs/
+    Service paiement : http://localhost:3009/api-docs/
+    Service orchestrateur : http://localhost:3010/api-docs/
     ```
 
 ## Instruction de test
 
-### Product 
+### Commande fonctionnel 
 
-  ![Étape 1](./docs/images/Product/ProductEtape1.png)
+  ![Étape 1](./docs/images/Labo06/Etape1.png)
 
-  ![Étape 2](./docs/images/Product/ProductEtape2.png)
+  ![Étape 2](./docs/imagesimages/Labo06/Etape2.png)
 
-### Replenishment
+  ![Étape 3](./docs/images/Labo06/Etape3.png)
 
-  ![Étape 1](./docs/images/Replenishment/ReplenishmentEtape1.png)
+  ![Étape 4](./docs/images/Labo06/Etape4.png)
 
-  ![Étape 2](./docs/images/Replenishment/ReplenishmentEtape2.png)
+### Commande échouant
+
+  ![Étape 1](./docs/images/Labo06/Etape5.png)
+
+## Rapport Laboratoire 06
+
+### Scénario métier et saga implémentée
+
+#### Scénario : Création de commande
+
+Étapes :
+
+- Vérification du stock :
+    - Appel vers InventoryService méthode checkStockAvailability
+        - La méthode checkStockAvailability prend un productId et une quantité requise afin de valider si il existe un stock dans le centre logistique correspondant au requis.
+- Réservation de stock
+    - Appel vers InventoryService méthode reserveStock Fonctionne
+        - La méthode reserveStock prend un productId, une quantitée et orderId afin de créer une réservation de stock pour la commande en cours de traitement.
+- Paiement
+    - Appel vers PaymentService méthode processPayment Fonctionne
+        - La méthode processPayment prend un montant, une méthode de paiement et un orderId afin de créer une méthode de paiement ainsi que de procéder au traitement de celui-ci.
+- Confirmation ou annulation de commande
+    - Appel vers OrderService méthode confirmOrder Fonctionne
+        - La méthode confirmOrder s’assure que la commande est bien dans le système et change son status à complèter.
+
+## Diagramme de machine d'état
+
+![Diagramme de machine d'état](./out/docs/UML/microservices/DiagrammeEtatCreationCommande/DiagrammeEtatCreationCommande.png)
+
+## ADR
+
+### ADR 1
+
+### Titre
+
+Choix de Axios comme librairie de requêtes HTTP synchrone
+
+### Status
+
+Accepté
+
+### Contexte
+
+Afin d’implémenter la logique métier de création de commande client il est nécessaire de pouvoir communiquer entre les différentes microservices de  l’application. Il est donc nécessaire de choisir une librairie de requête HTTP adapté à notre écosystème.
+
+### Décision
+
+J’ai choisi d’utiliser Axios comme librairie HTTP afin d’effectuer des appels synchrones entre les services.
+
+### Conséquences
+
+| **Avantages**                                                                 |
+| ----------------------------------------------------------------------------- |
+| Facile d’intégration                                                          |
+| Intégration native des timeout                                                |
+| Bien documenté, largement utilisé offrant ainsi beaucoup de support en ligne. |
+| **Inconvénient**                                                              |
+| Plus performant que la librairie http native de Node.js                       |
+| Ajoute une dépendance additionnelle devant être maintenu                      |
+| Plus lourd que certaines alternatives                                         |
+
+### ADR 2
+
+### Titre
+
+Séparation des entités Order et Sale
+
+### Status
+
+Accepté
+
+### Contexte
+
+Dans le cadre de l’évolution du système actuel afin d’y implémenter une logique de ecommerce, il est indispensable de différencier les commandes passées en ligne et celles effectuer en magasin. L’héritage n’étant pas une solution étant donné que celle-ci n’est pas stable sur l’ORM présente dans le projet.
+
+### Décision
+
+J’ai décidé d’introduire l’entités Order dans la logique métier :
+
+Order : Représente une commande en ligne pouvant être potentiellement en traitement ou annulable. 
+
+Sale : Représente une vente physique soit une transaction finale, irréversible
+
+### Conséquence
+
+| Avantages                                                                                                 |
+| --------------------------------------------------------------------------------------------------------- |
+| Facilite la compréhension de la logique métier entre les flux de commerce életronique et physique.        |
+| Permet d’appliquer des règles de méétier distinces pour la gestion d’un panier vs transaction en magasin. |
+| En ligne, une commande peut avoir plusieurs status différent, tandis qu’une vente physique est finale.    |
+| Inconvénients                                                                                             |
+| Ajoute une niveau de complexité, car il faut maintenant gérer deux entités                                |
+
+## Mécanismes de compensation
+
+En cas d’échec lors de la création de la commande client les opérations suivantes sont effectuées :
+
+- Libération des réservations de stock
+- Changement du status de la commande à annuler.
+
+## Capture d’écran du dashboard
+
+### Réussi 
+
+  ![Réussi](./docs/images/Labo06/Test17CommandeCree.png)
+
+### Échec
+
+  ![Échec](./docs/images/Labo06/Test17CommandeEchoue.png)
 
 ### Observabilité et comparaison
 
@@ -294,74 +403,6 @@ De même pour OrderLine et SaleLine
 ### Vue Processus récuperer Commandes par ClientId
 
 ![Vue Processus récuperer Commandes par ClientId](./out/docs/UML/microservices/VueProcessusRecupererCommandeParClient/SequenceGetOrdersByCustomer.png)
-
-
-## ADR
-
-### ADR 1
-
-### Titre
-
-Choix de l'architecture
-
-### Status
-
-Accepté
-
-### Contexte
-
-Dans le cadre de ce laboratoire, le système de gestion multi-magasin doit pouvoir répondre aux nouveaux besoins et intégrer des services de commerce électronique. La structure à 3 tier avec une API REST exposé n'est donc plus suffisante. 
-
-### Décision
-
-Faire évoluer l'architecture vers un système orienté microservice.
-
-#### Conséquence
-
-| **Avantages**                         | Explication                                                                          |
-| ------------------------------------- | ------------------------------------------------------------------------------------ |
-| Scalabilité indépendante              | Chaque microservice peut être déployé et mis à l’échelle séparément selon sa charge. |
-| Résilience améliorée                  | Une défaillance d’un service n’affecte pas nécessairement l’ensemble du système.     |
-| Séparation claire des responsabilités | Facilite le développement parallèle.                                                 |
-| **Inconvénients**                     |                                                                                      |
-| Complexité opérationnelle             | Nécessite un orchestrateur (Docker).                                                 |
-| Débogage plus complexe                | La distribution des responsabilités entre services rend le débogage plus complexe.   |
-
-
-### ADR 2
-
-### Titre
-
-Introduction d'un API Gateway avec NGINX
-
-### Status
-
-Accepté
-
-### Contexte
-
-Avec la migration vers une architecture microservices, chaque domaine métier (produits, ventes, utilisateurs) expose désormais ses propres endpoints RESTful. Sans API Gateway, le client devrait connaître l’adresse de chaque microservice.
-
-### Décision
-
-Nous avons décidé d’introduire NGINX comme API Gateway. Il sera configuré pour :
-
-- Recevoir toutes les requêtes des clients sur une seule adresse.
-
-- Router dynamiquement les requêtes vers le microservice approprié, en fonction du chemin.
-
-- Ajouter des en-têtes globaux (ex. Authorization, X-API-GATEWAY) pour le monitoring et la traçabilité.
-
-### Conséquence
-
-| **Avantages**              | Explication                                                                                          |
-| -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Reduction de la complexité | Centralisation du point d’entrée pour tous les microservices.                                        |
-| Évolutivité améliorée      | Possibilité d’ajouter des fonctionnalités transversales (caching, rate limiting) à l’avenir.         |
-| Sécurité améliorée         | Un seul point de filtrage.                                                                           |
-| **Inconvénients**          |                                                                                                      |
-| Latence                    | Légère latence supplémentaire due au proxying des requêtes.                                          |
-| SPOF                       | Introduit un point de défaillance unique (SPOF) si NGINX n’est pas configuré en haute disponibilité. |
 
 ### Choix technologiques
 
