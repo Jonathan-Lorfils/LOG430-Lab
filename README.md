@@ -63,7 +63,7 @@ Prérequis:
 
   ![Étape 1](./docs/images/Labo06/Etape1.png)
 
-  ![Étape 2](./docs/imagesimages/Labo06/Etape2.png)
+  ![Étape 2](./docs/images/Labo06/Etape2.png)
 
   ![Étape 3](./docs/images/Labo06/Etape3.png)
 
