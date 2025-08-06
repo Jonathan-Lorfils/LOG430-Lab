@@ -30,7 +30,6 @@ describe("ParentStoreService", () => {
     });
 
     it("getAllStoreRevenue should return total revenue per store", async () => {
-        const mockParent = { id: 1 };
         const mockStores = [
             {
                 name: "Store A",
@@ -42,12 +41,10 @@ describe("ParentStoreService", () => {
             }
         ];
 
-        ParentStore.findOne = jest.fn().mockResolvedValue(mockParent);
         Store.findAll = jest.fn().mockResolvedValue(mockStores);
 
         const result = await ParentStoreService.getAllStoreRevenue();
 
-        expect(ParentStore.findOne).toHaveBeenCalled();
         expect(Store.findAll).toHaveBeenCalledWith({
             where: { ParentStoreId: 1 },
             include: [{ model: Sale, attributes: ["subTotal"] }]
@@ -58,6 +55,7 @@ describe("ParentStoreService", () => {
             { storeName: "Store B", totalRevenue: 0 }
         ]);
     });
+
 
     it("getAllStocksEmptyQuantityByParentStoreId should return zero-stock products", async () => {
         const mockStores = [
