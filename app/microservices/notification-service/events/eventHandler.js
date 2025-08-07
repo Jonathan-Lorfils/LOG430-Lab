@@ -1,5 +1,5 @@
 import logger from '../utils/logger.js';
-import { CART_EVENTS } from '../../cart-service/events/eventTypes.js';
+import { CART_EVENTS } from '../events/eventTypes.js';
 
 const processedEvents = new Set();
 
