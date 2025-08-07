@@ -134,6 +134,78 @@ const CartApiController = {
                 error: error.message
             });
         }
+    },
+
+    async updateItemQuantity(req, res) {
+        const { quantity, cartId, cartItemId } = req.body;
+        logger.info(`Request received for PUT /api/v1/cart/updateItem/${cartItemId} with quantity: ${quantity}`);
+
+        try {
+            const updatedItem = await CartService.updateItemQuantity(cartId, cartItemId, quantity);
+
+            if (!updatedItem) {
+                logger.warn(`Item with ID ${cartItemId} not found in cart ${cartId}`);
+                return res.status(404).json({
+                    success: false,
+                    message: 'Item not found in cart'
+                });
+            }
+
+            // Invalide le cache du panier
+            await redis.del(`cart:${cartId}`);
+
+            logger.info(`Item with ID ${cartItemId} updated in cart ${cartId}`);
+            return res.status(200).json({
+                success: true,
+                message: 'Item quantity updated successfully',
+                data: updatedItem
+            });
+        } catch (error) {
+            logger.error(`Error while updating item quantity in cart ${cartId}`, {
+                error: error.message
+            });
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
+    },
+
+    async updateCartStatus(req, res) {
+        const { cartId, status } = req.body;
+        logger.info(`Request received for PUT /api/v1/cart/updateStatus with cartId: ${cartId}, status: ${status}`);
+
+        try {
+            const updatedCart = await CartService.updateCartStatus(cartId, status);
+
+            if (!updatedCart) {
+                logger.warn(`Cart with ID ${cartId} not found`);
+                return res.status(404).json({
+                    success: false,
+                    message: 'Cart not found'
+                });
+            }
+
+            // Invalide le cache du panier
+            await redis.del(`cart:${cartId}`);
+
+            logger.info(`Cart with ID ${cartId} status updated to ${status}`);
+            return res.status(200).json({
+                success: true,
+                message: 'Cart status updated successfully',
+                data: updatedCart
+            });
+        } catch (error) {
+            logger.error(`Error while updating cart status for cart ${cartId}`, {
+                error: error.message
+            });
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
     }
 };
 

@@ -170,4 +170,92 @@ CartApiRouter.delete('/:cartid/deleteItem/:cartitemid', CartApiController.delete
  */
 CartApiRouter.get('/customer/:customerid', CartApiController.getCartByCustomerId);
 
+/**
+ * @swagger
+ * /api/v1/cart/updateCartItemQuantity:
+ *   put:
+ *     summary: Met à jour la quantité d’un article dans un panier
+ *     tags: [Cart]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             cartId: "1"
+ *             cartItemId: "1"
+ *             quantity: 3
+ *     responses:
+ *       200:
+ *         description: Quantité de l’article mise à jour avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Item quantity updated successfully
+ *               data:
+ *                 id: "1"
+ *                 CartId: "1"
+ *                 quantity: 3
+ *                 price: 9.99
+ *       404:
+ *         description: Article introuvable dans le panier
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Item not found in cart
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal server error
+ *               error: "Database error"
+ */
+CartApiRouter.put('/updateCartItemQuantity', CartApiController.updateItemQuantity);
+
+/**
+ * @swagger
+ * /api/v1/cart/updateCartStatus:
+ *   put:
+ *     summary: Met à jour le statut d’un panier
+ *     tags: [Cart]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             cartId: "1"
+ *             status: "expired"
+ *     responses:
+ *       200:
+ *         description: Statut du panier mis à jour avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Cart status updated successfully
+ *               data:
+ *                 id: "1"
+ *                 status: "expired"
+ *                 updatedAt: "2025-08-07T19:30:00Z"
+ *       404:
+ *         description: Panier introuvable
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Cart not found
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal server error
+ *               error: "Database error"
+ */
+CartApiRouter.put('/updateCartStatus', CartApiController.updateCartStatus);
+
 export default CartApiRouter;
