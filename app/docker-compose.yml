@@ -301,6 +301,37 @@ services:
         condition: service_healthy
     networks:
       - pos-net
+    # === AUDIT SERVICE ===
+  audit-db:
+    image: postgres
+    container_name: audit-db
+    environment:
+      POSTGRES_DB: auditdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: XRoot123
+    volumes:
+      - audit-db-data:/var/lib/postgresql/data
+    networks:
+      - pos-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  audit-service:
+    build: ./microservices/audit-service
+    container_name: audit-service
+    environment:
+      DATABASE_URL: postgres://postgres:XRoot123@audit-db:5432/auditdb
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      audit-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - pos-net
 
   # === API GATEWAY ===
   api-gateway:
@@ -399,6 +430,7 @@ volumes:
   store-db-data:
   payment-db-data:
   rabbitmq-data:
+  audit-db-data:
 
     # === RÉSEAU PRIVÉ ===
 networks:
