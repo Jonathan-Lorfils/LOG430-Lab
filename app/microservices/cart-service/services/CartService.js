@@ -2,6 +2,8 @@ import logger from '../utils/logger.js';
 import Cart from '../models/Cart.js';
 import CartItem from '../models/CartItem.js';
 import sequelize from '../database.js';
+import { publishCartEvent } from '../events/publishCartEvent.js';
+import { CART_EVENTS } from '../events/eventTypes.js';
 
 const CartService = {
     async createCart(customerId) {
@@ -22,9 +24,7 @@ const CartService = {
         const t = await sequelize.transaction();
         try {
             const cart = await Cart.findByPk(cartId);
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
+            if (!cart) throw new Error('Cart not found');
 
             const cartItem = await CartItem.create({
                 CartId: cartId,
@@ -38,6 +38,14 @@ const CartService = {
             await t.commit();
 
             logger.info(`Item added to cart ${cartId}: Product ${productId}, Quantity ${quantity}`);
+
+            await publishCartEvent(CART_EVENTS.ARTICLE_AJOUTE, {
+                cartId,
+                productId,
+                price,
+                quantity
+            });
+
             return cartItem;
         } catch (error) {
             await t.rollback();
@@ -46,13 +54,51 @@ const CartService = {
         }
     },
 
+    async updateItemQuantity(cartId, cartItemId, quantity) {
+        const t = await sequelize.transaction();
+        try {
+            const cart = await Cart.findByPk(cartId);
+            if (!cart) throw new Error('Cart not found');
+
+            const cartItem = await CartItem.findOne({
+                where: { id: cartItemId, CartId: cartId },
+                transaction: t
+            });
+
+            if (!cartItem || Number(cartItem.CartId) !== Number(cartId)) {
+                throw new Error('Cart item not found');
+            }
+
+            const oldQuantity = cartItem.quantity;
+            cartItem.quantity = quantity;
+            await cartItem.save({ transaction: t });
+
+            cart.totalAmount += (quantity - oldQuantity) * cartItem.price;
+            await cart.save({ transaction: t });
+            await t.commit();
+
+            logger.info(`Item ${cartItemId} quantity updated in cart ${cartId}: New quantity ${quantity}`);
+
+            await publishCartEvent(CART_EVENTS.QUANTITE_MODIFIEE, {
+                cartId,
+                cartItemId,
+                oldQuantity,
+                newQuantity: quantity
+            });
+
+            return cartItem;
+        } catch (error) {
+            await t.rollback();
+            logger.error('Error updating item quantity in cart:', error);
+            throw error;
+        }
+    },
+
     async deleteItemFromCart(cartId, cartItemId) {
         const t = await sequelize.transaction();
         try {
             const cart = await Cart.findByPk(cartId);
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
+            if (!cart) throw new Error('Cart not found');
 
             const cartItem = await CartItem.findOne({
                 where: { id: cartItemId, CartId: cartId },
@@ -69,6 +115,12 @@ const CartService = {
             await t.commit();
 
             logger.info(`Item ${cartItemId} deleted from cart ${cartId}`);
+
+            await publishCartEvent(CART_EVENTS.ARTICLE_RETIRE, {
+                cartId,
+                cartItemId,
+                productId: cartItem.ProductId
+            });
         } catch (error) {
             await t.rollback();
             logger.error('Error deleting item from cart:', error);
@@ -80,9 +132,7 @@ const CartService = {
         const t = await sequelize.transaction();
         try {
             const cart = await Cart.findByPk(cartId);
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
+            if (!cart) throw new Error('Cart not found');
 
             await CartItem.destroy({ where: { CartId: cartId }, transaction: t });
             cart.totalAmount = 0;
@@ -90,6 +140,10 @@ const CartService = {
             await t.commit();
 
             logger.info(`Cart ${cartId} emptied`);
+
+            await publishCartEvent(CART_EVENTS.PANIER_VIDE, {
+                cartId
+            });
         } catch (error) {
             await t.rollback();
             logger.error('Error emptying cart:', error);
@@ -115,7 +169,35 @@ const CartService = {
             logger.error('Error retrieving cart by customer ID:', error);
             throw error;
         }
+    },
+
+    async updateCartStatus(cartId, status) {
+        const t = await sequelize.transaction();
+        try {
+            const cart = await Cart.findByPk(cartId);
+            if (!cart) throw new Error('Cart not found');
+
+            cart.status = status;
+            await cart.save({ transaction: t });
+            await t.commit();
+
+            logger.info(`Cart ${cartId} status updated to ${status}`);
+
+            if (status === 'expired') {
+                await publishCartEvent(CART_EVENTS.PANIER_EXPIRE, {
+                    cartId,
+                    status
+                });
+            }
+
+            return cart;
+        } catch (error) {
+            await t.rollback();
+            logger.error('Error updating cart status:', error);
+            throw error;
+        }
     }
+
 }
 
 export default CartService;

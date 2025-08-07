@@ -167,25 +167,10 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "3005:3000"
-    networks:
-      - pos-net
-
-  # === CART SERVICE INSTANCE 2 ===
-  cart-service-2:
-    build: ./microservices/cart-service
-    container_name: cart-service-2
-    environment:
-      DATABASE_URL: postgres://postgres:XRoot123@cart-db:5432/cartdb
-      REDIS_HOST: redis
-    depends_on:
-      cart-db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    ports:
-      - "3007:3000"
     networks:
       - pos-net
 
@@ -305,6 +290,18 @@ services:
     networks:
       - pos-net
 
+  # === NOTIFICATION SERVICE ===
+  notification-service:
+    build: ./microservices/notification-service
+    container_name: notification-service
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - pos-net
+
   # === API GATEWAY ===
   api-gateway:
     image: nginx
@@ -320,7 +317,6 @@ services:
       - inventory-service
       - customer-service
       - cart-service
-      - cart-service-2
       - checkout-service
       - store-service
       - payment-service
@@ -372,6 +368,23 @@ services:
       - GF_LOG_MODE=console
     networks:
       - pos-net
+  # === RABBITMQ ===
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - pos-net
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 # === VOLUMES PERSISTENTS ===
 volumes:
