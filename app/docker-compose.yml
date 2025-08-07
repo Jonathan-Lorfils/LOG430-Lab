@@ -77,8 +77,6 @@ services:
       POSTGRES_PASSWORD: XRoot123
     volumes:
       - inventory-db-data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
     networks:
       - pos-net
     healthcheck:
@@ -311,6 +309,8 @@ services:
       POSTGRES_PASSWORD: XRoot123
     volumes:
       - audit-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
       - pos-net
     healthcheck:
