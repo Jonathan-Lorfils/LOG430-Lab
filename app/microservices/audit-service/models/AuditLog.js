@@ -5,6 +5,7 @@ const AuditLog = sequelize.define('AuditLog', {
     event_type: { type: DataTypes.STRING, allowNull: false },
     payload: { type: DataTypes.JSONB, allowNull: false },
     service_name: { type: DataTypes.STRING, allowNull: false },
+    aggregate_id: { type: DataTypes.STRING, allowNull: false },
 }, {
     tableName: 'audit_logs',
     timestamps: true,

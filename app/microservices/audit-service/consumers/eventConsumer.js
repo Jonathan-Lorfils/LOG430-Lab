@@ -24,7 +24,8 @@ export async function startConsumer() {
                 type: content.type,
                 payload: content.payload,
                 source: 'cart-service',
-                timestamp: content.timestamp
+                timestamp: content.timestamp,
+                aggregateId: content.payload.cartId
             });
             channel.ack(msg);
         }
