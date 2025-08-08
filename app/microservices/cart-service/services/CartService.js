@@ -11,7 +11,9 @@ const CartService = {
         try {
             const cart = await Cart.create({ customerId }, { transaction: t });
             await t.commit();
+
             logger.info(`Cart created for customer ${customerId} with ID ${cart.id}`);
+
             return cart;
         } catch (error) {
             await t.rollback();
@@ -39,12 +41,11 @@ const CartService = {
 
             logger.info(`Item added to cart ${cartId}: Product ${productId}, Quantity ${quantity}`);
 
-            await publishCartEvent(CART_EVENTS.ARTICLE_AJOUTE, {
+            await publishCartEvent(
+                CART_EVENTS.ARTICLE_AJOUTE,
                 cartId,
-                productId,
-                price,
-                quantity
-            });
+                { productId, price, quantity, cartId }
+            );
 
             return cartItem;
         } catch (error) {
@@ -65,7 +66,7 @@ const CartService = {
                 transaction: t
             });
 
-            if (!cartItem || Number(cartItem.CartId) !== Number(cartId)) {
+            if (!cartItem) {
                 throw new Error('Cart item not found');
             }
 
@@ -79,12 +80,11 @@ const CartService = {
 
             logger.info(`Item ${cartItemId} quantity updated in cart ${cartId}: New quantity ${quantity}`);
 
-            await publishCartEvent(CART_EVENTS.QUANTITE_MODIFIEE, {
+            await publishCartEvent(
+                CART_EVENTS.QUANTITE_MODIFIEE,
                 cartId,
-                cartItemId,
-                oldQuantity,
-                newQuantity: quantity
-            });
+                { cartItemId, oldQuantity, newQuantity: quantity, cartId }
+            );
 
             return cartItem;
         } catch (error) {
@@ -105,7 +105,7 @@ const CartService = {
                 transaction: t
             });
 
-            if (!cartItem || Number(cartItem.CartId) !== Number(cartId)) {
+            if (!cartItem) {
                 throw new Error('Cart item not found');
             }
 
@@ -116,11 +116,11 @@ const CartService = {
 
             logger.info(`Item ${cartItemId} deleted from cart ${cartId}`);
 
-            await publishCartEvent(CART_EVENTS.ARTICLE_RETIRE, {
+            await publishCartEvent(
+                CART_EVENTS.ARTICLE_RETIRE,
                 cartId,
-                cartItemId,
-                productId: cartItem.ProductId
-            });
+                { cartItemId, productId: cartItem.ProductId, cartId }
+            );
         } catch (error) {
             await t.rollback();
             logger.error('Error deleting item from cart:', error);
@@ -141,9 +141,11 @@ const CartService = {
 
             logger.info(`Cart ${cartId} emptied`);
 
-            await publishCartEvent(CART_EVENTS.PANIER_VIDE, {
-                cartId
-            });
+            await publishCartEvent(
+                CART_EVENTS.PANIER_VIDE,
+                cartId,
+                { cartId }
+            );
         } catch (error) {
             await t.rollback();
             logger.error('Error emptying cart:', error);
@@ -184,10 +186,11 @@ const CartService = {
             logger.info(`Cart ${cartId} status updated to ${status}`);
 
             if (status === 'expired') {
-                await publishCartEvent(CART_EVENTS.PANIER_EXPIRE, {
+                await publishCartEvent(
+                    CART_EVENTS.PANIER_EXPIRE,
                     cartId,
-                    status
-                });
+                    { cartId, status }
+                );
             }
 
             return cart;
@@ -197,7 +200,6 @@ const CartService = {
             throw error;
         }
     }
-
-}
+};
 
 export default CartService;

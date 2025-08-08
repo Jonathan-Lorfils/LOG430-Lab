@@ -10,24 +10,30 @@ export async function startConsumer() {
     const channel = await conn.createChannel();
 
     await channel.assertExchange(EXCHANGE, 'topic', { durable: true });
-
     await channel.assertQueue(QUEUE, { durable: true });
-
     await channel.bindQueue(QUEUE, EXCHANGE, 'cart.#');
 
     console.log('audit-service is consuming from cart.events exchange (routing key: cart.#)');
 
     channel.consume(QUEUE, async (msg) => {
-        if (msg !== null) {
+        if (!msg) return;
+
+        try {
             const content = JSON.parse(msg.content.toString());
+
             await AuditService.logEvent({
-                type: content.type,
-                payload: content.payload,
-                source: 'cart-service',
+                type: content.type || content.eventType,
+                payload: content.payload ?? content.data ?? {},
+                source: content.source || 'cart-service',
                 timestamp: content.timestamp,
-                aggregateId: content.payload.cartId
+                aggregateId: content.aggregateId || content.payload?.cartId,
+                expectedVersion: content.expectedVersion
             });
+
             channel.ack(msg);
+        } catch (err) {
+            console.error(`Failed to append event: ${err.message}`);
+            channel.nack(msg, false, false);
         }
-    });
+    }, { noAck: false });
 }
