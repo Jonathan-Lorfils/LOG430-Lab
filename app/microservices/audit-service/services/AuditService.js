@@ -12,7 +12,7 @@ export default {
         // Compat: supporte { type, payload, aggregateId, source }
         const eventType = event.type || event.eventType;
         const aggregateId = event.aggregateId || event.payload?.cartId || event.payload?.aggregateId;
-        const aggregateType = inferAggregateType(eventType, 'Unknown');
+        const aggregateType = event.aggregateType || ((event.source || '').toLowerCase().includes('cart') ? 'Cart' : 'Unknown');
         const serviceName = event.source || 'audit-service';
 
         if (!eventType) throw new Error('event.type (ou eventType) est requis');

@@ -1,8 +1,19 @@
 import { startConsumer } from './consumers/eventConsumer.js';
 import sequelize from './database.js';
+import app from './app.js';
+import logger from './utils/logger.js';
 
-sequelize.sync()
-    .then(() => console.log('Connected to audit database and models synced.'))
-    .catch(err => console.error('Error syncing audit database:', err));
+const PORT = process.env.PORT || 3000;
+
+await sequelize.authenticate();
+logger.info('Connexion to postgresql successfully !')
+
+logger.info('Starting database sync...')
+await sequelize.sync({ force: true });
 
 startConsumer();
+
+app.listen(PORT, () => {
+    logger.info(`Service de panier démarré sur le port 3011`);
+    logger.info(`Documentation de l'API disponible à http://localhost:3011/api-docs`);
+});

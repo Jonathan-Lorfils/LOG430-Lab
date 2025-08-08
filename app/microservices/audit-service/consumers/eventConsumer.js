@@ -1,5 +1,5 @@
 import amqp from 'amqplib';
-import AuditService from '../service/AuditService.js';
+import AuditService from '../services/AuditService.js';
 
 const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://guest:guest@rabbitmq:5672';
 const EXCHANGE = 'cart.events';

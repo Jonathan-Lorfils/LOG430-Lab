@@ -330,6 +330,8 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    ports:
+      - "3011:3000"
     networks:
       - pos-net
 
@@ -352,6 +354,7 @@ services:
       - store-service
       - payment-service
       - orchestrator-service
+      - audit-service
     networks:
       - pos-net
 
