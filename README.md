@@ -21,7 +21,7 @@ Prérequis:
    ```
 
    ```
-   git checkout labo06
+   git checkout labo07
    ```
 
 2. Lancer le container
@@ -55,48 +55,67 @@ Prérequis:
     Service magasin : http://localhost:3008/api-docs/
     Service paiement : http://localhost:3009/api-docs/
     Service orchestrateur : http://localhost:3010/api-docs/
+    Service audit : http://localhost:3011/api-docs/
     ```
 
 ## Instruction de test
 
-### Commande fonctionnel 
+### Actions du scénario métier
 
-  ![Étape 1](./docs/images/Labo06/Etape1.png)
+Lien : http://localhost:3005/api-docs/#/
 
-  ![Étape 2](./docs/images/Labo06/Etape2.png)
+#### Ajouter un article au panier
+  ![Étape 1](./docs/images/Labo07/Etape1.png)
+  ![Étape 2](./docs/images/Labo07/Etape2.png)
 
-  ![Étape 3](./docs/images/Labo06/Etape3.png)
+Audit Log : 1	"ArticleAjouteAuPanier"	"{""price"": 9.99, ""cartId"": ""1"", ""quantity"": 2, ""productId"": ""123""}"	"cart-service"	"1"	"Cart"	1	"2025-08-08 21:40:58.815+00"
 
-  ![Étape 4](./docs/images/Labo06/Etape4.png)
+#### Mettre à jour la quantité d'un article au panier
+  ![Étape 1](./docs/images/Labo07/Etape3.png)
+  ![Étape 2](./docs/images/Labo07/Etape4.png)
 
-### Commande échouant
+Audit Log : 2	"QuantiteArticleModifiee"	"{""cartId"": ""1"", ""cartItemId"": ""1"", ""newQuantity"": 3, ""oldQuantity"": 2}"	"cart-service"	"1"	"Cart"	2	"2025-08-08 21:44:37.9+00"
 
-  ![Étape 1](./docs/images/Labo06/Etape5.png)
+#### Supprimer un article au panier
+  ![Étape 1](./docs/images/Labo07/Etape5.png)
+  ![Étape 2](./docs/images/Labo07/Etape6.png)
 
-## Rapport Laboratoire 06
+Audit Log : 3	"ArticleRetireDuPanier"	"{""cartId"": ""1"", ""productId"": 1, ""cartItemId"": ""1""}"	"cart-service"	"1"	"Cart"	3	"2025-08-08 21:46:25.534+00"
 
-### Scénario métier et saga implémentée
+#### Mettre a jour le status d'un panier
+  ![Étape 1](./docs/images/Labo07/Etape7.png)
+  ![Étape 1](./docs/images/Labo07/Etape8.png)
 
-#### Scénario : Création de commande
+Audit Log : 4	"PanierExpire"	"{""cartId"": ""1"", ""status"": ""expired""}"	"cart-service"	"1"	"Cart"	4	"2025-08-08 21:53:43.636+00"
 
-Étapes :
+#### Vider panier
+  ![Étape 1](./docs/images/Labo07/Etape9.png)
+  ![Étape 1](./docs/images/Labo07/Etape10.png)
 
-- Vérification du stock :
-    - Appel vers InventoryService méthode checkStockAvailability
-        - La méthode checkStockAvailability prend un productId et une quantité requise afin de valider si il existe un stock dans le centre logistique correspondant au requis.
-- Réservation de stock
-    - Appel vers InventoryService méthode reserveStock Fonctionne
-        - La méthode reserveStock prend un productId, une quantitée et orderId afin de créer une réservation de stock pour la commande en cours de traitement.
-- Paiement
-    - Appel vers PaymentService méthode processPayment Fonctionne
-        - La méthode processPayment prend un montant, une méthode de paiement et un orderId afin de créer une méthode de paiement ainsi que de procéder au traitement de celui-ci.
-- Confirmation ou annulation de commande
-    - Appel vers OrderService méthode confirmOrder Fonctionne
-        - La méthode confirmOrder s’assure que la commande est bien dans le système et change son status à complèter.
+Audit Log : 1	"PanierVide"	"{""cartId"": ""1""}"	"cart-service"	"1"	"Cart"	1	"2025-08-08 22:06:15.505+00"
 
-## Diagramme de machine d'état
+### Actions de replay
 
-![Diagramme de machine d'état](./out/docs/UML/microservices/DiagrammeEtatCreationCommande/DiagrammeEtatCreationCommande.png)
+Lien : http://localhost:3011/api-docs/#/
+
+  ![Étape 1](./docs/images/Labo07/Etape11.png)
+  ![Étape 2](./docs/images/Labo07/Etape12.png)
+
+### Scénario métier
+
+#### Scénario Panier e-commerce
+
+#### Évènements
+
+- **Ajout d’un article au panier** → `ArticleAjouteAuPanier`
+- **Suppression d’un article du panier** → `ArticleRetireDuPanier`
+- **Mise à jour de la quantité** → `QuantiteArticleModifiee`
+- **Expiration du panier** → `PanierExpire`
+- **Panier vidé manuellement** → `PanierVide`
+
+## Schéma de l’architecture événementielle
+
+![Diagramme de machine d'état](./out/docs/UML/microservices/ArchitectureEvenementielle/ArchitectureEvenementielle.png)
 
 ## ADR
 
@@ -104,7 +123,7 @@ Prérequis:
 
 ### Titre
 
-Choix de Axios comme librairie de requêtes HTTP synchrone
+Choix de RabbitMQ comme système de messagerie
 
 ### Status
 
@@ -112,29 +131,32 @@ Accepté
 
 ### Contexte
 
-Afin d’implémenter la logique métier de création de commande client il est nécessaire de pouvoir communiquer entre les différentes microservices de  l’application. Il est donc nécessaire de choisir une librairie de requête HTTP adapté à notre écosystème.
+Dans le cadre de l’implémentation d’une architecture événementielle (Pub/Sub), il est nécessaire d'implémenter un système de messagerie fiable permettant la communication asynchrone entre les différents microservices.
+Ce composant doit assurer la livraison des messages, gérer les files d’attente et supporter le routage des événements selon différents patterns.
 
 ### Décision
 
-J’ai choisi d’utiliser Axios comme librairie HTTP afin d’effectuer des appels synchrones entre les services.
+J’ai choisi d’utiliser RabbitMQ comme broker de messages pour la transmission d’événements métier entre microservices.
 
 ### Conséquences
 
-| **Avantages**                                                                 |
-| ----------------------------------------------------------------------------- |
-| Facile d’intégration                                                          |
-| Intégration native des timeout                                                |
-| Bien documenté, largement utilisé offrant ainsi beaucoup de support en ligne. |
-| **Inconvénient**                                                              |
-| Plus performant que la librairie http native de Node.js                       |
-| Ajoute une dépendance additionnelle devant être maintenu                      |
-| Plus lourd que certaines alternatives                                         |
+| **Avantages**                                                                                     |
+| ------------------------------------------------------------------------------------------------- |
+| Supporte nativement plusieurs patterns de communication (Pub/Sub, work queues, routing par clés). |
+| Gestion des messages persistants pour éviter toute perte en cas de panne d’un service.            |
+| Documentation riche et communauté active facilitant l’intégration et le dépannage.                |
+| Compatible avec de nombreux langages et protocoles (AMQP, MQTT, STOMP).                           |
+| **Inconvénients**                                                                                 |
+| Nécessite une infrastructure supplémentaire (service dédié à déployer et superviser).             |
+| Complexité supplémentaire dans le débogage d’un système distribué asynchrone.                     |
+| Nécessite la gestion des échecs et des messages en retard (dead-letter queues).                   |
+
 
 ### ADR 2
 
 ### Titre
 
-Séparation des entités Order et Sale
+Choix de PostgreSQL comme Event Store
 
 ### Status
 
@@ -142,32 +164,28 @@ Accepté
 
 ### Contexte
 
-Dans le cadre de l’évolution du système actuel afin d’y implémenter une logique de ecommerce, il est indispensable de différencier les commandes passées en ligne et celles effectuer en magasin. L’héritage n’étant pas une solution étant donné que celle-ci n’est pas stable sur l’ORM présente dans le projet.
+Dans l’architecture événementielle mise en place, il est nécessaire de stocker tous les événements métiers afin de permettre leur relecture et la reconstruction d’état.
+Plusieurs options existent : bases spécialisées (EventStoreDB, Kafka log compaction) ou bases relationnelles.
+Le choix doit prendre en compte l’infrastructure déjà en place, la simplicité d’intégration et la capacité à manipuler des données au format JSON.
 
 ### Décision
 
-J’ai décidé d’introduire l’entités Order dans la logique métier :
-
-Order : Représente une commande en ligne pouvant être potentiellement en traitement ou annulable. 
-
-Sale : Représente une vente physique soit une transaction finale, irréversible
+J’ai choisi d’utiliser PostgreSQL comme Event Store, en exploitant ses colonnes JSONB pour stocker les payloads d’événements.
+Ce choix permet de réutiliser l’infrastructure de base de données déjà déployée dans le projet et de bénéficier de la robustesse et des fonctionnalités avancées de PostgreSQL.
 
 ### Conséquence
 
-| Avantages                                                                                                 |
-| --------------------------------------------------------------------------------------------------------- |
-| Facilite la compréhension de la logique métier entre les flux de commerce életronique et physique.        |
-| Permet d’appliquer des règles de méétier distinces pour la gestion d’un panier vs transaction en magasin. |
-| En ligne, une commande peut avoir plusieurs status différent, tandis qu’une vente physique est finale.    |
-| Inconvénients                                                                                             |
-| Ajoute une niveau de complexité, car il faut maintenant gérer deux entités                                |
+| **Avantages**                                                                                                |
+| ------------------------------------------------------------------------------------------------------------ |
+| Réutilisation de l’infrastructure existante sans ajout de service supplémentaire.                            |
+| Support natif du type JSONB pour stocker des événements de manière flexible.                                 |
+| Fiabilité et robustesse reconnues de PostgreSQL (transactions, durabilité).                                  |
+| Facilité d’interrogation et filtrage des événements via SQL.                                                 |
+| **Inconvénients**                                                                                            |
+| Moins optimisé qu’une base spécialisée pour les très forts volumes d’événements.                             |
+| Nécessite une implémentation manuelle des fonctions de replay et de projection.                              |
+| Risque de complexité accrue si le volume d’événements devient très important (archivage et partitionnement). |
 
-## Mécanismes de compensation
-
-En cas d’échec lors de la création de la commande client les opérations suivantes sont effectuées :
-
-- Libération des réservations de stock
-- Changement du status de la commande à annuler.
 
 ## Capture d’écran du dashboard
 

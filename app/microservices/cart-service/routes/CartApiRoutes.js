@@ -258,4 +258,45 @@ CartApiRouter.put('/updateCartItemQuantity', CartApiController.updateItemQuantit
  */
 CartApiRouter.put('/updateCartStatus', CartApiController.updateCartStatus);
 
+/**
+ * @swagger
+ * /api/v1/cart/emptyCart/{cartid}:
+ *   put:
+ *     summary: Vide complètement un panier
+ *     description: Supprime tous les articles du panier et remet le total à 0.
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: path
+ *         name: cartid
+ *         required: true
+ *         description: ID du panier à vider
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Panier vidé avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Cart emptied successfully
+ *               data: null
+ *       404:
+ *         description: Panier introuvable
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Cart not found
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal server error
+ *               error: "Error while emptying cart"
+ */
+CartApiRouter.put('/emptyCart/:cartid', CartApiController.emptyCart);
+
 export default CartApiRouter;

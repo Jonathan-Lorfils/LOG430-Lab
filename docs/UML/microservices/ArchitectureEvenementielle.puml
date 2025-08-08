@@ -1,0 +1,95 @@
+@startuml ArchitectureEvenementielle
+title Architecture évènementielle — Pub/Sub + Event Store + CQRS
+
+skinparam componentStyle rectangle
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+skinparam shadowing false
+skinparam rectangle {
+  BorderColor #555
+}
+skinparam database {
+  BorderColor #555
+}
+skinparam queue {
+  BorderColor #555
+}
+
+actor "Client" as Client
+
+rectangle "API Gateway\n(NGINX)" as APIGW
+
+package "Domaine Commandes (Write)" as CMD {
+  component "cart-service\n(REST Commands)" as CartAPI
+  database "cart-db" as CartDB
+  component "publishCartEvent()" as Pub
+
+  CartAPI -down-> CartDB : Écrit/Met à jour
+  CartAPI -right-> Pub : Publie évènements
+}
+
+rectangle "Broker\n(Pub/Sub)" as RMQ {
+  component "Exchange:\ncart.events" as EX
+  queue "audit-queue" as Q_AUDIT
+  queue "notification-queue" as Q_NOTIF
+  EX -down-> Q_AUDIT
+  EX -down-> Q_NOTIF
+}
+
+package "Event Store & Projections (Read/Store)" as ES {
+  package "audit-service" as AUDIT {
+    component "Event Consumer" as Consumer
+    component "AuditService.logEvent\n(versioning + insert)" as LogEvent
+    database "audit-db\n(table: audit_logs)" as AuditDB
+    component "ReplayService\n(replay + upcasters)" as ReplaySvc
+    component "API Replay\n/​replay/*" as ReplayAPI
+  }
+
+  package "Read Model (CQRS — Query)" as READ {
+    database "carts_read\n(view matérialisée)" as CartsRead
+    component "API Read\n/​read/*" as ReadAPI
+  }
+}
+
+package "Autres Abonnés (Pub/Sub)" as SUBS {
+  component "notification-service\n(Consumer)" as NotifConsumer
+  component "Notifs/Emails" as Notifier
+  NotifConsumer -down-> Notifier
+}
+
+' --- Flux externes
+Client -> APIGW
+APIGW --> CartAPI : POST /cart/* (Command)
+
+' --- Publication d'événements
+Pub --> EX : publish(type,\naggregateId,payload)
+
+' --- Consommation par l'Event Store
+Q_AUDIT --> Consumer : messages cart.*
+Consumer --> LogEvent
+LogEvent --> AuditDB : INSERT (aggregate_type, aggregate_id,\nversion, event_type, payload)
+
+' --- Replay & Projections (CQRS)
+ReplayAPI --> ReplaySvc
+ReplaySvc --> AuditDB : SELECT événements\nORDER BY version
+ReplaySvc --> CartsRead : UPSERT projection
+
+' --- Lecture (Queries)
+Client --> APIGW : GET /replay/cart/:id
+APIGW --> ReplayAPI
+
+Client --> APIGW : GET /read/cart/:id
+APIGW --> ReadAPI
+ReadAPI --> CartsRead : SELECT O(1)
+
+' --- Autres abonnés (Pub/Sub)
+Q_NOTIF --> NotifConsumer : messages cart.*
+' (ex: envoi d'email, WebSocket, etc.)
+
+legend right
+= Légende =
+[Pub/Sub]  : RabbitMQ (Exchange + Queues)
+[Event Store] : audit-service + audit_logs (versionné)
+[CQRS] : Séparation Write (Commands) / Read (Replay/Projections)
+endlegend
+@enduml

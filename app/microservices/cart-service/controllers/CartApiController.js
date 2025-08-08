@@ -206,6 +206,34 @@ const CartApiController = {
                 error: error.message
             });
         }
+    },
+
+    async emptyCart(req, res) {
+        const cartId = req.params.cartid;
+        logger.info(`Request received for DELETE /api/v1/carts/${cartId}/emptyCart`);
+
+        try {
+            const result = await CartService.emptyCart(cartId);
+
+            // Invalide le cache du panier
+            await redis.del(`cart:${cartId}`);
+
+            logger.info(`Cart with ID ${cartId} emptied successfully`);
+            return res.status(200).json({
+                success: true,
+                message: 'Cart emptied successfully',
+                data: result
+            });
+        } catch (error) {
+            logger.error(`Error while emptying cart ${cartId}`, {
+                error: error.message
+            });
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
     }
 };
 
